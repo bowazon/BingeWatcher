@@ -28,9 +28,11 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.movieguide.ui.theme.MovieGuideTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.cos
 import kotlin.math.sin
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
