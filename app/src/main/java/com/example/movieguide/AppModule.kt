@@ -1,8 +1,7 @@
 package com.example.movieguide
 
 import com.example.network.tvmaze.TvMazeApi
-import com.example.network.tvmaze.api
-import com.example.network.tvmaze.retrofit
+import com.example.network.tvmaze.retrofit.TvMazeRetrofitImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +14,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApi(): TvMazeApi {
-        return api
+        return TvMazeRetrofitImpl()
     }
 }
