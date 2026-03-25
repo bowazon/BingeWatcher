@@ -1,6 +1,6 @@
 package com.example.movieguide
 
-import com.example.network.tvmaze.TvMazeApi
+import com.example.network.tvmaze.TvMazeRemoteDataSource
 import com.example.network.tvmaze.retrofit.TvMazeRetrofitImpl
 import dagger.Module
 import dagger.Provides
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideApi(): TvMazeApi {
+    fun provideApi(): TvMazeRemoteDataSource {
         return TvMazeRetrofitImpl()
     }
 }

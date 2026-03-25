@@ -2,8 +2,8 @@ package com.example.movieguide
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.network.tvmaze.TvMazeApi
-import com.example.network.tvmaze.models.Show
+import com.example.network.tvmaze.TvMazeRemoteDataSource
+import com.example.network.tvmaze.models.TvMazeShow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val api: TvMazeApi
+    val api: TvMazeRemoteDataSource
 ): ViewModel() {
-    private val _searchState = MutableStateFlow<List<Show>>(emptyList())
+    private val _searchState = MutableStateFlow<List<TvMazeShow>>(emptyList())
     val searchState = _searchState.asStateFlow()
 
     init {

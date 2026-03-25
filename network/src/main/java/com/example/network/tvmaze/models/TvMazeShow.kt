@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Show(
+data class TvMazeShow(
     val score: Float,
 
     @SerialName("show")
-    val showDetails: ShowDetails,
+    val showDetails: TvMazeShowDetails,
 ) {
 
 }
