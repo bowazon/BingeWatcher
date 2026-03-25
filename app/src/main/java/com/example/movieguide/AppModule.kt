@@ -1,6 +1,8 @@
 package com.example.movieguide
 
-import com.example.network.Tmdb
+import com.example.network.tvmaze.TvMazeApi
+import com.example.network.tvmaze.api
+import com.example.network.tvmaze.retrofit
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +14,7 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideApi(): Tmdb {
-        return Tmdb()
+    fun provideApi(): TvMazeApi {
+        return api
     }
 }

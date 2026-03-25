@@ -19,8 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.example.movieguide.ui.theme.MovieGuideTheme
-import com.example.network.Tmdb
-import com.example.network.getMoviesSuspend
+import com.example.network.tvmaze.TvMazeApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,19 +28,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var api: Tmdb
+    lateinit var api: TvMazeApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val movies = api.getMoviesSuspend()
-            val latest = movies.getLatest()
-
-            latest.genres.onEach {
-                Log.i("ART_DBG", it.name)
-            }
+            val res = api.search("gitls")
+            Log.i("ART_DBG", res.toString())
         }
 
         setContent {
