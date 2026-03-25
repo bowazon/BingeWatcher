@@ -1,10 +1,9 @@
 package com.example.network
 
-import info.movito.themoviedbapi.TmdbApi
-import info.movito.themoviedbapi.TmdbMovies
-import info.movito.themoviedbapi.model.core.responses.TmdbResponseException
-import info.movito.themoviedbapi.tools.TmdbException
-import info.movito.themoviedbapi.tools.TmdbResponseCode
+import com.example.network.tmdb_lib.TmdbApi
+import com.example.network.tmdb_lib.TmdbMovies
+import com.example.network.tmdb_lib.model.core.responses.TmdbResponseException
+import com.example.network.tmdb_lib.tools.TmdbException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -34,3 +33,4 @@ suspend fun Tmdb.getMoviesSuspend(): TmdbMovies = withContext(Dispatchers.IO) {
         throw exception
     }
 }
+
