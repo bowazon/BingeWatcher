@@ -33,4 +33,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     implementation("org.apache.commons:commons-lang3:3.20.0")
+
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 }

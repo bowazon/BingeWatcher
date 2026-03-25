@@ -22,6 +22,7 @@ import com.example.movieguide.ui.theme.MovieGuideTheme
 import com.example.network.Tmdb
 import com.example.network.getMoviesSuspend
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val movies = api.getMoviesSuspend()
             val latest = movies.getLatest()
 
