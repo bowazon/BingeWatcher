@@ -28,10 +28,15 @@ val client = OkHttpClient.Builder()
     })
     .build()
 
+val json = Json {
+    ignoreUnknownKeys = true
+    isLenient = true
+}
+
 val retrofit = Retrofit.Builder()
     .client(client)
     .addCallAdapterFactory(ResultCallAdapterFactory.create())
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()
 

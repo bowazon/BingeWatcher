@@ -6,5 +6,8 @@ import kotlinx.serialization.Serializable
 data class ShowDetails(
     val id: Int,
     val url: String,
+    val name: String,
+    val type: String,
+    val language: String,
 ) {
 }
