@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "MovieGuide"
 include(":app")
 include(":designsystem")
+include(":network")
