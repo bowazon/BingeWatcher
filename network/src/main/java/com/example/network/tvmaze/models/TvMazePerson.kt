@@ -3,7 +3,16 @@ package com.example.network.tvmaze.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TvMazePerson (
-    val score: Double,
-    val person: TvMazePersonDetails,
+data class TvMazePerson(
+    val id: Long,
+    val url: String,
+    val name: String,
+    val country: TvMazeCountry?,
+    val birthday: String?,
+    val deathday: String?,
+    val gender: String,
+    val image: TvMazeImage?,
+    val updated: Long,
+    //@JsonProperty("_links")
+    //val links: Links,
 )

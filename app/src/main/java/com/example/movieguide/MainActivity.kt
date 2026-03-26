@@ -51,7 +51,7 @@ fun Greeting(
             modifier = Modifier.padding(padding)
         ) {
             items(shows) { show ->
-                Text(text = show.showDetails.name)
+                Text(text = show.name)
             }
         }
     }

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeEmbedded(
-    val show: TvMazeShowDetails,
+    val show: TvMazeShow,
 )

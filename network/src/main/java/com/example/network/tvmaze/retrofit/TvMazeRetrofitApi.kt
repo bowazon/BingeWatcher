@@ -5,10 +5,10 @@ import com.example.network.tvmaze.models.TvMazeCastCredit
 import com.example.network.tvmaze.models.TvMazeCrewCredit
 import com.example.network.tvmaze.models.TvMazeCrewMember
 import com.example.network.tvmaze.models.TvMazeEpisode
-import com.example.network.tvmaze.models.TvMazePersonDetails
+import com.example.network.tvmaze.models.TvMazeScoredPerson
+import com.example.network.tvmaze.models.TvMazeScoredShow
 import com.example.network.tvmaze.models.TvMazeSeason
 import com.example.network.tvmaze.models.TvMazeShow
-import com.example.network.tvmaze.models.TvMazeShowDetails
 import com.example.network.tvmaze.models.TvMazeShowImage
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,18 +18,18 @@ import retrofit2.http.Query
 interface TvMazeRetrofitApi {
     // search
     @GET("search/shows")
-    suspend fun search(@Query("q") query: String): Result<List<TvMazeShow>>
+    suspend fun search(@Query("q") query: String): List<TvMazeScoredShow>
 
     @GET("singlesearch/shows")
-    suspend fun singleSearch(@Query("q") query: String): Result<TvMazeShowDetails>
+    suspend fun singleSearch(@Query("q") query: String): TvMazeShow
 
     /*
     @GET("lookup/shows")
-    suspend fun lookup(@Query("thetvdb") query: String): Result<TvMazeShowDetails>
+    suspend fun lookup(@Query("thetvdb") query: String): TvMazeShowDetails
      */
 
     @GET("search/people")
-    suspend fun peopleSearch(@Query("q") query: String): Result<List<TvMazePersonDetails>>
+    suspend fun peopleSearch(@Query("q") query: String): List<TvMazeScoredPerson>
 
 
     // schedule
@@ -37,56 +37,56 @@ interface TvMazeRetrofitApi {
     suspend fun webSchedule(
         @Query("country") countryCode: String,
         @Query("date") date: String
-    ): Result<List<TvMazeEpisode>>
+    ): List<TvMazeEpisode>
 
     @GET("schedule/full")
-    suspend fun fullSchedule(): Result<List<TvMazeEpisode>>
+    suspend fun fullSchedule(): List<TvMazeEpisode>
 
 
     // shows
     @GET("shows/{id}")
-    suspend fun showInfo(@Path("id") showId: Int): Result<TvMazeShowDetails>
+    suspend fun showInfo(@Path("id") showId: Int): TvMazeShow
 
     @GET("shows/{id}/episodes")
-    suspend fun episodeList(@Path("id") showId: Int): Result<List<TvMazeEpisode>>
+    suspend fun episodeList(@Path("id") showId: Int): List<TvMazeEpisode>
 
     @GET("shows/{id}/episodebynumber")
     suspend fun episodeByNumber(
         @Path("id") showId: Int,
         @Query("season") s: String,
         @Query("number") e: String
-    ): Result<TvMazeEpisode>
+    ): TvMazeEpisode
 
     @GET("shows/{id}/episodesbydate")
     suspend fun episodeByDate(
         @Path("id") showId: Int,
         @Query("date") date: String
-    ): Result<TvMazeEpisode>
+    ): TvMazeEpisode
 
     @GET("shows/{id}/seasons")
-    suspend fun seasons(@Path("id") showId: Int): Result<TvMazeSeason>
+    suspend fun seasons(@Path("id") showId: Int): TvMazeSeason
 
     @GET("shows/{id}/cast")
-    suspend fun cast(@Path("id") showId: Int): Result<List<TvMazeActor>>
+    suspend fun cast(@Path("id") showId: Int): List<TvMazeActor>
 
     @GET("shows/{id}/crew")
-    suspend fun crew(@Path("id") showId: Int): Result<List<TvMazeCrewMember>>
+    suspend fun crew(@Path("id") showId: Int): List<TvMazeCrewMember>
 
     @GET("shows/{id}/images")
-    suspend fun images(@Path("id") showId: Int): Result<List<TvMazeShowImage>>
+    suspend fun images(@Path("id") showId: Int): List<TvMazeShowImage>
 
     @GET("shows")
-    suspend fun showsPaginated(@Query("page") page: Int): Result<List<TvMazeShowDetails>>
+    suspend fun showsPaginated(@Query("page") page: Int): List<TvMazeShow>
 
     // Episodes
     @GET("episodes/{id}")
-    suspend fun episode(@Path("id") id: Int): Result<TvMazeEpisode>
+    suspend fun episode(@Path("id") id: Int): TvMazeEpisode
 
 
     // people
     @GET("people/{id}/castcredits")
-    suspend fun personCastCredits(@Path("id") id: Int): Result<List<TvMazeCastCredit>>
+    suspend fun personCastCredits(@Path("id") id: Int): List<TvMazeCastCredit>
 
     @GET("people/{id}/crewcredits")
-    suspend fun personCrewCredits(@Path("id") id: Int): Result<List<TvMazeCrewCredit>>
+    suspend fun personCrewCredits(@Path("id") id: Int): List<TvMazeCrewCredit>
 }

@@ -19,7 +19,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _searchState.emit(api.search("girls").getOrNull() ?: emptyList())
+            _searchState.emit(api.search("girls").map { it.show })
         }
     }
 }
