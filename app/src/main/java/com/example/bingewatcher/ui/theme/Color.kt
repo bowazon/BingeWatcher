@@ -1,4 +1,4 @@
-package com.example.movieguide.ui.theme
+package com.example.bingewatcher.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

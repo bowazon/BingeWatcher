@@ -1,4 +1,4 @@
-package com.example.movieguide
+package com.example.bingewatcher
 
 import com.example.network.tvmaze.TvMazeRemoteDataSource
 import com.example.network.tvmaze.retrofit.TvMazeRetrofitImpl

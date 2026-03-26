@@ -1,4 +1,4 @@
-package com.example.movieguide
+package com.example.bingewatcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

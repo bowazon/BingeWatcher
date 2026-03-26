@@ -1,4 +1,4 @@
-package com.example.movieguide
+package com.example.bingewatcher
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.designsystem.ShowCard
-import com.example.movieguide.ui.theme.MovieGuideTheme
+import com.example.bingewatcher.ui.theme.BingeWatcherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            MovieGuideTheme {
+            BingeWatcherTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         modifier = Modifier.padding(innerPadding),

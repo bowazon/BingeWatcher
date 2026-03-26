@@ -1,4 +1,4 @@
-package com.example.movieguide.ui.theme
+package com.example.bingewatcher.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

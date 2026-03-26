@@ -1,4 +1,4 @@
-package com.example.movieguide
+package com.example.bingewatcher
 
 import org.junit.Test
 

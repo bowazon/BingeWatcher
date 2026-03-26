@@ -22,7 +22,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MovieGuide"
+rootProject.name = "BingeWatcher"
 include(":app")
 include(":designsystem")
 include(":network")
