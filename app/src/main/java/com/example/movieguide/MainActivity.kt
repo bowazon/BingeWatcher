@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.designsystem.ShowCard
 import com.example.movieguide.ui.theme.MovieGuideTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,7 +52,12 @@ fun Greeting(
             modifier = Modifier.padding(padding)
         ) {
             items(shows) { show ->
-                Text(text = show.name)
+                ShowCard(
+                    name = show.name,
+                    pictureUrl = show.image.medium,
+                    date = show.premiered.substringBefore("-"),
+                    genre = show.genres.joinToString(separator = "/"),
+                )
             }
         }
     }

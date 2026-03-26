@@ -60,7 +60,11 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(project(":network"))
+    implementation(project(":designsystem"))
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)
+
+    implementation(libs.coil.core)
+    implementation(libs.coil.compose)
 }
