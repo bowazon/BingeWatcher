@@ -1,0 +1,25 @@
+package com.example.features.discover.impl
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.network.tvmaze.TvMazeRemoteDataSource
+import com.example.network.tvmaze.models.TvMazeShow
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class DiscoverViewModel @Inject constructor(
+    val api: TvMazeRemoteDataSource
+) : ViewModel() {
+    private val _searchState = MutableStateFlow<List<TvMazeShow>>(emptyList())
+    val searchState = _searchState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _searchState.emit(api.search("girls").map { it.show })
+        }
+    }
+}

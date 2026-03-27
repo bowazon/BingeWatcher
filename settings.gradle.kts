@@ -24,5 +24,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "BingeWatcher"
 include(":app")
-include(":designsystem")
-include(":network")
+include(":core:designsystem")
+include(":core:network")
+include(":core:navigation")
+include(":features:discover:api")
+include(":features:discover:impl")
+include(":features:search:api")
+include(":features:search:impl")
