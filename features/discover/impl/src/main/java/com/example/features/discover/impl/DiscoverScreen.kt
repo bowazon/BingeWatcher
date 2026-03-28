@@ -13,7 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.designsystem.BingeWatcherBottomNavigation
 import com.example.designsystem.ShowCard
 import com.example.designsystem.theme.BingeWatcherTheme
-import com.example.network.tvmaze.models.TvMazeShow
+import com.example.entities.ShowDetailed
 
 @Composable
 fun DiscoverScreen(
@@ -30,7 +30,7 @@ fun DiscoverScreen(
 @Composable
 fun Greeting(
     modifier: Modifier = Modifier,
-    shows: List<TvMazeShow>
+    shows: List<ShowDetailed>
 ) {
     Scaffold { padding ->
         LazyColumn(
@@ -38,10 +38,10 @@ fun Greeting(
         ) {
             items(shows) { show ->
                 ShowCard(
-                    name = show.name,
-                    pictureUrl = show.image.medium,
-                    date = show.premiered.substringBefore("-"),
-                    genre = show.genres.joinToString(separator = "/"),
+                    name = show.summary.name,
+                    pictureUrl = show.summary.image,
+                    date = show.summary.premiered,
+                    genre = show.summary.genres,
                 )
             }
         }

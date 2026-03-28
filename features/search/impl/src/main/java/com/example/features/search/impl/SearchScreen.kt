@@ -50,10 +50,10 @@ fun SearchScreen(
             ) {
                 items(shows) { show ->
                     ShowCard(
-                        name = show.name,
-                        pictureUrl = show.image.medium,
-                        date = show.premiered.substringBefore("-"),
-                        genre = show.genres.joinToString(separator = "/"),
+                        name = show.summary.name,
+                        pictureUrl = show.summary.image,
+                        date = show.summary.premiered,
+                        genre = show.summary.genres,
                     )
                 }
             }

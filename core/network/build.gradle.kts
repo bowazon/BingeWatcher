@@ -21,4 +21,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.retrofit.converter.kotlinx.serialization)
+
+    implementation(project(":core:entities"))
 }

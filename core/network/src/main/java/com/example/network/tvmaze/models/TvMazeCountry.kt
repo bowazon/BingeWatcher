@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeCountry(
-    val name: String,
-    val code: String,
-    val timezone: String,
+    val name: String?,
+    val code: String?,
+    val timezone: String?,
 )
