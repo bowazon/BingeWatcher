@@ -36,6 +36,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,7 +59,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlin.math.tan
 
-@Preview
 @Composable
 fun BingeWatcherShowDetailedCard(
     modifier: Modifier = Modifier,
@@ -68,45 +68,12 @@ fun BingeWatcherShowDetailedCard(
     premiered: String,
     imdb: String,
     ended: String,
-    largeImage: String,
+    //largeImage: String,
     officialSite: String,
-    description: String
+    description: String,
+    bgColor: Color,
+    painter: Painter?
 ) {
-    val context = LocalContext.current
-
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var bgColor by remember { mutableStateOf(Color.Black) }
-    var isError by remember { mutableStateOf(false) }
-
-    LaunchedEffect(largeImage) {
-        try {
-            val loader = ImageLoader(context)
-
-            val request = ImageRequest.Builder(context)
-                .data(largeImage)
-                .allowHardware(false)
-                .build()
-
-            val result = loader.execute(request)
-            val drawable = result.drawable
-
-            if (drawable is BitmapDrawable) {
-                val bmp = drawable.bitmap
-                bitmap = bmp
-
-                val palette = Palette.from(bmp).generate()
-                bgColor = Color(
-                    palette.darkMutedSwatch?.rgb
-                        ?: palette.dominantSwatch?.rgb
-                        ?: Color.Black.toArgb()
-                )
-            } else {
-                isError = true
-            }
-        } catch (e: Exception) {
-            isError = true
-        }
-    }
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -115,30 +82,15 @@ fun BingeWatcherShowDetailedCard(
         Box(modifier = Modifier.fillMaxSize()) {
 
             // Show picture
-            when {
-                bitmap != null && !isError -> {
-                    Image(
-                        bitmap = bitmap!!.asImageBitmap(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop, // TODO FillHeight or crop? With crop it might look better
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(600.dp)
-                            .align(Alignment.TopCenter)
-                    )
-                }
-
-                isError -> {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(400.dp)
-                            .align(Alignment.TopCenter)
-                    )
-                }
-            }
+            Image(
+                painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                contentScale = ContentScale.Crop, // TODO FillHeight or crop? With crop it might look better
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(600.dp)
+                    .align(Alignment.TopCenter)
+            )
 
             // Bottom gradient
             Box(
@@ -294,8 +246,11 @@ fun PreviewBingeWatcherCard() {
         rating = "9.5",
         genres = "Drama, Crime",
         premiered = "2008",
+        officialSite = "",
+        ended = "",
+        imdb = "",
         description = "A high school chemistry teacher turned meth producer...",
-        image = painterResource(R.drawable.ic_launcher_foreground),
+        painter = painterResource(R.drawable.ic_launcher_foreground),
         bgColor = Color.DarkGray
     )
 }

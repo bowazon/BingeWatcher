@@ -60,6 +60,7 @@ dependencies {
     // TODO remove???
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
+    // TODO remove coil?
     implementation(libs.coil.core)
     implementation(libs.coil.compose)
 

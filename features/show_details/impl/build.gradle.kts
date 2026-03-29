@@ -66,4 +66,7 @@ dependencies {
 
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.palette)
+
+    implementation(libs.coil.core)
+    implementation(libs.coil.compose)
 }
