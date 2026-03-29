@@ -1,5 +1,8 @@
 package com.example.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ShowSummary(
     val name: String,
     val premiered: String,

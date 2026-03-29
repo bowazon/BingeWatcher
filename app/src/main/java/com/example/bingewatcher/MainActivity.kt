@@ -27,6 +27,7 @@ import com.example.features.discover.api.DiscoverNavKey
 import com.example.features.discover.impl.discoverEntry
 import com.example.features.search.api.SearchNavKey
 import com.example.features.search.impl.searchEntry
+import com.example.features.show_details.impl.showDetailsEntry
 import com.example.navigation.Navigator
 import com.example.navigation.toEntries
 
@@ -55,6 +56,7 @@ class MainActivity : ComponentActivity() {
                     val entryProvider = entryProvider {
                         discoverEntry(navigator)
                         searchEntry(navigator)
+                        showDetailsEntry(navigator)
                     }
                     NavDisplay(
                         entries = navigator.toEntries(entryProvider),

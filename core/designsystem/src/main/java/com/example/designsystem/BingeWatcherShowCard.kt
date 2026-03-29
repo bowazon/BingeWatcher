@@ -25,10 +25,11 @@ fun ShowCard(
     name: String,
     pictureUrl: String,
     date: String,
-    genre: String
+    genre: String,
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
+    // TODO do we need to load picture here, or pass bitmap
     val imageLoader = rememberAsyncImagePainter(
         model = pictureUrl,
         onState = { state ->
@@ -47,6 +48,7 @@ fun ShowCard(
             painter = if (isError.not()) {
                 imageLoader
             } else {
+                // TODO image for error
                 painterResource(R.drawable.ic_launcher_foreground)
             },
             contentDescription = null

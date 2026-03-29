@@ -1,4 +1,4 @@
-package com.example.ui
+package com.example.features.show_details.impl
 
 import org.junit.Test
 

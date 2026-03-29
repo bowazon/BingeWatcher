@@ -1,9 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
-    namespace = "com.example.ui"
+    namespace = "com.example.features.show_details.api"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -39,4 +40,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
+    implementation(project(":core:navigation"))
+    implementation(project(":core:entities"))
 }

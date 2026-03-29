@@ -1,0 +1,17 @@
+package com.example.features.show_details.api
+
+import androidx.navigation3.runtime.NavKey
+import com.example.entities.ShowDetailed
+import com.example.navigation.Navigator
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ShowDetailsNavKey(
+    val showDetailed: ShowDetailed
+) : NavKey
+
+fun Navigator.navigateToShowDetails(
+    showDetailed: ShowDetailed,
+) {
+    navigate(ShowDetailsNavKey(showDetailed))
+}

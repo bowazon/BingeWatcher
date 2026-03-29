@@ -16,6 +16,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,11 +34,13 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.designsystem.ShowCard
+import com.example.entities.ShowDetailed
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    onDetailsClicked: (ShowDetailed) -> Unit
 ) {
     val shows by viewModel.searchState.collectAsState()
 
@@ -49,17 +52,31 @@ fun SearchScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 items(shows) { show ->
-                    ShowCard(
-                        name = show.summary.name,
-                        pictureUrl = show.summary.image,
-                        date = show.summary.premiered,
-                        genre = show.summary.genres,
+                    ShowCardClickable(
+                        show = show,
+                        onDetailsClicked = onDetailsClicked,
                     )
                 }
             }
         }
     }
+}
 
+@Composable
+fun ShowCardClickable(
+    onDetailsClicked: (ShowDetailed) -> Unit,
+    show: ShowDetailed
+) {
+    Surface(
+        onClick = { onDetailsClicked(show) }
+    ) { //onDetailsClicked(show)
+        ShowCard(
+            name = show.summary.name,
+            pictureUrl = show.summary.image,
+            date = show.summary.premiered,
+            genre = show.summary.genres,
+        )
+    }
 }
 
 @Composable

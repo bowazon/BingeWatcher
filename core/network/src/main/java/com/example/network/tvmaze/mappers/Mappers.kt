@@ -22,6 +22,7 @@ fun TvMazeShow.toShowDetailed(): ShowDetailed {
         ended = ended?.substringBefore("-") ?: "", // empty if still active
         officialSite = officialSite ?: "",
         imdb = externals?.imdb ?: "",
-        largeImage = image?.original ?: ""
+        largeImage = image?.original ?: "",
+        description = summary ?: ""
     )
 }
