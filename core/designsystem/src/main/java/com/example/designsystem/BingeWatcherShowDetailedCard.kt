@@ -19,9 +19,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -88,22 +90,27 @@ fun BingeWatcherShowDetailedCard(
                 contentScale = ContentScale.Crop, // TODO FillHeight or crop? With crop it might look better
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(600.dp)
+                    .height(600.dp) // TODO 600 dp works but must think about original height
                     .align(Alignment.TopCenter)
             )
 
             // Bottom gradient
             Box(
-                modifier = Modifier
-                    .matchParentSize()
+                Modifier
+                    .fillMaxSize()
                     .drawWithCache {
-                        val gradient = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                bgColor//Color.Black
-                            ),
-                            startY = size.height * 0.3f,
-                            endY = size.height
+                        val offset = size.height * tan(
+                            Math.toRadians(11.06).toFloat()
+                        )
+
+                        val start = Offset(size.width / 2 + offset / 2, 0f)
+                        val end = Offset(size.width / 2 - offset / 2, size.height)
+
+                        val gradient = Brush.linearGradient(
+                            0.3f to Color.Transparent,
+                            0.95f to bgColor,
+                            start = start,
+                            end = end
                         )
 
                         onDrawWithContent {
@@ -241,16 +248,44 @@ fun Spanned.toAnnotatedString(): AnnotatedString {
 @Preview(showBackground = true)
 @Composable
 fun PreviewBingeWatcherCard() {
-    BingeWatcherShowDetailedCard(
-        name = "Breaking Bad",
-        rating = "9.5",
-        genres = "Drama, Crime",
-        premiered = "2008",
-        officialSite = "",
-        ended = "",
-        imdb = "",
-        description = "A high school chemistry teacher turned meth producer...",
-        painter = painterResource(R.drawable.ic_launcher_foreground),
-        bgColor = Color.DarkGray
-    )
+    NavigationSuiteScaffold(
+        navigationSuiteItems = {
+            item(
+                selected = true,
+                onClick =  {  } ,
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_launcher_foreground),
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("Discover") }
+            )
+            item(
+                selected = true,
+                onClick =  {  } ,
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_launcher_foreground),
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("Search") }
+            )
+        }
+    ) {
+        BingeWatcherShowDetailedCard(
+            name = "Breaking Bad",
+            rating = "9.5",
+            genres = "Drama, Crime",
+            premiered = "2008",
+            officialSite = "",
+            ended = "",
+            imdb = "",
+            description = "A high school chemistry teacher turned meth producer...",
+            painter = painterResource(R.drawable.girls),
+            bgColor = Color.Black
+        )
+    }
+
 }
