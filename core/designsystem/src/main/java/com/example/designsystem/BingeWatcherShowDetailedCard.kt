@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.text.Spanned
 import android.text.style.StyleSpan
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,12 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -42,6 +48,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -52,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCoerceAtLeast
 import androidx.core.text.HtmlCompat
 import androidx.palette.graphics.Palette
 import coil.ImageLoader
@@ -60,6 +68,9 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlin.math.tan
+
+const val SHOW_IMAGE_HEIGHT = 600
+const val SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL = 200
 
 @Composable
 fun BingeWatcherShowDetailedCard(
@@ -70,60 +81,69 @@ fun BingeWatcherShowDetailedCard(
     premiered: String,
     imdb: String,
     ended: String,
-    //largeImage: String,
     officialSite: String,
     description: String,
     bgColor: Color,
     painter: Painter?
 ) {
+    val scrollState = rememberScrollState() // in pixels!
+
+    val maxPx = with(LocalDensity.current) {
+        SHOW_IMAGE_HEIGHT.dp.toPx() }
+    val minPx = with(LocalDensity.current) {
+        SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL.dp.toPx() }
+
+    val heightPx = (maxPx - scrollState.value).coerceAtLeast(minPx)
+
+    val currentImageHeight = with(LocalDensity.current) { heightPx.toDp() }
 
     Surface(
         modifier = modifier.fillMaxSize(),
         color = bgColor
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()
+                .height(currentImageHeight)) {
 
-            // Show picture
-            Image(
-                painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                contentScale = ContentScale.Crop, // TODO FillHeight or crop? With crop it might look better
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(600.dp) // TODO 600 dp works but must think about original height
-                    .align(Alignment.TopCenter)
-            )
+                // Show picture
+                Image(
+                    painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillHeight, // TODO FillHeight or crop? With crop it might look better
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(currentImageHeight) // TODO 600 dp works but must think about original height
+                        .align(Alignment.TopCenter)
+                )
 
-            // Bottom gradient
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .drawWithCache {
-                        val offset = size.height * tan(
-                            Math.toRadians(11.06).toFloat()
-                        )
+                // Bottom gradient
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .drawWithCache {
+                            val gradient = Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, bgColor),
+                                startY = size.height * 0.95f,
+                                endY = size.height
+                            )
 
-                        val start = Offset(size.width / 2 + offset / 2, 0f)
-                        val end = Offset(size.width / 2 - offset / 2, size.height)
-
-                        val gradient = Brush.linearGradient(
-                            0.3f to Color.Transparent,
-                            0.95f to bgColor,
-                            start = start,
-                            end = end
-                        )
-
-                        onDrawWithContent {
-                            drawContent()
-                            drawRect(gradient)
+                            onDrawWithContent {
+                                drawContent()
+                                drawRect(gradient)
+                            }
                         }
-                    }
-            )
+                )
+
+            }
+
+
 
             // Description
             Column(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
+                    //.align(Alignment.BottomStart)
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
@@ -188,13 +208,38 @@ fun BingeWatcherShowDetailedCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Description
-                HtmlText(
-                    html = description,
-                    color = Color.White.copy(alpha = 0.9f),
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
+                val isScrolled by remember {
+                    derivedStateOf { scrollState.value > 0 }
+                }
+
+                    Column (modifier = Modifier.alpha(if (isScrolled) 1f else 0f)) {
+                        HtmlText(
+                            html = description,
+                            color = Color.White.copy(alpha = 0.9f),
+                            style = MaterialTheme.typography.bodySmall,
+                            maxLines = 4,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        // imdb
+                        Button(onClick = {}) {
+                            Text("IMDB")
+                        }
+
+                        // official site
+                        Button(onClick = {}) {
+                            Text("Official site")
+                        }
+
+                        // follow
+                        Button(onClick = {}) {
+                            Text("Official site")
+                        }
+
+
+                        // block with seasons, cast
+                    }
+
             }
         }
     }
@@ -245,7 +290,7 @@ fun Spanned.toAnnotatedString(): AnnotatedString {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun PreviewBingeWatcherCard() {
     NavigationSuiteScaffold(
