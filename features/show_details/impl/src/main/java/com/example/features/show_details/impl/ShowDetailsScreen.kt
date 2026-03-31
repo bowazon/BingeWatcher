@@ -2,9 +2,12 @@ package com.example.features.show_details.impl
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,11 +34,24 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.materialPath
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import com.example.designsystem.utils.getReadableTextColor
+
 @Composable
 fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: ShowDetailsViewModel = hiltViewModel(),
-    showDetailed: ShowDetailed
+    showDetailed: ShowDetailed,
+    onBackClicked: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -77,9 +93,9 @@ fun ShowDetailsScreen(
         }
     }
 
-
-
-    Scaffold { padding ->
+    // TODO do we need scaffold?
+    //Scaffold { padding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         BingeWatcherShowDetailedCard(
             name = showDetailed.summary.name,
             rating = showDetailed.summary.rating,
@@ -93,5 +109,18 @@ fun ShowDetailsScreen(
             backgroundColor = backgroundColor,
             painter = painter
         )
+
+        IconButton(
+            onClick = { onBackClicked() },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = null,
+                tint = getReadableTextColor(backgroundColor)
+            )
+        }
     }
 }

@@ -21,7 +21,7 @@ data class TvMazeShow(
     val weight: Long?,
     val network: TvMazeNetwork?,
     val webChannel: TvMazeWebChannel?,
-    val dvdCountry: String?,
+    val dvdCountry: TvMazeCountry?,
     val externals: TvMazeExternals?,
     // TODO can be null
     val image: TvMazeImage?,

@@ -72,7 +72,7 @@ import coil.request.ImageRequest
 import kotlin.math.tan
 
 const val SHOW_IMAGE_HEIGHT = 600
-const val SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL = 200
+
 @Composable
 fun BingeWatcherShowDetailedCard(
     modifier: Modifier = Modifier,
@@ -88,7 +88,6 @@ fun BingeWatcherShowDetailedCard(
     painter: Painter?
 ) {
     val maxHeight = SHOW_IMAGE_HEIGHT.dp
-    val minHeight = SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL.dp
 
     val lazyListState = rememberLazyListState()
 
@@ -115,7 +114,7 @@ fun BingeWatcherShowDetailedCard(
                     Image(
                         painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
                         contentDescription = null,
-                        contentScale = ContentScale.FillHeight,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -181,38 +180,40 @@ fun BingeWatcherShowDetailedCard(
             }
         }
 
-        item {Surface(color = backgroundColor) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = genres,
-                    color = Color.White.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Surface(color = backgroundColor,
+                modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = genres,
+                        color = Color.White.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                HtmlText(
-                    html = description,
-                    color = Color.White.copy(alpha = 0.9f),
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 6,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    HtmlText(
+                        html = description,
+                        color = Color.White.copy(alpha = 0.9f),
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 6,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Column { //(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = {}) { Text("IMDB") }
-                    Button(onClick = {}) { Text("Official site") }
-                    Button(onClick = {}) { Text("Follow") }
+                    Column { //(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(onClick = {}) { Text("IMDB") }
+                        Button(onClick = {}) { Text("Official site") }
+                        Button(onClick = {}) { Text("Follow") }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // others: cast, seasons, etc
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // others: cast, seasons, etc
             }
-        }
         }
     }
 }

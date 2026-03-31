@@ -9,7 +9,8 @@ import java.util.Map.entry
 fun EntryProviderScope<NavKey>.showDetailsEntry(navigator: Navigator) {
     entry<ShowDetailsNavKey> { it ->
         ShowDetailsScreen(
-            showDetailed = it.showDetailed
+            showDetailed = it.showDetailed,
+            onBackClicked = navigator::goBack
         )
     }
 }
