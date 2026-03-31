@@ -53,7 +53,7 @@ fun SearchScreen(
             ) {
                 items(shows) { show ->
                     ShowCardClickable(
-                        show = show,
+                        showDetailed = show,
                         onDetailsClicked = onDetailsClicked,
                     )
                 }
@@ -65,16 +65,16 @@ fun SearchScreen(
 @Composable
 fun ShowCardClickable(
     onDetailsClicked: (ShowDetailed) -> Unit,
-    show: ShowDetailed
+    showDetailed: ShowDetailed
 ) {
     Surface(
-        onClick = { onDetailsClicked(show) }
+        onClick = { onDetailsClicked(showDetailed) }
     ) { //onDetailsClicked(show)
         ShowCard(
-            name = show.summary.name,
-            pictureUrl = show.summary.image,
-            date = show.summary.premiered,
-            genre = show.summary.genres,
+            name = showDetailed.summary.name,
+            pictureUrl = showDetailed.summary.image,
+            date = showDetailed.summary.premiered,
+            genre = showDetailed.summary.genres,
         )
     }
 }

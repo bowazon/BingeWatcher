@@ -18,6 +18,7 @@ fun TvMazeShow.toShowSummary(): ShowSummary {
 
 fun TvMazeShow.toShowDetailed(): ShowDetailed {
     return ShowDetailed(
+        id = id.toString(),
         summary = toShowSummary(),
         ended = ended?.substringBefore("-") ?: "", // empty if still active
         officialSite = officialSite ?: "",

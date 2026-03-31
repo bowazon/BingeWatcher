@@ -60,6 +60,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCoerceAtLeast
 import androidx.core.text.HtmlCompat
@@ -69,240 +70,130 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.designsystem.utils.HtmlText
 import kotlin.math.tan
 
-const val SHOW_IMAGE_HEIGHT = 600
+
+
 
 @Composable
-fun BingeWatcherShowDetailedCard(
+fun BingeWatcherShowRestDescription(
     modifier: Modifier = Modifier,
-    name: String,
-    rating: String,
+    backgroundColor: Color,
     genres: String,
-    premiered: String,
-    imdb: String,
-    ended: String,
-    officialSite: String,
     description: String,
+
+    ) {
+    Surface(color = backgroundColor,
+        modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = genres,
+                color = Color.White.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            HtmlText(
+                html = description,
+                color = Color.White.copy(alpha = 0.9f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 6,
+                overflow = TextOverflow.Ellipsis
+            )
+
+        }
+    }
+}
+
+@Composable
+fun BingeWatcherShowShortDescription(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color,
+    name: String,
+    premiered: String,
+    rating: String
+) {
+    Surface(color = backgroundColor) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = premiered,
+                    color = Color.White.copy(alpha = 0.8f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            if (rating.isNotEmpty()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = rating,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.star),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BingeWatcherShowImageWithGradient(
+    modifier: Modifier = Modifier,
+    imageHeight: Dp,
     backgroundColor: Color,
     painter: Painter?
 ) {
-    val maxHeight = SHOW_IMAGE_HEIGHT.dp
-
-    val lazyListState = rememberLazyListState()
-
-    val scrollOffset = remember {
-        derivedStateOf {
-            lazyListState.firstVisibleItemScrollOffset.coerceAtMost(SHOW_IMAGE_HEIGHT)
-        }
-    }
-
-    val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
-
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        state = lazyListState
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(imageHeight)
     ) {
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imageHeight)
-            ) {
-                Surface(
-                    color = backgroundColor) {
-                    Image(
-                        painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .drawWithCache {
-                            val gradient = Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, backgroundColor),
-                                startY = size.height * 0.95f,
-                                endY = size.height
-                            )
-                            onDrawWithContent {
-                                drawContent()
-                                drawRect(gradient)
-                            }
-                        }
-                )
-            }
-        }
-
-        stickyHeader {
-            Surface(color = backgroundColor) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = name,
-                            color = Color.White,
-                            style = MaterialTheme.typography.headlineSmall,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = premiered,
-                            color = Color.White.copy(alpha = 0.8f),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    if (rating.isNotEmpty()) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = rating,
-                                color = Color.White,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Image(
-                                painter = painterResource(R.drawable.star),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        item {
-            Surface(color = backgroundColor,
-                modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = genres,
-                        color = Color.White.copy(alpha = 0.7f),
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    HtmlText(
-                        html = description,
-                        color = Color.White.copy(alpha = 0.9f),
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 6,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Column { //(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = {}) { Text("IMDB") }
-                        Button(onClick = {}) { Text("Official site") }
-                        Button(onClick = {}) { Text("Follow") }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // others: cast, seasons, etc
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun HtmlText(
-    html: String,
-    color: Color,
-    style: TextStyle,
-    maxLines: Int,
-    overflow: TextOverflow
-) {
-    val spanned = remember(html) {
-        HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
-    }
-
-    Text(
-        text = spanned.toAnnotatedString(),
-        color = color,
-        style = style,
-        maxLines = maxLines,
-        overflow = overflow
-    )
-}
-
-fun Spanned.toAnnotatedString(): AnnotatedString {
-    return buildAnnotatedString {
-        append(this@toAnnotatedString.toString())
-
-        getSpans(0, length, StyleSpan::class.java).forEach { span ->
-            val start = getSpanStart(span)
-            val end = getSpanEnd(span)
-
-            when (span.style) {
-                Typeface.BOLD -> addStyle(
-                    SpanStyle(fontWeight = FontWeight.Bold),
-                    start,
-                    end
-                )
-                Typeface.ITALIC -> addStyle(
-                    SpanStyle(fontStyle = FontStyle.Italic),
-                    start,
-                    end
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = false)
-@Composable
-fun PreviewBingeWatcherCard() {
-    NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            item(
-                selected = true,
-                onClick =  {  } ,
-                icon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                    )
-                },
-                label = { Text("Discover") }
-            )
-            item(
-                selected = true,
-                onClick =  {  } ,
-                icon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                    )
-                },
-                label = { Text("Search") }
+        Surface(color = backgroundColor) {
+            Image(
+                painter = painter ?: painterResource(com.example.designsystem.R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
-    ) {
-        BingeWatcherShowDetailedCard(
-            name = "Breaking Bad",
-            rating = "9.5",
-            genres = "Drama, Crime",
-            premiered = "2008",
-            officialSite = "",
-            ended = "",
-            imdb = "",
-            description = "A high school chemistry teacher turned meth producer...",
-            painter = painterResource(R.drawable.girls),
-            backgroundColor = Color.Black
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .drawWithCache {
+                    val gradient = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, backgroundColor),
+                        startY = size.height * 0.95f,
+                        endY = size.height
+                    )
+                    onDrawWithContent {
+                        drawContent()
+                        drawRect(gradient)
+                    }
+                }
         )
     }
 }
+
