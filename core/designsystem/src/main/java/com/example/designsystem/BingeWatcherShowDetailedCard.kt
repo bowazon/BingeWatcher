@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -71,7 +73,6 @@ import kotlin.math.tan
 
 const val SHOW_IMAGE_HEIGHT = 600
 const val SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL = 200
-
 @Composable
 fun BingeWatcherShowDetailedCard(
     modifier: Modifier = Modifier,
@@ -83,89 +84,77 @@ fun BingeWatcherShowDetailedCard(
     ended: String,
     officialSite: String,
     description: String,
-    bgColor: Color,
+    backgroundColor: Color,
     painter: Painter?
 ) {
-    val scrollState = rememberScrollState() // in pixels!
+    val maxHeight = SHOW_IMAGE_HEIGHT.dp
+    val minHeight = SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL.dp
 
-    val maxPx = with(LocalDensity.current) {
-        SHOW_IMAGE_HEIGHT.dp.toPx() }
-    val minPx = with(LocalDensity.current) {
-        SHOW_IMAGE_HEIGHT_DIMINISHED_ON_SCROLL.dp.toPx() }
+    val lazyListState = rememberLazyListState()
 
-    val heightPx = (maxPx - scrollState.value).coerceAtLeast(minPx)
+    val scrollOffset = remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemScrollOffset.coerceAtMost(SHOW_IMAGE_HEIGHT)
+        }
+    }
 
-    val currentImageHeight = with(LocalDensity.current) { heightPx.toDp() }
+    val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
 
-    Surface(
+    LazyColumn(
         modifier = modifier.fillMaxSize(),
-        color = bgColor
+        state = lazyListState
     ) {
-        Column(
-            modifier = Modifier.verticalScroll(scrollState)
-        ) {
-            Box(modifier = Modifier.fillMaxWidth()
-                .height(currentImageHeight)) {
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(imageHeight)
+            ) {
+                Surface(
+                    color = backgroundColor) {
+                    Image(
+                        painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillHeight,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
 
-                // Show picture
-                Image(
-                    painter = painter ?: painterResource(R.drawable.ic_launcher_foreground),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillHeight, // TODO FillHeight or crop? With crop it might look better
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(currentImageHeight) // TODO 600 dp works but must think about original height
-                        .align(Alignment.TopCenter)
-                )
-
-                // Bottom gradient
                 Box(
-                    Modifier
+                    modifier = Modifier
                         .matchParentSize()
                         .drawWithCache {
                             val gradient = Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, bgColor),
+                                colors = listOf(Color.Transparent, backgroundColor),
                                 startY = size.height * 0.95f,
                                 endY = size.height
                             )
-
                             onDrawWithContent {
                                 drawContent()
                                 drawRect(gradient)
                             }
                         }
                 )
-
             }
+        }
 
-
-
-            // Description
-            Column(
-                modifier = Modifier
-                    //.align(Alignment.BottomStart)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-
-                // Name and rating
+        stickyHeader {
+            Surface(color = backgroundColor) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = name,
                             color = Color.White,
-                            style = MaterialTheme.typography.headlineLarge,
-                            maxLines = 2,
+                            style = MaterialTheme.typography.headlineSmall,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-
                         Text(
                             text = premiered,
                             color = Color.White.copy(alpha = 0.8f),
@@ -173,18 +162,14 @@ fun BingeWatcherShowDetailedCard(
                         )
                     }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (rating != "") {
+                    if (rating.isNotEmpty()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = rating,
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleMedium
                             )
-
                             Spacer(modifier = Modifier.width(4.dp))
-
                             Image(
                                 painter = painterResource(R.drawable.star),
                                 contentDescription = null,
@@ -193,10 +178,11 @@ fun BingeWatcherShowDetailedCard(
                         }
                     }
                 }
+            }
+        }
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Genres
+        item {Surface(color = backgroundColor) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = genres,
                     color = Color.White.copy(alpha = 0.7f),
@@ -204,43 +190,29 @@ fun BingeWatcherShowDetailedCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Description
-                val isScrolled by remember {
-                    derivedStateOf { scrollState.value > 0 }
+                HtmlText(
+                    html = description,
+                    color = Color.White.copy(alpha = 0.9f),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 6,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Column { //(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = {}) { Text("IMDB") }
+                    Button(onClick = {}) { Text("Official site") }
+                    Button(onClick = {}) { Text("Follow") }
                 }
 
-                    Column (modifier = Modifier.alpha(if (isScrolled) 1f else 0f)) {
-                        HtmlText(
-                            html = description,
-                            color = Color.White.copy(alpha = 0.9f),
-                            style = MaterialTheme.typography.bodySmall,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                Spacer(modifier = Modifier.height(24.dp))
 
-                        // imdb
-                        Button(onClick = {}) {
-                            Text("IMDB")
-                        }
-
-                        // official site
-                        Button(onClick = {}) {
-                            Text("Official site")
-                        }
-
-                        // follow
-                        Button(onClick = {}) {
-                            Text("Official site")
-                        }
-
-
-                        // block with seasons, cast
-                    }
-
+                // others: cast, seasons, etc
             }
+        }
         }
     }
 }
@@ -329,8 +301,7 @@ fun PreviewBingeWatcherCard() {
             imdb = "",
             description = "A high school chemistry teacher turned meth producer...",
             painter = painterResource(R.drawable.girls),
-            bgColor = Color.Black
+            backgroundColor = Color.Black
         )
     }
-
 }

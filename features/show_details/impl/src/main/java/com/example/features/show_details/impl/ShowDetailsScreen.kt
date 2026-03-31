@@ -40,7 +40,7 @@ fun ShowDetailsScreen(
     val context = LocalContext.current
 
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var bgColor by remember { mutableStateOf(Color.Black) }
+    var backgroundColor by remember { mutableStateOf(Color.Black) }
     var isError by remember { mutableStateOf(false) }
     var painter by remember { mutableStateOf<Painter?>(null) }
 
@@ -62,7 +62,7 @@ fun ShowDetailsScreen(
                 painter = BitmapPainter(bitmap!!.asImageBitmap())
 
                 val palette = Palette.from(bmp).generate()
-                bgColor = Color(
+                backgroundColor = Color(
                     palette.darkMutedSwatch?.rgb
                         ?: palette.dominantSwatch?.rgb
                         ?: Color.Black.toArgb()
@@ -90,7 +90,7 @@ fun ShowDetailsScreen(
             //largeImage = showDetailed.largeImage,
             officialSite = showDetailed.officialSite,
             description = showDetailed.description,
-            bgColor = bgColor,
+            backgroundColor = backgroundColor,
             painter = painter
         )
     }
