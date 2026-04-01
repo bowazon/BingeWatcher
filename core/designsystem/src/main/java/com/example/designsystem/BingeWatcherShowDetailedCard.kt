@@ -167,7 +167,7 @@ fun BingeWatcherShowImageWithGradient(
     imagePainter: Painter?
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(imageHeight)
     ) {

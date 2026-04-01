@@ -66,6 +66,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -123,6 +124,10 @@ fun ShowDetailsScreen(
         scrollOffset.value.toDp()
     }).coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST.dp)
 
+    val alpha = 1f - (scrollOffset.value / SHOW_IMAGE_HEIGHT.toFloat())
+
+    val imageAlpha = alpha.coerceIn(0.7f, 1f)
+
     // TODO do we need scaffold?
     //Scaffold { padding ->
     Box(modifier = Modifier.fillMaxSize()) {
@@ -135,6 +140,9 @@ fun ShowDetailsScreen(
         ) {
             item {
                 BingeWatcherShowImageWithGradient(
+                    modifier = Modifier.graphicsLayer {
+                        this.alpha = imageAlpha
+                    },
                     imageHeight = imageHeight,
                     backgroundColor = backgroundColor,
                     imagePainter = painterLargeImage)
