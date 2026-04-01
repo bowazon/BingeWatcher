@@ -27,7 +27,7 @@ interface TvMazeRemoteDataSource {
     suspend fun episodeList(showId: Int): List<TvMazeEpisode>
     suspend fun episodeByNumber(showId: Int, s: String, e: String): TvMazeEpisode
     suspend fun episodeByDate(showId: Int, date: String): TvMazeEpisode
-    suspend fun seasons(showId: Int): TvMazeSeason
+    suspend fun seasons(showId: Int): List<TvMazeSeason>
     suspend fun cast(showId: Int): List<TvMazeActor>
     suspend fun crew(showId: Int): List<TvMazeCrewMember>
     suspend fun images(showId: Int): List<TvMazeShowImage>

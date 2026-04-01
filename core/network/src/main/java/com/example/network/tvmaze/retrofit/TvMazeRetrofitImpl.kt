@@ -91,7 +91,7 @@ class TvMazeRetrofitImpl : TvMazeRemoteDataSource {
         return api.episodeByDate(showId, date)
     }
 
-    override suspend fun seasons(showId: Int): TvMazeSeason {
+    override suspend fun seasons(showId: Int): List<TvMazeSeason> {
         return api.seasons(showId)
     }
 

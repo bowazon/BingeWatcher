@@ -64,7 +64,7 @@ interface TvMazeRetrofitApi {
     ): TvMazeEpisode
 
     @GET("shows/{id}/seasons")
-    suspend fun seasons(@Path("id") showId: Int): TvMazeSeason
+    suspend fun seasons(@Path("id") showId: Int): List<TvMazeSeason>
 
     @GET("shows/{id}/cast")
     suspend fun cast(@Path("id") showId: Int): List<TvMazeActor>

@@ -13,7 +13,7 @@ data class TvMazeSeason(
     val endDate: String,
     val network: TvMazeNetwork,
     val webChannel: String?,
-    val image: TvMazeImage,
+    val image: TvMazeImage?,
     val summary: String,
     //@JsonProperty("_links")
     //val links: Links,

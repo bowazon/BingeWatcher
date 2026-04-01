@@ -2,6 +2,7 @@ package com.example.features.show_details.impl
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
@@ -54,6 +56,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.drawWithCache
@@ -83,6 +86,9 @@ fun ShowDetailsScreen(
     onBackClicked: () -> Unit
 ) {
     val context = LocalContext.current
+
+    // TODO remember?
+    val state by viewModel.state.collectAsState()
 
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var backgroundColor by remember { mutableStateOf(Color.Black) }
@@ -134,6 +140,30 @@ fun ShowDetailsScreen(
             painter = null
         }
     }
+
+    var actorImages by remember { mutableStateOf<MutableList<BitmapPainter>>(mutableListOf<BitmapPainter>()) }
+/*
+    state?.let {
+        LaunchedEffect(state?.cast) {
+            // TODO, should we load images here or should it do ViewModel or Repo?
+            val loader = ImageLoader(context)
+
+            for (c in state!!.cast) {
+                val request = ImageRequest.Builder(context)
+                    .data(c.image)
+                    .allowHardware(false)
+                    .build()
+
+                val result = loader.execute(request)
+                val drawable = (result.drawable as BitmapDrawable).bitmap
+
+                drawable?.let {
+                    actorImages.add(BitmapPainter(drawable.asImageBitmap()))
+                }
+            }
+        }
+    }
+*/
 
     // TODO do we need scaffold?
     //Scaffold { padding ->
@@ -202,6 +232,18 @@ fun ShowDetailsScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // others: cast, seasons, etc
+                /*
+                Column() {
+                    LazyRow() {
+                        items(actorImages.size) { // TODO !!
+                            it ->
+                            Image(
+                                painter = actorImages[it],
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }*/
             }
         }
 
