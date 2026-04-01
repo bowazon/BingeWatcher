@@ -1,8 +1,10 @@
 package com.example.features.show_details.impl
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -98,6 +100,19 @@ fun ShowDetailsScreen(
 ) {
     // TODO remember?
     val state by viewModel.state.collectAsState()
+
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is ShowDetailsEffect.OpenUrl -> {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(effect.url))
+                    context.startActivity(intent)
+                }
+            }
+        }
+    }
 
     //TODO should be really moved to themes
     var backgroundColor by remember { mutableStateOf(Color.Black) }

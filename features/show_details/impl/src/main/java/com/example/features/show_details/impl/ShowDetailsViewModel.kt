@@ -15,8 +15,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +30,9 @@ class ShowDetailsViewModel @AssistedInject constructor(
 
     private val _state = MutableStateFlow<ShowDetailsUiModel?>(null)
     val state: StateFlow<ShowDetailsUiModel?> = _state
+
+    private val _effects = MutableSharedFlow<ShowDetailsEffect>()
+    val effects = _effects.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -57,11 +62,14 @@ class ShowDetailsViewModel @AssistedInject constructor(
         when (event) {
             is ShowDetailsEvent.OnImdbClick -> {
                 // TODO should have analytics
-                Log.i("ART_DBG", "ShowDetailsEvent.OnImdbClick")
-                Log.i("ART_DBG", "showDetailed is " + showDetailed.toString())
+                viewModelScope.launch {
+                    _effects.emit(ShowDetailsEffect.OpenUrl(showDetailed.imdb))
+                }
             }
             is ShowDetailsEvent.OnOfficialSiteClick -> {
-
+                viewModelScope.launch {
+                    _effects.emit(ShowDetailsEffect.OpenUrl(showDetailed.officialSite))
+                }
             }
             is ShowDetailsEvent.OnFollowClick -> {
                 // TODO
@@ -109,4 +117,8 @@ sealed interface ShowDetailsEvent {
     data class OnSeasonClick(val s: Int) : ShowDetailsEvent
     data class OnActorClick(val id: Int) : ShowDetailsEvent
     data class OnGalleryClick(val i: Int) : ShowDetailsEvent
+}
+
+sealed interface ShowDetailsEffect {
+    data class OpenUrl(val url: String) : ShowDetailsEffect
 }

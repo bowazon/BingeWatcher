@@ -16,6 +16,8 @@ import com.example.network.tvmaze.models.TvMazeShowImage
 import kotlin.String
 import kotlin.text.substringBefore
 
+const val IMDB_ADDRESS = "https://www.imdb.com/title/"
+
 fun TvMazeShow.toShowSummary(): ShowSummary {
     return ShowSummary(
         name = name,
@@ -32,7 +34,7 @@ fun TvMazeShow.toShowDetailed(): ShowDetailed {
         summary = toShowSummary(),
         ended = ended?.substringBefore("-") ?: "", // empty if still active
         officialSite = officialSite ?: "",
-        imdb = externals?.imdb ?: "",
+        imdb = IMDB_ADDRESS + (externals?.imdb ?: ""),
         largeImage = image?.original ?: "",
         description = summary ?: ""
     )
