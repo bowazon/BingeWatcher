@@ -86,6 +86,7 @@ import com.example.designsystem.R
 import com.example.designsystem.utils.getReadableTextColor
 
 const val SHOW_IMAGE_HEIGHT = 600
+const val SHOW_IMAGE_HEIGHT_LEAST = 200
 
 @Composable
 fun ShowDetailsScreen(
@@ -106,13 +107,21 @@ fun ShowDetailsScreen(
 
     val scrollOffset = remember {
         derivedStateOf {
-            lazyListState.firstVisibleItemScrollOffset.coerceAtMost(SHOW_IMAGE_HEIGHT)
+            val index = lazyListState.firstVisibleItemIndex
+            val offset = lazyListState.firstVisibleItemScrollOffset
+
+            when {
+                index == 0 -> offset
+                else -> SHOW_IMAGE_HEIGHT // полностью схлопнули
+            }.coerceAtMost(SHOW_IMAGE_HEIGHT)
         }
     }
 
     val painterLargeImage = rememberAsyncImagePainter(model = showDetailed.largeImage)
 
-    val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
+    val imageHeight = (maxHeight - with(LocalDensity.current) {
+        scrollOffset.value.toDp()
+    }).coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST.dp)
 
     // TODO do we need scaffold?
     //Scaffold { padding ->
@@ -131,7 +140,7 @@ fun ShowDetailsScreen(
                     imagePainter = painterLargeImage)
             }
 
-            item {//stickyHeader {
+            stickyHeader {//stickyHeader {
                 BingeWatcherShowShortDescription(
                     backgroundColor = backgroundColor,
                     name = showDetailed.summary.name,
@@ -140,6 +149,7 @@ fun ShowDetailsScreen(
                 )
             }
 
+            // TODO too much elements in one item
             item {
                 BingeWatcherShowRestDescription(
                     backgroundColor = backgroundColor,
