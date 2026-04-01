@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -66,9 +68,6 @@ import androidx.compose.ui.util.fastCoerceAtLeast
 import androidx.core.text.HtmlCompat
 import androidx.palette.graphics.Palette
 import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.designsystem.utils.HtmlText
 import kotlin.math.tan
@@ -163,7 +162,7 @@ fun BingeWatcherShowImageWithGradient(
     modifier: Modifier = Modifier,
     imageHeight: Dp,
     backgroundColor: Color,
-    imageUrl: String
+    imagePainter: Painter?
 ) {
     Box(
         modifier = Modifier
@@ -171,21 +170,12 @@ fun BingeWatcherShowImageWithGradient(
             .height(imageHeight)
     ) {
         Surface(color = backgroundColor) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-            /*
             Image(
-                painter = painter ?: painterResource(com.example.designsystem.R.drawable.ic_launcher_foreground),
+                painter = imagePainter ?: painterResource(R.drawable.ic_launcher_foreground),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
-
-             */
         }
 
         Box(
@@ -206,3 +196,69 @@ fun BingeWatcherShowImageWithGradient(
     }
 }
 
+@Composable
+fun BingeWatcherSmallSeasonCard(
+    modifier: Modifier = Modifier,
+    season: Int,
+    episodesAmount: Int,
+    imagePainter: Painter?,
+    premiereDate: String,
+    defaultPicture: Painter,
+) {
+    Column {
+        Text(text = "Season $season", color = Color.White)
+        Box(
+            modifier = modifier
+                .height(150.dp)
+                .width(120.dp)
+        ) {
+            Image(
+                painter = imagePainter ?: defaultPicture!!,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            Image(
+                painter = painterResource(R.drawable.episodes_icon),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .height(50.dp)
+            )
+
+            Text(
+                text = episodesAmount.toString(),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    //.padding(8.dp)
+                    //.background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 2.dp, vertical = 1.dp),
+                color = Color.Black
+            )
+
+            Text(
+                text = premiereDate,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    //.padding(8.dp)
+                    .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun BingeWatcherSmallSeasonCardPreview() {
+    BingeWatcherSmallSeasonCard(
+        season = 1,
+        episodesAmount = 11,
+        imagePainter = painterResource(R.drawable.breaking_bad_official),
+        premiereDate = "2012",
+        defaultPicture = painterResource(R.drawable.breaking_bad_official)
+    )
+}

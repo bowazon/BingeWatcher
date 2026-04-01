@@ -45,6 +45,7 @@ fun ShowCard(
     Row(Modifier.padding(16.dp)) {
         Image(
             modifier = Modifier.size(150.dp),
+            // TODO no need for image loader, change for AsyncImage from coil
             painter = if (isError.not()) {
                 imageLoader
             } else {

@@ -15,7 +15,7 @@ fun EntryProviderScope<NavKey>.showDetailsEntry(navigator: Navigator) {
             showDetailed = navKey.showDetailed,
             onBackClicked = navigator::goBack,
             viewModel = hiltViewModel<ShowDetailsViewModel, ShowDetailsViewModel.Factory>(
-                //key = "",
+                key = "showDetails_${navKey.showDetailed.id}",
             ) { factory ->
                 factory.create(navKey.showDetailed)
             }

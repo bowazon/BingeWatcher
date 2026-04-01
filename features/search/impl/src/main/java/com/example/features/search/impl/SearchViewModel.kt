@@ -22,7 +22,10 @@ class SearchViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _query.collect {
-                _searchState.emit(repository.searchShow(it))
+                // TODO SHOULD NOT SEARCH FROM START
+                //try {
+                    _searchState.emit(repository.searchShow(it))
+                //}
             }
         }
     }

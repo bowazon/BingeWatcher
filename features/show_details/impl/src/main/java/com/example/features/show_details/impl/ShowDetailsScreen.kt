@@ -3,6 +3,7 @@ package com.example.features.show_details.impl
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,6 +53,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,9 +73,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter.State.Empty.painter
+import coil.compose.SubcomposeAsyncImage
+import coil.size.Size
 import com.example.designsystem.BingeWatcherShowImageWithGradient
 import com.example.designsystem.BingeWatcherShowRestDescription
 import com.example.designsystem.BingeWatcherShowShortDescription
+import com.example.designsystem.BingeWatcherSmallSeasonCard
 import com.example.designsystem.R
 import com.example.designsystem.utils.getReadableTextColor
 
@@ -81,21 +87,15 @@ const val SHOW_IMAGE_HEIGHT = 600
 @Composable
 fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
-    viewModel: ShowDetailsViewModel = hiltViewModel(),
+    viewModel: ShowDetailsViewModel,
     showDetailed: ShowDetailed,
     onBackClicked: () -> Unit
 ) {
-    val context = LocalContext.current
-
     // TODO remember?
     val state by viewModel.state.collectAsState()
 
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-
     //TODO should be really moved to themes
     var backgroundColor by remember { mutableStateOf(Color.Black) }
-    //var isError by remember { mutableStateOf(false) }
-    var painter by remember { mutableStateOf<Painter?>(null) }
 
     val maxHeight = SHOW_IMAGE_HEIGHT.dp
 
@@ -107,11 +107,9 @@ fun ShowDetailsScreen(
         }
     }
 
+    val painterLargeImage = rememberAsyncImagePainter(model = showDetailed.largeImage)
+
     val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
-
-
-    //var actorImages by remember { mutableStateOf<MutableList<BitmapPainter>>(mutableListOf<BitmapPainter>()) }
-
 
     // TODO do we need scaffold?
     //Scaffold { padding ->
@@ -127,7 +125,7 @@ fun ShowDetailsScreen(
                 BingeWatcherShowImageWithGradient(
                     imageHeight = imageHeight,
                     backgroundColor = backgroundColor,
-                    imageUrl = showDetailed.largeImage)
+                    imagePainter = painterLargeImage)
             }
 
             stickyHeader {
@@ -162,12 +160,48 @@ fun ShowDetailsScreen(
                     Button(onClick = {
                         viewModel.redux(ShowDetailsEvent.OnFollowClick)
                     }) {
+                        // TODO should be like if show ended and follow in ongoing
                         Text("Follow")
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                state?.let {
+                    uiState ->
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(uiState.seasons.size) { i ->
+
+                            val painter = rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(uiState.seasons[i].image)
+                                    .size(Size.ORIGINAL)
+                                    .build()
+                            )
+
+                            val painterState = painter.state
+
+                            val currentImagePainter = when (painterState) {
+                                is AsyncImagePainter.State.Success -> painterState.painter
+                                else -> painterLargeImage
+                            }
+
+                            BingeWatcherSmallSeasonCard(
+                                season = i + 1,
+                                episodesAmount = uiState.seasons[i].episodesAmount,
+                                premiereDate = uiState.seasons[i].premiereDate,
+                                imagePainter = currentImagePainter,
+                                defaultPicture = painterLargeImage
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
 
@@ -186,4 +220,3 @@ fun ShowDetailsScreen(
         }
     }
 }
-
