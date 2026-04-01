@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeRating(
-    val average: Double?,
+    val average: Double? = null,
 )

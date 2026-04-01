@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TvMazeShowImage(
     val id: Long,
-    val type: String,
+    val type: String? = null,
     val main: Boolean,
-    val resolutions: TvMazeResolutions,
+    val resolutions: TvMazeResolutions? = null,
 )

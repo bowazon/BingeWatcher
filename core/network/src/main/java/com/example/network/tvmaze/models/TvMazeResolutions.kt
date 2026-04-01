@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeResolutions(
-    val original: TvMazeOriginal,
-    val medium: TvMazeMedium?,
+    val original: TvMazeOriginal? = null,
+    val medium: TvMazeMedium? = null,
 )

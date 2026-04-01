@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeExternals(
-    val tvrage: Long?,
-    val thetvdb: Long?,
-    val imdb: String?,
+    val tvrage: Long? = null,
+    val thetvdb: Long? = null,
+    val imdb: String? = null,
 )

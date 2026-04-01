@@ -56,6 +56,6 @@ fun TvMazeSeason.toSeason(): Season {
     )
 }
 
-fun TvMazeShowImage.toImageUrl(): String {
-    return resolutions.original.url
+fun TvMazeShowImage.toImageUrl(): String? {
+    return resolutions?.original?.url
 }

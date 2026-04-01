@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TvMazeSchedule(
     val time: String?,
-    val days: List<String>?,
+    val days: List<String>? = null,
 )

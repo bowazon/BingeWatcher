@@ -7,7 +7,7 @@ data class TvMazeCharacter(
     val id: Long,
     val url: String,
     val name: String,
-    val image: TvMazeImage?,
+    val image: TvMazeImage? = null,
     //@JsonProperty("_links")
     //val links: ,
 )

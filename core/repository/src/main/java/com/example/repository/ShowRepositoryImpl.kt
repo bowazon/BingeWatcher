@@ -30,6 +30,6 @@ class ShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getImagesForShow(showId: Int): List<String> {
-        return api.images(showId).map { it.toImageUrl() }
+        return api.images(showId).mapNotNull { it.toImageUrl() }
     }
 }

@@ -163,7 +163,7 @@ fun BingeWatcherShowImageWithGradient(
     modifier: Modifier = Modifier,
     imageHeight: Dp,
     backgroundColor: Color,
-    painter: Painter?
+    imageUrl: String
 ) {
     Box(
         modifier = Modifier
@@ -171,12 +171,21 @@ fun BingeWatcherShowImageWithGradient(
             .height(imageHeight)
     ) {
         Surface(color = backgroundColor) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            /*
             Image(
                 painter = painter ?: painterResource(com.example.designsystem.R.drawable.ic_launcher_foreground),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
+
+             */
         }
 
         Box(

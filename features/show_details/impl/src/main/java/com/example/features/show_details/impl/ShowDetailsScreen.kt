@@ -91,8 +91,10 @@ fun ShowDetailsScreen(
     val state by viewModel.state.collectAsState()
 
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    //TODO should be really moved to themes
     var backgroundColor by remember { mutableStateOf(Color.Black) }
-    var isError by remember { mutableStateOf(false) }
+    //var isError by remember { mutableStateOf(false) }
     var painter by remember { mutableStateOf<Painter?>(null) }
 
     val maxHeight = SHOW_IMAGE_HEIGHT.dp
@@ -108,77 +110,12 @@ fun ShowDetailsScreen(
     val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
 
 
-    LaunchedEffect(showDetailed.largeImage) {
-        try {
-            val loader = ImageLoader(context)
+    //var actorImages by remember { mutableStateOf<MutableList<BitmapPainter>>(mutableListOf<BitmapPainter>()) }
 
-            val request = ImageRequest.Builder(context)
-                .data(showDetailed.largeImage)
-                .allowHardware(false)
-                .build()
-
-            val result = loader.execute(request)
-            val drawable = result.drawable
-
-            if (drawable is BitmapDrawable) {
-                val bmp = drawable.bitmap
-                bitmap = bmp
-                painter = BitmapPainter(bitmap!!.asImageBitmap())
-
-                val palette = Palette.from(bmp).generate()
-                backgroundColor = Color(
-                    palette.darkMutedSwatch?.rgb
-                        ?: palette.dominantSwatch?.rgb
-                        ?: Color.Black.toArgb()
-                )
-            } else {
-                //isError = true
-                painter = null
-            }
-        } catch (e: Exception) { // TODO which exception
-            //isError = true
-            painter = null
-        }
-    }
-
-    var actorImages by remember { mutableStateOf<MutableList<BitmapPainter>>(mutableListOf<BitmapPainter>()) }
-/*
-    state?.let {
-        LaunchedEffect(state?.cast) {
-            // TODO, should we load images here or should it do ViewModel or Repo?
-            val loader = ImageLoader(context)
-
-            for (c in state!!.cast) {
-                val request = ImageRequest.Builder(context)
-                    .data(c.image)
-                    .allowHardware(false)
-                    .build()
-
-                val result = loader.execute(request)
-                val drawable = (result.drawable as BitmapDrawable).bitmap
-
-                drawable?.let {
-                    actorImages.add(BitmapPainter(drawable.asImageBitmap()))
-                }
-            }
-        }
-    }
-*/
 
     // TODO do we need scaffold?
     //Scaffold { padding ->
     Box(modifier = Modifier.fillMaxSize()) {
-        val maxHeight = SHOW_IMAGE_HEIGHT.dp
-
-        val lazyListState = rememberLazyListState()
-
-        val scrollOffset = remember {
-            derivedStateOf {
-                lazyListState.firstVisibleItemScrollOffset.coerceAtMost(SHOW_IMAGE_HEIGHT)
-            }
-        }
-
-        val imageHeight = maxHeight - with(LocalDensity.current){ scrollOffset.value.toDp() }
 
         LazyColumn(
             modifier = modifier
@@ -190,7 +127,7 @@ fun ShowDetailsScreen(
                 BingeWatcherShowImageWithGradient(
                     imageHeight = imageHeight,
                     backgroundColor = backgroundColor,
-                    painter = painter)
+                    imageUrl = showDetailed.largeImage)
             }
 
             stickyHeader {
@@ -231,19 +168,6 @@ fun ShowDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // others: cast, seasons, etc
-                /*
-                Column() {
-                    LazyRow() {
-                        items(actorImages.size) { // TODO !!
-                            it ->
-                            Image(
-                                painter = actorImages[it],
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }*/
             }
         }
 

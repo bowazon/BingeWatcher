@@ -13,12 +13,12 @@ data class TvMazeEpisode(
     val airdate: String,
     val airtime: String,
     val airstamp: String,
-    val runtime: Long?,
+    val runtime: Long? = null,
     val rating: TvMazeRating,
-    val image: TvMazeImage?,
-    val summary: String?,
+    val image: TvMazeImage? = null,
+    val summary: String? = null,
     //@JsonProperty("_links")
     val links: TvMazeLinks,
     //@JsonProperty("_embedded")
-    val embedded: TvMazeEmbedded?,
+    val embedded: TvMazeEmbedded? = null,
 )

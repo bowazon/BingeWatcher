@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeOriginal(
-    val url: String,
-    val width: Long,
-    val height: Long,
+    val url: String? = null,
+    val width: Long? = null,
+    val height: Long? = null,
 )
