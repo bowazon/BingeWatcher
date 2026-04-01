@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -249,6 +251,49 @@ fun BingeWatcherSmallSeasonCard(
             )
         }
     }
+}
+
+@Composable
+fun BingeWatcherActorSmallCard(
+    modifier: Modifier = Modifier,
+    actorName: String,
+    imagePainter: Painter?,
+    defaultPicture: Painter,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = modifier
+                .size(100.dp)
+        ) {
+            Image(
+                painter = imagePainter ?: defaultPicture,
+                contentDescription = actorName,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = actorName,
+            color = Color.White
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BingeWatcherActorSmallCardPreview() {
+    BingeWatcherActorSmallCard(
+        actorName = "Jone Jones",
+        imagePainter = null,
+        defaultPicture = painterResource(R.drawable.ic_launcher_foreground),
+    )
 }
 
 @Preview

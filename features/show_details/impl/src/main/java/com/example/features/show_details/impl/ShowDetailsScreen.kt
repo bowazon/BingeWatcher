@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -62,6 +63,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.luminance
@@ -75,6 +77,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.SubcomposeAsyncImage
 import coil.size.Size
+import com.example.designsystem.BingeWatcherActorSmallCard
 import com.example.designsystem.BingeWatcherShowImageWithGradient
 import com.example.designsystem.BingeWatcherShowRestDescription
 import com.example.designsystem.BingeWatcherShowShortDescription
@@ -128,7 +131,7 @@ fun ShowDetailsScreen(
                     imagePainter = painterLargeImage)
             }
 
-            stickyHeader {
+            item {//stickyHeader {
                 BingeWatcherShowShortDescription(
                     backgroundColor = backgroundColor,
                     name = showDetailed.summary.name,
@@ -197,6 +200,76 @@ fun ShowDetailsScreen(
                                 premiereDate = uiState.seasons[i].premiereDate,
                                 imagePainter = currentImagePainter,
                                 defaultPicture = painterLargeImage
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                state?.let {
+                        uiState ->
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(uiState.cast.size) { i ->
+
+                            val painter = rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(uiState.cast[i].image)
+                                    .size(Size.ORIGINAL)
+                                    .build()
+                            )
+
+                            val painterState = painter.state
+
+                            val currentImagePainter = when (painterState) {
+                                is AsyncImagePainter.State.Success -> painterState.painter
+                                else -> painterLargeImage
+                            }
+
+                            BingeWatcherActorSmallCard(
+                                actorName = uiState.cast[i].name,
+                                imagePainter = currentImagePainter,
+                                defaultPicture = painterLargeImage,
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                state?.let {
+                        uiState ->
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(uiState.pictures.size) { i ->
+
+                            val painter = rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(uiState.pictures[i])
+                                    .size(Size.ORIGINAL)
+                                    .build()
+                            )
+
+                            val painterState = painter.state
+
+                            val currentImagePainter = when (painterState) {
+                                is AsyncImagePainter.State.Success -> painterState.painter
+                                else -> painterLargeImage
+                            }
+
+                            Image(
+                                painter = currentImagePainter,
+                                contentDescription = null,
+                                contentScale = ContentScale.FillHeight,
+                                modifier = Modifier
+                                    .height(150.dp)
                             )
                         }
                     }
