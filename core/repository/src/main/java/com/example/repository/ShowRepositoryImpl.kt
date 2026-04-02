@@ -8,9 +8,6 @@ import com.example.network.tvmaze.mappers.toActor
 import com.example.network.tvmaze.mappers.toImageUrl
 import com.example.network.tvmaze.mappers.toSeason
 import com.example.network.tvmaze.mappers.toShowDetailed
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShowRepositoryImpl @Inject constructor(

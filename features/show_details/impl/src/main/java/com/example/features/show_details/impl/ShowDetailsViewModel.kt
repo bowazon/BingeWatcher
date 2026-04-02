@@ -1,10 +1,6 @@
 package com.example.features.show_details.impl
 
-import android.graphics.drawable.Drawable
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.entities.Actor
 import com.example.entities.Season
@@ -21,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = ShowDetailsViewModel.Factory::class)
 class ShowDetailsViewModel @AssistedInject constructor(
