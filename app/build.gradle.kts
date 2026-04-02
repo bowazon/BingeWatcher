@@ -67,10 +67,10 @@ dependencies {
     implementation(project(":core:repository"))
     implementation(project(":features:discover:api"))
     implementation(project(":features:search:api"))
-    implementation(project(":features:show_details:api"))
+    implementation(project(":features:show:api"))
     implementation(project(":features:discover:impl"))
     implementation(project(":features:search:impl"))
-    implementation(project(":features:show_details:impl"))
+    implementation(project(":features:show:impl"))
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)
