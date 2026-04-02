@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShowDetailsNavKey(
-    val showDetailed: ShowDetailed
+    val showId: Int
 ) : NavKey
 
 fun Navigator.navigateToShowDetails(
-    showDetailed: ShowDetailed,
+    showId: Int,
 ) {
-    navigate(ShowDetailsNavKey(showDetailed))
+    navigate(ShowDetailsNavKey(showId))
 }

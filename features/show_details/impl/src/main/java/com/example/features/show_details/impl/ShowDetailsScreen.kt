@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -77,6 +78,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCoerceAtMost
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.SubcomposeAsyncImage
 import coil.size.Size
@@ -87,114 +90,153 @@ import com.example.designsystem.BingeWatcherShowShortDescription
 import com.example.designsystem.BingeWatcherSmallSeasonCard
 import com.example.designsystem.R
 import com.example.designsystem.utils.getReadableTextColor
+import androidx.core.net.toUri
 
-const val SHOW_IMAGE_HEIGHT = 600
-const val SHOW_IMAGE_HEIGHT_LEAST = 200
+private val SHOW_IMAGE_HEIGHT = 600.dp
+private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
+
+@Composable
+private fun rememberFirstElementScrollOffset(
+    lazyListState: LazyListState
+): Dp {
+    val density = LocalDensity.current
+
+    return remember(lazyListState, density) {
+        derivedStateOf {
+            if (lazyListState.firstVisibleItemIndex == 0) {
+                with(density) {
+                    lazyListState.firstVisibleItemScrollOffset.toDp()
+                }
+            } else SHOW_IMAGE_HEIGHT
+        }
+    }.value
+}
+
+@Composable
+private fun loadPainter(
+    url: String,
+    placeholder: Painter
+): Painter {
+    val localContext = LocalContext.current
+    val request = remember(url) {
+        ImageRequest.Builder(localContext)
+            .data(url)
+            .size(Size.ORIGINAL)
+            .build()
+    }
+    val painter = rememberAsyncImagePainter(
+        model = request
+    )
+
+    val painterState = painter.state
+
+    return when (painterState) {
+        is AsyncImagePainter.State.Success -> painterState.painter
+        else -> placeholder
+    }
+}
 
 @Composable
 fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
-    viewModel: ShowDetailsViewModel,
-    showDetailed: ShowDetailed,
+    viewModel: ShowDetailsViewModel = hiltViewModel(),
     onBackClicked: () -> Unit
 ) {
-    // TODO remember?
-    val state by viewModel.state.collectAsState()
-
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 is ShowDetailsEffect.OpenUrl -> {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(effect.url))
+                    val intent = Intent(Intent.ACTION_VIEW, effect.url.toUri())
                     context.startActivity(intent)
                 }
             }
         }
     }
 
-    //TODO should be really moved to themes
-    var backgroundColor by remember { mutableStateOf(Color.Black) }
-
-    val maxHeight = SHOW_IMAGE_HEIGHT.dp
-
-    val lazyListState = rememberLazyListState()
-
-    val scrollOffset = remember {
-        derivedStateOf {
-            val index = lazyListState.firstVisibleItemIndex
-            val offset = lazyListState.firstVisibleItemScrollOffset
-
-            when {
-                index == 0 -> offset
-                else -> SHOW_IMAGE_HEIGHT // полностью схлопнули
-            }.coerceAtMost(SHOW_IMAGE_HEIGHT)
+    when(uiState) {
+        is ShowDetailsUiState.Loading -> {
+            // TODO show loading
+        }
+        is ShowDetailsUiState.Error -> {
+            // TODO show error
+        }
+        is ShowDetailsUiState.Success -> {
+            ShowDetailsScreen(
+                modifier = modifier,
+                uiData = (uiState as ShowDetailsUiState.Success).data,
+                onBackClicked = onBackClicked,
+                onEvent = viewModel::redux
+            )
         }
     }
+}
 
-    val painterLargeImage = rememberAsyncImagePainter(model = showDetailed.largeImage)
+@Composable
+internal fun ShowDetailsScreen(
+    modifier: Modifier = Modifier,
+    uiData: ShowDetailsUiModel,
+    onBackClicked: () -> Unit,
+    onEvent: (ShowDetailsEvent) -> Unit
+) {
+    val lazyListState = rememberLazyListState()
+    val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
+    val painterLargeImage = rememberAsyncImagePainter(model = uiData.showDetails.largeImage)
 
-    val imageHeight = (maxHeight - with(LocalDensity.current) {
-        scrollOffset.value.toDp()
-    }).coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST.dp)
+    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.7f, 1f)
 
-    val alpha = 1f - (scrollOffset.value / SHOW_IMAGE_HEIGHT.toFloat())
+    val imageHeight = (SHOW_IMAGE_HEIGHT - firstElementScrollOffset)
+        .coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST)
 
-    val imageAlpha = alpha.coerceIn(0.7f, 1f)
-
-    // TODO do we need scaffold?
-    //Scaffold { padding ->
     Box(modifier = Modifier.fillMaxSize()) {
-
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .background(backgroundColor),
+                .background(Color.Black),
             state = lazyListState
         ) {
             item {
                 BingeWatcherShowImageWithGradient(
                     modifier = Modifier.graphicsLayer {
-                        this.alpha = imageAlpha
+                        this.alpha = alpha
                     },
                     imageHeight = imageHeight,
-                    backgroundColor = backgroundColor,
                     imagePainter = painterLargeImage)
             }
 
-            stickyHeader {//stickyHeader {
+            stickyHeader {
                 BingeWatcherShowShortDescription(
-                    backgroundColor = backgroundColor,
-                    name = showDetailed.summary.name,
-                    premiered = showDetailed.summary.premiered,
-                    rating = showDetailed.summary.rating
+                    name = uiData.showDetails.summary.name,
+                    premiered = uiData.showDetails.summary.premiered,
+                    rating = uiData.showDetails.summary.rating
                 )
             }
 
-            // TODO too much elements in one item
             item {
                 BingeWatcherShowRestDescription(
-                    backgroundColor = backgroundColor,
-                    genres = showDetailed.summary.genres,
-                    description = showDetailed.description
+                    genres = uiData.showDetails.summary.genres,
+                    description = uiData.showDetails.description
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
+            }
 
-                Column { //(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            item {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Button(onClick = {
-                        viewModel.redux(ShowDetailsEvent.OnImdbClick)
+                        onEvent(ShowDetailsEvent.OnImdbClick)
                     }) {
                         Text("IMDB")
                     }
                     Button(onClick = {
-                        viewModel.redux(ShowDetailsEvent.OnOfficialSiteClick)
+                        onEvent(ShowDetailsEvent.OnOfficialSiteClick)
                     }) {
                         Text("Official site")
                     }
                     Button(onClick = {
-                        viewModel.redux(ShowDetailsEvent.OnFollowClick)
+                        onEvent(ShowDetailsEvent.OnFollowClick)
                     }) {
                         // TODO should be like if show ended and follow in ongoing
                         Text("Follow")
@@ -202,111 +244,70 @@ fun ShowDetailsScreen(
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
+            }
 
-                state?.let {
-                    uiState ->
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.seasons.size) { i ->
+            item {
 
-                            val painter = rememberAsyncImagePainter(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(uiState.seasons[i].image)
-                                    .size(Size.ORIGINAL)
-                                    .build()
-                            )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiData.seasons.size) { i ->
+                        val painter = loadPainter(uiData.seasons[i].image, painterLargeImage)
 
-                            val painterState = painter.state
-
-                            val currentImagePainter = when (painterState) {
-                                is AsyncImagePainter.State.Success -> painterState.painter
-                                else -> painterLargeImage
-                            }
-
-                            BingeWatcherSmallSeasonCard(
-                                season = i + 1,
-                                episodesAmount = uiState.seasons[i].episodesAmount,
-                                premiereDate = uiState.seasons[i].premiereDate,
-                                imagePainter = currentImagePainter,
-                                defaultPicture = painterLargeImage
-                            )
-                        }
+                        BingeWatcherSmallSeasonCard(
+                            season = i + 1,
+                            episodesAmount = uiData.seasons[i].episodesAmount,
+                            premiereDate = uiData.seasons[i].premiereDate,
+                            imagePainter = painter
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
+            }
 
-                state?.let {
-                        uiState ->
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.cast.size) { i ->
+            item {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiData.cast) { actor ->
+                        val painter = loadPainter(actor.image, painterLargeImage)
 
-                            val painter = rememberAsyncImagePainter(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(uiState.cast[i].image)
-                                    .size(Size.ORIGINAL)
-                                    .build()
-                            )
-
-                            val painterState = painter.state
-
-                            val currentImagePainter = when (painterState) {
-                                is AsyncImagePainter.State.Success -> painterState.painter
-                                else -> painterLargeImage
-                            }
-
-                            BingeWatcherActorSmallCard(
-                                actorName = uiState.cast[i].name,
-                                imagePainter = currentImagePainter,
-                                defaultPicture = painterLargeImage,
-                            )
-                        }
+                        BingeWatcherActorSmallCard(
+                            actorName = actor.name,
+                            imagePainter = painter
+                        )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(24.dp))
+            }
+            item {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiData.pictures.size) { i ->
 
-                state?.let {
-                        uiState ->
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.pictures.size) { i ->
+                        val painter = loadPainter(uiData.pictures[i], painterLargeImage)
 
-                            val painter = rememberAsyncImagePainter(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(uiState.pictures[i])
-                                    .size(Size.ORIGINAL)
-                                    .build()
-                            )
-
-                            val painterState = painter.state
-
-                            val currentImagePainter = when (painterState) {
-                                is AsyncImagePainter.State.Success -> painterState.painter
-                                else -> painterLargeImage
-                            }
-
-                            Image(
-                                painter = currentImagePainter,
-                                contentDescription = null,
-                                contentScale = ContentScale.FillHeight,
-                                modifier = Modifier
-                                    .height(150.dp)
-                            )
-                        }
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillHeight,
+                            modifier = Modifier
+                                .height(150.dp)
+                        )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -321,7 +322,7 @@ fun ShowDetailsScreen(
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                 contentDescription = null,
-                tint = getReadableTextColor(backgroundColor)
+                tint = getReadableTextColor(Color.Black)
             )
         }
     }

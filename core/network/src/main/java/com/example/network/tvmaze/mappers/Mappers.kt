@@ -53,7 +53,7 @@ fun TvMazeSeason.toSeason(): Season {
     return Season (
         id = id.toInt(),
         episodesAmount = episodeOrder.toInt(),
-        image = image?.medium ?: null,
+        image = image?.medium ?: "",
         premiereDate = premiereDate.substringBefore("-")
     )
 }

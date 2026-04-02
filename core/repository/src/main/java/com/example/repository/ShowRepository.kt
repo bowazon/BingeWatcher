@@ -10,6 +10,7 @@ interface ShowRepository {
     // that is, repository for search screen
     suspend fun searchShow(name: String): List<ShowDetailed>
 
+    suspend fun getShow(showId: Int): ShowDetailed
     suspend fun getActorsForShow(showId: Int): List<Actor>
     suspend fun getSeasonsForShow(showId: Int): List<Season>
     suspend fun getImagesForShow(showId: Int): List<String>

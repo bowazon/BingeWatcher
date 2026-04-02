@@ -15,6 +15,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,12 +25,12 @@ import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = ShowDetailsViewModel.Factory::class)
 class ShowDetailsViewModel @AssistedInject constructor(
-    @Assisted val showDetailed: ShowDetailed,
+    @Assisted val showId: Int,
     val repository: ShowRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<ShowDetailsUiModel?>(null)
-    val state: StateFlow<ShowDetailsUiModel?> = _state
+    private val _state = MutableStateFlow<ShowDetailsUiState>(ShowDetailsUiState.Loading)
+    val state: StateFlow<ShowDetailsUiState> = _state
 
     private val _effects = MutableSharedFlow<ShowDetailsEffect>()
     val effects = _effects.asSharedFlow()
@@ -37,23 +38,25 @@ class ShowDetailsViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             // TODO exceptions handler? Supervisor Job?
-            val cast = async { repository.getActorsForShow(showDetailed.id) }
-            val pictures = async { repository.getImagesForShow(showDetailed.id) }
-            val seasons = async { repository.getSeasonsForShow(showDetailed.id) }
+            try {
+                coroutineScope {
+                    val showDetails = async { repository.getShow(showId) }
+                    val cast = async { repository.getActorsForShow(showId) }
+                    val pictures = async { repository.getImagesForShow(showId) }
+                    val seasons = async { repository.getSeasonsForShow(showId) }
 
-            _state.value = ShowDetailsUiModel(
-                name = showDetailed.summary.name,
-                rating = showDetailed.summary.rating,
-                genres = showDetailed.summary.genres,
-                premiered = showDetailed.summary.premiered,
-                imdb = showDetailed.imdb,
-                ended = showDetailed.ended,
-                officialSite = showDetailed.officialSite,
-                description = showDetailed.description,
-                cast = cast.await(),
-                pictures = pictures.await(),
-                seasons = seasons.await()
-            )
+                    _state.value = ShowDetailsUiState.Success(
+                        ShowDetailsUiModel(
+                            showDetails.await(),
+                            cast.await(),
+                            pictures.await(),
+                            seasons.await()
+                        )
+                    )
+                }
+            } catch (e: Exception) { // TODO generic error bad
+                _state.value = ShowDetailsUiState.Error
+            }
         }
     }
 
@@ -63,12 +66,20 @@ class ShowDetailsViewModel @AssistedInject constructor(
             is ShowDetailsEvent.OnImdbClick -> {
                 // TODO should have analytics
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenUrl(showDetailed.imdb))
+                    if (_state.value is ShowDetailsUiState.Success) {
+                        (_state.value as ShowDetailsUiState.Success).data.showDetails?.let {
+                            _effects.emit(ShowDetailsEffect.OpenUrl(it.imdb))
+                        }
+                    }
                 }
             }
             is ShowDetailsEvent.OnOfficialSiteClick -> {
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenUrl(showDetailed.officialSite))
+                    if (_state.value is ShowDetailsUiState.Success) {
+                        (_state.value as ShowDetailsUiState.Success).data.showDetails?.let {
+                            _effects.emit(ShowDetailsEffect.OpenUrl(it.officialSite))
+                        }
+                    }
                 }
             }
             is ShowDetailsEvent.OnFollowClick -> {
@@ -90,21 +101,20 @@ class ShowDetailsViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            show: ShowDetailed,
+            showId: Int,
         ): ShowDetailsViewModel
     }
 }
 
+sealed class ShowDetailsUiState {
+    object Error: ShowDetailsUiState()
+    object Loading: ShowDetailsUiState()
+    // TODO data class contains data class
+    data class Success(val data: ShowDetailsUiModel): ShowDetailsUiState()
+}
 
 data class ShowDetailsUiModel(
-    val name: String,
-    val rating: String,
-    val genres: String,
-    val premiered: String,
-    val imdb: String,
-    val ended: String,
-    val officialSite: String,
-    val description: String,
+    val showDetails: ShowDetailed,
     val cast: List<Actor>,
     val pictures: List<String>,
     val seasons: List<Season>

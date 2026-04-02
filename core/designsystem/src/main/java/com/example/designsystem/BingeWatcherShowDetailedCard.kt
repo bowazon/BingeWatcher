@@ -75,17 +75,15 @@ import com.example.designsystem.utils.HtmlText
 import kotlin.math.tan
 
 
-
+// TODO all Color.Black should be borrowed from theme
 
 @Composable
 fun BingeWatcherShowRestDescription(
     modifier: Modifier = Modifier,
-    backgroundColor: Color,
     genres: String,
     description: String,
-
-    ) {
-    Surface(color = backgroundColor,
+) {
+    Surface(color = Color.Black,
         modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -112,12 +110,11 @@ fun BingeWatcherShowRestDescription(
 @Composable
 fun BingeWatcherShowShortDescription(
     modifier: Modifier = Modifier,
-    backgroundColor: Color,
     name: String,
     premiered: String,
     rating: String
 ) {
-    Surface(color = backgroundColor) {
+    Surface(color = Color.Black) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -163,17 +160,16 @@ fun BingeWatcherShowShortDescription(
 fun BingeWatcherShowImageWithGradient(
     modifier: Modifier = Modifier,
     imageHeight: Dp,
-    backgroundColor: Color,
-    imagePainter: Painter?
+    imagePainter: Painter
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(imageHeight)
     ) {
-        Surface(color = backgroundColor) {
+        Surface(color = Color.Black) {
             Image(
-                painter = imagePainter ?: painterResource(R.drawable.ic_launcher_foreground),
+                painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -185,7 +181,7 @@ fun BingeWatcherShowImageWithGradient(
                 .matchParentSize()
                 .drawWithCache {
                     val gradient = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, backgroundColor),
+                        colors = listOf(Color.Transparent, Color.Black),
                         startY = size.height * 0.95f,
                         endY = size.height
                     )
@@ -203,9 +199,8 @@ fun BingeWatcherSmallSeasonCard(
     modifier: Modifier = Modifier,
     season: Int,
     episodesAmount: Int,
-    imagePainter: Painter?,
-    premiereDate: String,
-    defaultPicture: Painter,
+    imagePainter: Painter,
+    premiereDate: String
 ) {
     Column {
         Text(text = "Season $season", color = Color.White)
@@ -215,7 +210,7 @@ fun BingeWatcherSmallSeasonCard(
                 .width(120.dp)
         ) {
             Image(
-                painter = imagePainter ?: defaultPicture!!,
+                painter = imagePainter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -257,8 +252,7 @@ fun BingeWatcherSmallSeasonCard(
 fun BingeWatcherActorSmallCard(
     modifier: Modifier = Modifier,
     actorName: String,
-    imagePainter: Painter?,
-    defaultPicture: Painter,
+    imagePainter: Painter
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -268,7 +262,7 @@ fun BingeWatcherActorSmallCard(
                 .size(100.dp)
         ) {
             Image(
-                painter = imagePainter ?: defaultPicture,
+                painter = imagePainter,
                 contentDescription = actorName,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -291,8 +285,7 @@ fun BingeWatcherActorSmallCard(
 fun BingeWatcherActorSmallCardPreview() {
     BingeWatcherActorSmallCard(
         actorName = "Jone Jones",
-        imagePainter = null,
-        defaultPicture = painterResource(R.drawable.ic_launcher_foreground),
+        imagePainter = painterResource(R.drawable.ic_launcher_foreground)
     )
 }
 
@@ -303,7 +296,6 @@ fun BingeWatcherSmallSeasonCardPreview() {
         season = 1,
         episodesAmount = 11,
         imagePainter = painterResource(R.drawable.breaking_bad_official),
-        premiereDate = "2012",
-        defaultPicture = painterResource(R.drawable.breaking_bad_official)
+        premiereDate = "2012"
     )
 }

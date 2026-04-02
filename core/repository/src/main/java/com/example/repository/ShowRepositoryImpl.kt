@@ -21,6 +21,10 @@ class ShowRepositoryImpl @Inject constructor(
         return api.search(name).map { it.show.toShowDetailed() }
     }
 
+    override suspend fun getShow(showId: Int): ShowDetailed {
+        return api.showInfo(showId).toShowDetailed()
+    }
+
     override suspend fun getActorsForShow(showId: Int): List<Actor> {
         return api.cast(showId).map { it.toActor() }
     }

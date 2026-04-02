@@ -12,12 +12,11 @@ import java.util.Map.entry
 fun EntryProviderScope<NavKey>.showDetailsEntry(navigator: Navigator) {
     entry<ShowDetailsNavKey> { navKey ->
         ShowDetailsScreen(
-            showDetailed = navKey.showDetailed,
             onBackClicked = navigator::goBack,
             viewModel = hiltViewModel<ShowDetailsViewModel, ShowDetailsViewModel.Factory>(
-                key = "showDetails_${navKey.showDetailed.id}",
+                key = "showDetails_${navKey.showId}",
             ) { factory ->
-                factory.create(navKey.showDetailed)
+                factory.create(navKey.showId)
             }
         )
     }

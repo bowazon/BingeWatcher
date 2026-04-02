@@ -40,7 +40,7 @@ import com.example.entities.ShowDetailed
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
-    onDetailsClicked: (ShowDetailed) -> Unit
+    onDetailsClicked: (Int) -> Unit
 ) {
     val shows by viewModel.searchState.collectAsState()
 
@@ -64,11 +64,11 @@ fun SearchScreen(
 
 @Composable
 fun ShowCardClickable(
-    onDetailsClicked: (ShowDetailed) -> Unit,
+    onDetailsClicked: (Int) -> Unit,
     showDetailed: ShowDetailed
 ) {
     Surface(
-        onClick = { onDetailsClicked(showDetailed) }
+        onClick = { onDetailsClicked(showDetailed.id) }
     ) { //onDetailsClicked(show)
         ShowCard(
             name = showDetailed.summary.name,
