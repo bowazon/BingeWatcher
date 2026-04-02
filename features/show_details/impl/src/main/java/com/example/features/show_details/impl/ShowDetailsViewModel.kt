@@ -55,26 +55,19 @@ class ShowDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    // TODO do we need to return ShowDetailsUiModel? We don't mutate state
-    fun redux(event: ShowDetailsEvent) /* : ShowDetailsUiModel*/ {
+    fun onEvent(event: ShowDetailsEvent) {
         when (event) {
             is ShowDetailsEvent.OnImdbClick -> {
                 // TODO should have analytics
-                viewModelScope.launch {
-                    if (_state.value is ShowDetailsUiState.Success) {
-                        (_state.value as ShowDetailsUiState.Success).data.showDetails?.let {
-                            _effects.emit(ShowDetailsEffect.OpenUrl(it.imdb))
-                        }
-                    }
+                val currentState = _state.value
+                if (currentState is ShowDetailsUiState.Success) {
+                    openUrl(currentState.data.showDetails.imdb)
                 }
             }
             is ShowDetailsEvent.OnOfficialSiteClick -> {
-                viewModelScope.launch {
-                    if (_state.value is ShowDetailsUiState.Success) {
-                        (_state.value as ShowDetailsUiState.Success).data.showDetails?.let {
-                            _effects.emit(ShowDetailsEffect.OpenUrl(it.officialSite))
-                        }
-                    }
+                val currentState = _state.value
+                if (currentState is ShowDetailsUiState.Success) {
+                    openUrl(currentState.data.showDetails.officialSite)
                 }
             }
             is ShowDetailsEvent.OnFollowClick -> {
@@ -93,6 +86,12 @@ class ShowDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    private fun openUrl(url: String) {
+        viewModelScope.launch {
+            _effects.emit(ShowDetailsEffect.OpenUrl(url))
+        }
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(
@@ -104,7 +103,6 @@ class ShowDetailsViewModel @AssistedInject constructor(
 sealed class ShowDetailsUiState {
     object Error: ShowDetailsUiState()
     object Loading: ShowDetailsUiState()
-    // TODO data class contains data class
     data class Success(val data: ShowDetailsUiModel): ShowDetailsUiState()
 }
 

@@ -3,7 +3,7 @@ package com.example.features.search.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.entities.ShowDetailed
-import com.example.repository.ShowRepository
+import com.example.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    val repository: ShowRepository
+    val repository: SearchRepository
 ) : ViewModel() {
     private val _searchState = MutableStateFlow<List<ShowDetailed>>(emptyList())
     val searchState = _searchState.asStateFlow()

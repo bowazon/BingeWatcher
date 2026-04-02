@@ -13,10 +13,6 @@ import javax.inject.Inject
 class ShowRepositoryImpl @Inject constructor(
     val api: TvMazeRemoteDataSource
 ) : ShowRepository {
-    override suspend fun searchShow(name: String): List<ShowDetailed> {
-        // TODO error processing
-        return api.search(name).map { it.show.toShowDetailed() }
-    }
 
     override suspend fun getShow(showId: Int): ShowDetailed {
         return api.showInfo(showId).toShowDetailed()

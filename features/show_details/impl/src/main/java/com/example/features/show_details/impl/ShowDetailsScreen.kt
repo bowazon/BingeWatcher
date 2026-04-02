@@ -127,7 +127,7 @@ fun ShowDetailsScreen(
                 modifier = modifier,
                 uiData = (uiState as ShowDetailsUiState.Success).data,
                 onBackClicked = onBackClicked,
-                onEvent = viewModel::redux
+                onEvent = viewModel::onEvent
             )
         }
     }
