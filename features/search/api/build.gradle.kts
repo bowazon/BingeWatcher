@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.features.search.api"
+    namespace = "com.bowazon.bingewatcher.features.search.api"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1

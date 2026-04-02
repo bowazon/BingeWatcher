@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.designsystem"
+    namespace = "com.bowazon.bingewatcher.core.designsystem"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1

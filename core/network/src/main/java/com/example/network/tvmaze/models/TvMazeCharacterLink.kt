@@ -1,9 +1,0 @@
-package com.example.network.tvmaze.models
-
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class TvMazeCharacterLink(
-    val href: String,
-    val name: String,
-)

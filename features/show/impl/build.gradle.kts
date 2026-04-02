@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.features.show.impl"
+    namespace = "com.bowazon.bingewatcher.features.show.impl"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
