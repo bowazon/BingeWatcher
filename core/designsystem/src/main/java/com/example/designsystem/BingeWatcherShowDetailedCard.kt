@@ -216,24 +216,26 @@ fun BingeWatcherSmallSeasonCard(
                 modifier = Modifier.fillMaxSize()
             )
 
-            Image(
-                painter = painterResource(R.drawable.episodes_icon),
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .height(50.dp)
-            )
+            if (episodesAmount != 0) {
+                Image(
+                    painter = painterResource(R.drawable.episodes_icon),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .height(50.dp)
+                )
 
-            Text(
-                text = episodesAmount.toString(),
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    //.padding(8.dp)
-                    //.background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
-                    .padding(horizontal = 2.dp, vertical = 1.dp),
-                color = Color.Black
-            )
+                Text(
+                    text = episodesAmount.toString(),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        //.padding(8.dp)
+                        //.background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 2.dp, vertical = 1.dp),
+                    color = Color.Black
+                )
+            }
 
             Text(
                 text = premiereDate,

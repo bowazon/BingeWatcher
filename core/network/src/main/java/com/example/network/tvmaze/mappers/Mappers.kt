@@ -52,7 +52,7 @@ fun TvMazeActor.toActor(): Actor {
 fun TvMazeSeason.toSeason(): Season {
     return Season (
         id = id.toInt(),
-        episodesAmount = episodeOrder.toInt(),
+        episodesAmount = episodeOrder?.toInt() ?: 0,
         image = image?.medium ?: "",
         premiereDate = premiereDate.substringBefore("-")
     )

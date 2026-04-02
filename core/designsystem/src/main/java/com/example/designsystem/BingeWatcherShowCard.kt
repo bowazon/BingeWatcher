@@ -37,10 +37,7 @@ fun ShowCard(
             isError = state is AsyncImagePainter.State.Error
         },
     )
-    SideEffect {
-        Log.d("ART_DBG", "pictureUrl " + pictureUrl)
-        Log.d("ART_DBG", "isError is "  + isError)
-    }
+
     //painterResource(id = R.drawable.ic_launcher_foreground)
     Row(Modifier.padding(16.dp)) {
         Image(

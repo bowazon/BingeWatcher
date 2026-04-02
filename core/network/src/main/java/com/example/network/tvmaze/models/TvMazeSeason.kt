@@ -8,7 +8,7 @@ data class TvMazeSeason(
     val url: String,
     val number: Long,
     val name: String,
-    val episodeOrder: Long,
+    val episodeOrder: Long? = null,
     val premiereDate: String,
     val endDate: String? = null,
     val network: TvMazeNetwork? = null,
