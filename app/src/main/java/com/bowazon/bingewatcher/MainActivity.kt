@@ -20,10 +20,11 @@ import com.bowazon.bingewatcher.features.search.impl.searchEntry
 import com.bowazon.bingewatcher.features.show.impl.showDetailsEntry
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.navigation.toEntries
+import com.bowazon.bingewatcher.features.actor.impl.actorEntry
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
+    //private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,7 @@ class MainActivity : ComponentActivity() {
                         discoverEntry(navigator)
                         searchEntry(navigator)
                         showDetailsEntry(navigator)
+                        actorEntry(navigator)
                     }
                     NavDisplay(
                         entries = navigator.toEntries(entryProvider),

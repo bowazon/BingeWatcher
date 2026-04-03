@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeActor(
-    val person: TvMazePerson,
-    val character: TvMazeCharacter,
-    val self: Boolean,
-    val voice: Boolean,
+    val person: TvMazePerson? = null,
+    val character: TvMazeCharacter? = null,
+    val self: Boolean? = null,
+    val voice: Boolean? = null,
 )

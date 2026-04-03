@@ -5,11 +5,13 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewMember
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredPerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
+import retrofit2.http.Path
 
 interface TvMazeRemoteDataSource {
     // search
@@ -37,6 +39,7 @@ interface TvMazeRemoteDataSource {
     suspend fun episode(id: Int): TvMazeEpisode
 
     // people
+    suspend fun personInfo(id: Int): TvMazePerson
     suspend fun personCastCredits(id: Int): List<TvMazeCastCredit>
     suspend fun personCrewCredits(id: Int): List<TvMazeCrewCredit>
 

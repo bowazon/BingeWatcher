@@ -1,10 +1,12 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.mappers
 
-import com.bowazon.bingewatcher.core.entities.Actor
+import com.bowazon.bingewatcher.core.entities.ActorDetailed
+import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.entities.ShowSummary
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
@@ -35,12 +37,12 @@ fun TvMazeShow.toShowDetailed(): ShowDetailed {
     )
 }
 
-fun TvMazeActor.toActor(): Actor {
-    return Actor(
-        id = person.id.toInt(),
-        name = person.name,
-        image = person.image?.medium ?: "",
-        characterName = character.name
+fun TvMazeActor.toActor(): ActorSummary {
+    return ActorSummary(
+        id = person?.id?.let { it.toInt() } ?: 0,
+        name = person?.name ?: "",
+        image = person?.image?.medium ?: "",
+        characterName = character?.name ?: ""
     )
 }
 
@@ -55,4 +57,15 @@ fun TvMazeSeason.toSeason(): Season {
 
 fun TvMazeShowImage.toImageUrl(): String? {
     return resolutions?.original?.url
+}
+
+fun TvMazePerson.toActorDetailed(): ActorDetailed {
+    return ActorDetailed(
+        id = id.toInt(),
+        name = name,
+        image = image?.medium ?: "",
+        country = country?.name ?: "",
+        birthday = birthday ?: "",
+        gender = gender ?: "",
+    )
 }

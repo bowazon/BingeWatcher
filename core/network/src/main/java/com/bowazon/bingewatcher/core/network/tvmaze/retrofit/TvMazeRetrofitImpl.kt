@@ -7,6 +7,7 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewMember
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredPerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
@@ -113,6 +114,10 @@ class TvMazeRetrofitImpl : TvMazeRemoteDataSource {
 
     override suspend fun episode(id: Int): TvMazeEpisode {
         return api.episode(id)
+    }
+
+    override suspend fun personInfo(id: Int): TvMazePerson {
+        return api.personInfo(id)
     }
 
     override suspend fun personCastCredits(id: Int): List<TvMazeCastCredit> {

@@ -3,6 +3,7 @@ package com.bowazon.bingewatcher.features.show.impl
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -99,7 +100,8 @@ private fun loadPainter(
 fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: ShowDetailsViewModel = hiltViewModel(),
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    navigateToActor: (Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -110,6 +112,9 @@ fun ShowDetailsScreen(
                 is ShowDetailsEffect.OpenUrl -> {
                     val intent = Intent(Intent.ACTION_VIEW, effect.url.toUri())
                     context.startActivity(intent)
+                }
+                is ShowDetailsEffect.OpenActorCard -> {
+                    navigateToActor(effect.id)
                 }
             }
         }
@@ -127,7 +132,7 @@ fun ShowDetailsScreen(
                 modifier = modifier,
                 uiData = (uiState as ShowDetailsUiState.Success).data,
                 onBackClicked = onBackClicked,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
             )
         }
     }
@@ -138,7 +143,7 @@ internal fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
     uiData: ShowDetailsUiModel,
     onBackClicked: () -> Unit,
-    onEvent: (ShowDetailsEvent) -> Unit
+    onEvent: (ShowDetailsEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
@@ -206,7 +211,6 @@ internal fun ShowDetailsScreen(
             }
 
             item {
-
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -238,6 +242,9 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(actor.image, painterLargeImage)
 
                         BingeWatcherActorSmallCard(
+                            modifier.clickable {
+                                onEvent(ShowDetailsEvent.OnActorClick(actor.id))
+                            },
                             actorName = actor.name,
                             imagePainter = painter
                         )

@@ -56,7 +56,6 @@ dependencies {
 
     implementation(project(":features:discover:api"))
     implementation(project(":core:navigation"))
-    //implementation(project(":core:network"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:entities"))
     implementation(project(":core:repository"))

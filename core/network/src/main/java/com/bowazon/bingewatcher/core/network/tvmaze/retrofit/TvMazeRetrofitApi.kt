@@ -5,6 +5,7 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewMember
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredPerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeScoredShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
@@ -84,6 +85,9 @@ interface TvMazeRetrofitApi {
 
 
     // people
+    @GET("people/{id}")
+    suspend fun personInfo(@Path("id") id: Int): TvMazePerson
+
     @GET("people/{id}/castcredits")
     suspend fun personCastCredits(@Path("id") id: Int): List<TvMazeCastCredit>
 

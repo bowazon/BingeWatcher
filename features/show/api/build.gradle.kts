@@ -45,5 +45,5 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
 
     implementation(project(":core:navigation"))
-    implementation(project(":core:entities"))
+    //implementation(project(":core:entities"))
 }

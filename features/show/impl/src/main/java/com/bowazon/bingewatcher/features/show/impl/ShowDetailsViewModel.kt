@@ -2,7 +2,7 @@ package com.bowazon.bingewatcher.features.show.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bowazon.bingewatcher.core.entities.Actor
+import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.repository.ShowRepository
@@ -78,7 +78,10 @@ class ShowDetailsViewModel @AssistedInject constructor(
 
             }
             is ShowDetailsEvent.OnActorClick -> {
-
+                val actorId = event.id
+                viewModelScope.launch {
+                    _effects.emit(ShowDetailsEffect.OpenActorCard(actorId))
+                }
             }
             is ShowDetailsEvent.OnGalleryClick -> {
 
@@ -108,7 +111,7 @@ sealed class ShowDetailsUiState {
 
 data class ShowDetailsUiModel(
     val showDetails: ShowDetailed,
-    val cast: List<Actor>,
+    val cast: List<ActorSummary>,
     val pictures: List<String>,
     val seasons: List<Season>
 )
@@ -124,4 +127,5 @@ sealed interface ShowDetailsEvent {
 
 sealed interface ShowDetailsEffect {
     data class OpenUrl(val url: String) : ShowDetailsEffect
+    data class OpenActorCard(val id: Int) : ShowDetailsEffect
 }

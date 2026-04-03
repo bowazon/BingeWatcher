@@ -1,6 +1,6 @@
 package com.bowazon.bingewatcher.core.repository
 
-import com.bowazon.bingewatcher.core.entities.Actor
+import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
@@ -18,7 +18,7 @@ class ShowRepositoryImpl @Inject constructor(
         return api.showInfo(showId).toShowDetailed()
     }
 
-    override suspend fun getActorsForShow(showId: Int): List<Actor> {
+    override suspend fun getActorsForShow(showId: Int): List<ActorSummary> {
         return api.cast(showId).map { it.toActor() }
     }
 

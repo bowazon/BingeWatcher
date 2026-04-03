@@ -2,6 +2,7 @@ package com.bowazon.bingewatcher.core.entities
 
 import kotlinx.serialization.Serializable
 
+//TODO remove serialization
 @Serializable
 data class ShowDetailed(
     val id: Int,
