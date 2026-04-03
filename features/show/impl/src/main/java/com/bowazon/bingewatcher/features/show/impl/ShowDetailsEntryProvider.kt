@@ -6,12 +6,14 @@ import androidx.navigation3.runtime.NavKey
 import com.bowazon.bingewatcher.features.show.api.ShowDetailsNavKey
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.features.actor.api.navigateToActor
+import com.bowazon.bingewatcher.features.season.api.navigateToSeason
 
 fun EntryProviderScope<NavKey>.showDetailsEntry(navigator: Navigator) {
     entry<ShowDetailsNavKey> { navKey ->
         ShowDetailsScreen(
             onBackClicked = navigator::goBack,
             navigateToActor = navigator::navigateToActor,
+            navigateToSeason = navigator::navigateToSeason,
             viewModel = hiltViewModel<ShowDetailsViewModel, ShowDetailsViewModel.Factory>(
                 key = "showDetails_${navKey.showId}",
             ) { factory ->

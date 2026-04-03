@@ -75,7 +75,15 @@ class ShowDetailsViewModel @AssistedInject constructor(
                 // to follow repository
             }
             is ShowDetailsEvent.OnSeasonClick -> {
-
+                // TODO showId and seasonId is good place to use inline value classes
+                val showId = event.showId
+                val seasonId = event.seasonId
+                viewModelScope.launch {
+                    _effects.emit(ShowDetailsEffect.OpenSeasonCard(
+                        showId,
+                        seasonId
+                    ))
+                }
             }
             is ShowDetailsEvent.OnActorClick -> {
                 val actorId = event.id
@@ -120,7 +128,7 @@ sealed interface ShowDetailsEvent {
     object OnImdbClick : ShowDetailsEvent
     object OnOfficialSiteClick : ShowDetailsEvent
     object OnFollowClick : ShowDetailsEvent
-    data class OnSeasonClick(val s: Int) : ShowDetailsEvent
+    data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowDetailsEvent
     data class OnActorClick(val id: Int) : ShowDetailsEvent
     data class OnGalleryClick(val i: Int) : ShowDetailsEvent
 }
@@ -128,4 +136,5 @@ sealed interface ShowDetailsEvent {
 sealed interface ShowDetailsEffect {
     data class OpenUrl(val url: String) : ShowDetailsEffect
     data class OpenActorCard(val id: Int) : ShowDetailsEffect
+    data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowDetailsEffect
 }

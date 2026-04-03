@@ -5,11 +5,14 @@ import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.entities.ShowSummary
+import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
+import kotlin.Int
 import kotlin.String
 import kotlin.text.substringBefore
 
@@ -67,5 +70,19 @@ fun TvMazePerson.toActorDetailed(): ActorDetailed {
         country = country?.name ?: "",
         birthday = birthday ?: "",
         gender = gender ?: "",
+    )
+}
+
+fun TvMazeEpisode.toEpisode(): Episode {
+    return Episode(
+        id = id.toInt(),
+        name = name,
+        season = season.toInt(),
+        episode = number.toInt(),
+        airdate = airdate ?: "",
+        runtime = runtime?.toInt() ?: 0,
+        rating = rating?.average?.let { it.toString() } ?: "",
+        image = image?.medium ?: "",
+        summary = summary ?: ""
     )
 }

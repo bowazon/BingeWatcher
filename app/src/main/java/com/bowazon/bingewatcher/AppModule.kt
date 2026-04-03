@@ -6,6 +6,8 @@ import com.bowazon.bingewatcher.core.repository.ActorRepository
 import com.bowazon.bingewatcher.core.repository.ActorRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.SearchRepository
 import com.bowazon.bingewatcher.core.repository.SearchRepositoryImpl
+import com.bowazon.bingewatcher.core.repository.SeasonRepository
+import com.bowazon.bingewatcher.core.repository.SeasonRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.ShowRepository
 import com.bowazon.bingewatcher.core.repository.ShowRepositoryImpl
 import dagger.Module
@@ -40,5 +42,11 @@ object AppModule {
     @Singleton
     fun provideActorRepository(remoteDataSource: TvMazeRemoteDataSource): ActorRepository {
         return ActorRepositoryImpl(remoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSeasonRepository(remoteDataSource: TvMazeRemoteDataSource): SeasonRepository {
+        return SeasonRepositoryImpl(remoteDataSource)
     }
 }

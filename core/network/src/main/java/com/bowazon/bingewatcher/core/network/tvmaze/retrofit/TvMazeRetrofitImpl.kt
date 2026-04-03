@@ -112,6 +112,10 @@ class TvMazeRetrofitImpl : TvMazeRemoteDataSource {
         return api.showsPaginated(page)
     }
 
+    override suspend fun episodesInSeason(id: Int): List<TvMazeEpisode> {
+        return api.episodesInSeason(id)
+    }
+
     override suspend fun episode(id: Int): TvMazeEpisode {
         return api.episode(id)
     }

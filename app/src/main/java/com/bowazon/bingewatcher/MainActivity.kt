@@ -21,6 +21,7 @@ import com.bowazon.bingewatcher.features.show.impl.showDetailsEntry
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.navigation.toEntries
 import com.bowazon.bingewatcher.features.actor.impl.actorEntry
+import com.bowazon.bingewatcher.features.season.impl.seasonEntry
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -49,6 +50,7 @@ class MainActivity : ComponentActivity() {
                         searchEntry(navigator)
                         showDetailsEntry(navigator)
                         actorEntry(navigator)
+                        seasonEntry(navigator)
                     }
                     NavDisplay(
                         entries = navigator.toEntries(entryProvider),

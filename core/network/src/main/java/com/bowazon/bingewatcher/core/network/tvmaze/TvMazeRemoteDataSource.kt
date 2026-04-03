@@ -35,6 +35,9 @@ interface TvMazeRemoteDataSource {
     suspend fun images(showId: Int): List<TvMazeShowImage>
     suspend fun showsPaginated(page: Int): List<TvMazeShow>
 
+    // Seasons
+    suspend fun episodesInSeason(id: Int): List<TvMazeEpisode>
+
     // Episodes
     suspend fun episode(id: Int): TvMazeEpisode
 

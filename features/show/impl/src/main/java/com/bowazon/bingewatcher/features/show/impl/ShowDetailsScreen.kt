@@ -39,6 +39,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -101,7 +102,8 @@ fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: ShowDetailsViewModel = hiltViewModel(),
     onBackClicked: () -> Unit,
-    navigateToActor: (Int) -> Unit
+    navigateToActor: (Int) -> Unit,
+    navigateToSeason: (Int, Int) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -115,6 +117,9 @@ fun ShowDetailsScreen(
                 }
                 is ShowDetailsEffect.OpenActorCard -> {
                     navigateToActor(effect.id)
+                }
+                is ShowDetailsEffect.OpenSeasonCard -> {
+                    navigateToSeason(effect.showId, effect.seasonId)
                 }
             }
         }
@@ -221,6 +226,12 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(uiData.seasons[i].image, painterLargeImage)
 
                         BingeWatcherSmallSeasonCard(
+                            modifier = Modifier.clickable{
+                                onEvent(ShowDetailsEvent.OnSeasonClick(
+                                    uiData.showDetails.id,
+                                    uiData.seasons[i].id
+                                ))
+                            },
                             season = i + 1,
                             episodesAmount = uiData.seasons[i].episodesAmount,
                             premiereDate = uiData.seasons[i].premiereDate,
