@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":features:show:api"))
     implementation(project(":features:actor:api"))
     implementation(project(":features:season:api"))
+    implementation(project(":features:imageview:api"))
     implementation(project(":core:navigation"))
     //implementation(project(":core:network"))
     implementation(project(":core:designsystem"))

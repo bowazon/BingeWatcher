@@ -104,6 +104,7 @@ fun ShowDetailsScreen(
     onBackClicked: () -> Unit,
     navigateToActor: (Int) -> Unit,
     navigateToSeason: (Int, Int) -> Unit,
+    navigateToImageView: (Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -120,6 +121,9 @@ fun ShowDetailsScreen(
                 }
                 is ShowDetailsEffect.OpenSeasonCard -> {
                     navigateToSeason(effect.showId, effect.seasonId)
+                }
+                is ShowDetailsEffect.OpenImageView -> {
+                    navigateToImageView(effect.imageId)
                 }
             }
         }
@@ -281,6 +285,9 @@ internal fun ShowDetailsScreen(
                             contentScale = ContentScale.FillHeight,
                             modifier = Modifier
                                 .height(150.dp)
+                                .clickable {
+                                    onEvent(ShowDetailsEvent.OnGalleryClick(i))
+                                }
                         )
                     }
                 }

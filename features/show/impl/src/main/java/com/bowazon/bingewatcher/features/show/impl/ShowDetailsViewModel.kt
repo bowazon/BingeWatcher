@@ -92,7 +92,10 @@ class ShowDetailsViewModel @AssistedInject constructor(
                 }
             }
             is ShowDetailsEvent.OnGalleryClick -> {
-
+                val imageId = event.i
+                viewModelScope.launch {
+                    _effects.emit(ShowDetailsEffect.OpenImageView(imageId))
+                }
             }
         }
     }
@@ -117,6 +120,7 @@ sealed class ShowDetailsUiState {
     data class Success(val data: ShowDetailsUiModel): ShowDetailsUiState()
 }
 
+// TODO dumb model
 data class ShowDetailsUiModel(
     val showDetails: ShowDetailed,
     val cast: List<ActorSummary>,
@@ -137,4 +141,5 @@ sealed interface ShowDetailsEffect {
     data class OpenUrl(val url: String) : ShowDetailsEffect
     data class OpenActorCard(val id: Int) : ShowDetailsEffect
     data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowDetailsEffect
+    data class OpenImageView(val imageId: Int) : ShowDetailsEffect
 }

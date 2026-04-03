@@ -70,11 +70,13 @@ dependencies {
     implementation(project(":features:show:api"))
     implementation(project(":features:actor:api"))
     implementation(project(":features:season:api"))
+    implementation(project(":features:imageview:api"))
     implementation(project(":features:discover:impl"))
     implementation(project(":features:search:impl"))
     implementation(project(":features:show:impl"))
     implementation(project(":features:actor:impl"))
     implementation(project(":features:season:impl"))
+    implementation(project(":features:imageview:impl"))
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)
