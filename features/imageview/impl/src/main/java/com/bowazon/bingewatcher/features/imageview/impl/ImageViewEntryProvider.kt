@@ -11,7 +11,8 @@ fun EntryProviderScope<NavKey>.imageViewEntry(navigator: Navigator) {
     entry<ImageViewNavKey> { navKey ->
         ImageViewScreen(
             imageIndex = navKey.imageIndex,
-            urlList = navKey.urlList
+            urlList = navKey.urlList,
+            onBackClicked = navigator::goBack
         )
     }
 }
