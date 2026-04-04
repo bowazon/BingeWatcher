@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeActorAssociatedWith(
-    val show: TvMazeShow,
+    val show: TvMazeShowLink,
     val character: TvMazeCharacterLink,
 )

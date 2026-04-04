@@ -56,6 +56,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
+// TODO it will not survive configuration changes, must use view model or rememberSavable
+
 @Composable
 fun ImageViewScreen(
     modifier: Modifier = Modifier,
@@ -220,6 +222,7 @@ fun ZoomableImage(url: String) {
 }
 
 fun shareImage(context: Context, url: String) {
+    // TODO bad; must use rememberCoroutineScope
     val scope = CoroutineScope(Dispatchers.IO)//rememberCoroutineScope { Dispatchers.IO }
 
     //LaunchedEffect(Unit) {

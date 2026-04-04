@@ -1,7 +1,9 @@
 package com.bowazon.bingewatcher.features.actor.impl
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.ActorDetailed
 import com.bowazon.bingewatcher.core.repository.ActorRepository
 import dagger.assisted.Assisted
@@ -34,15 +36,18 @@ class ActorViewModel @AssistedInject constructor(
             try {
                 coroutineScope {
                     val actorDetails = async { repository.getActorInfo(actorId) }
+                    val actorCredits = async { repository.getActorCredits(actorId) }
 
                     _state.value = ActorUiState.Success(
                         ActorUiModel(
                             actorDetails.await(),
+                            actorCredits.await()
                         )
                     )
                 }
             } catch (e: Exception) { // TODO generic error bad
                 _state.value = ActorUiState.Error
+                Log.i("ART_DBG", "e is " + e.toString())
             }
         }
     }
@@ -68,7 +73,8 @@ sealed class ActorUiState {
 
 // TODO probably should be it's own dumb model
 data class ActorUiModel(
-    val actorDetailed: ActorDetailed
+    val actorDetailed: ActorDetailed,
+    val actorCredits: List<ActorCredits>
 )
 
 sealed interface ActorEvent {

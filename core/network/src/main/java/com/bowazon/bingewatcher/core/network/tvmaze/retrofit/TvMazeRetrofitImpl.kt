@@ -124,8 +124,8 @@ class TvMazeRetrofitImpl : TvMazeRemoteDataSource {
         return api.personInfo(id)
     }
 
-    override suspend fun personCastCredits(id: Int): List<TvMazeCastCredit> {
-        return api.personCastCredits(id)
+    override suspend fun personCastCredits(id: Int, embedded: String?): List<TvMazeCastCredit> {
+        return api.personCastCredits(id, embedded)
     }
 
     override suspend fun personCrewCredits(id: Int): List<TvMazeCrewCredit> {

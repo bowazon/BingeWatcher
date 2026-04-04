@@ -94,7 +94,10 @@ interface TvMazeRetrofitApi {
     suspend fun personInfo(@Path("id") id: Int): TvMazePerson
 
     @GET("people/{id}/castcredits")
-    suspend fun personCastCredits(@Path("id") id: Int): List<TvMazeCastCredit>
+    suspend fun personCastCredits(
+        @Path("id") id: Int,
+        @Query("embed") embedded: String? = null
+    ): List<TvMazeCastCredit>
 
     @GET("people/{id}/crewcredits")
     suspend fun personCrewCredits(@Path("id") id: Int): List<TvMazeCrewCredit>

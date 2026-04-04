@@ -43,7 +43,7 @@ interface TvMazeRemoteDataSource {
 
     // people
     suspend fun personInfo(id: Int): TvMazePerson
-    suspend fun personCastCredits(id: Int): List<TvMazeCastCredit>
+    suspend fun personCastCredits(id: Int, embedded: String?): List<TvMazeCastCredit>
     suspend fun personCrewCredits(id: Int): List<TvMazeCrewCredit>
 
 }

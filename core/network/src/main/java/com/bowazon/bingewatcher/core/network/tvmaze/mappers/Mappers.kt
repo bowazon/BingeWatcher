@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.mappers
 
+import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.ActorDetailed
 import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.Season
@@ -7,6 +8,7 @@ import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.entities.ShowSummary
 import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
@@ -84,5 +86,17 @@ fun TvMazeEpisode.toEpisode(): Episode {
         rating = rating?.average?.let { it.toString() } ?: "",
         image = image?.medium ?: "",
         summary = summary ?: ""
+    )
+}
+
+fun TvMazeCastCredit.toActorCredits(): ActorCredits {
+    return ActorCredits(
+        showId = embedded?.show?.id ?: 0,
+        showName = embedded?.show?.name ?: "",
+        showPicture = embedded?.show?.image?.medium ?: "",
+        showGenre = embedded?.show?.genres?.joinToString(separator = "/") ?: "",
+        showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
+        showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
+        character = links.character.name,
     )
 }

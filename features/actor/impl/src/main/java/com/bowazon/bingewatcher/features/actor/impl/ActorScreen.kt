@@ -50,7 +50,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowRestDescriptio
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowShortDescription
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
-import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
 
 private val SHOW_IMAGE_HEIGHT = 600.dp
 private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
@@ -164,7 +164,7 @@ internal fun ActorScreen(
 
             stickyHeader {
                 BingeWatcherShowShortDescription(
-                    name = "Actors Name",  // TODO actor name
+                    name = uiData.actorDetailed.name,  // TODO actor name
                     premiered = "test 1",
                     rating = "test 2"
                 )
@@ -182,16 +182,6 @@ internal fun ActorScreen(
             item {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Button(onClick = {
-                        //onEvent(ShowDetailsEvent.OnImdbClick)
-                    }) {
-                        Text("IMDB")
-                    }
-                    Button(onClick = {
-                        //onEvent(ShowDetailsEvent.OnOfficialSiteClick)
-                    }) {
-                        Text("Official site")
-                    }
-                    Button(onClick = {
                         //onEvent(ShowDetailsEvent.OnFollowClick)
                     }) {
                         // TODO should be like if show ended and follow in ongoing
@@ -202,7 +192,18 @@ internal fun ActorScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
+            items(uiData.actorCredits) { credits ->
+                BingeWatcherShowCard(
+                    showName = credits.showName,
+                    characterName = credits.character,
+                    pictureUrl = credits.showPicture,
+                    date = credits.showPremiered,
+                    genre = credits.showGenre,
+                    rating = credits.showRating
+                )
+            }
         }
+
 
 
         IconButton(

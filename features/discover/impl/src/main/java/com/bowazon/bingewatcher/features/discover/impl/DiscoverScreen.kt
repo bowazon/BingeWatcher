@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.bowazon.bingewatcher.core.designsystem.ShowCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 
 @Composable
@@ -34,11 +34,12 @@ fun Greeting(
             modifier = Modifier.padding(padding)
         ) {
             items(shows) { show ->
-                ShowCard(
-                    name = show.summary.name,
+                BingeWatcherShowCard(
+                    showName = show.summary.name,
                     pictureUrl = show.summary.image,
                     date = show.summary.premiered,
                     genre = show.summary.genres,
+                    rating = show.summary.rating
                 )
             }
         }
