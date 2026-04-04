@@ -6,11 +6,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ImageViewNavKey(
-    val imageId: Int
+    val imageIndex: Int,
+    val urlList: List<String>
 ) : NavKey
 
 fun Navigator.navigateToImageView(
-    imageId: Int,
+    imageIndex: Int,
+    urlList: List<String>
 ) {
-    navigate(ImageViewNavKey(imageId))
+    navigate(ImageViewNavKey(imageIndex, urlList))
 }

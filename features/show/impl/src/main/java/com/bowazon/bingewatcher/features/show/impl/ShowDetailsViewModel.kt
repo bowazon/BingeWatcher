@@ -92,9 +92,10 @@ class ShowDetailsViewModel @AssistedInject constructor(
                 }
             }
             is ShowDetailsEvent.OnGalleryClick -> {
-                val imageId = event.i
+                val imageIndex = event.imageIndex
+                val urlList = event.urlList
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenImageView(imageId))
+                    _effects.emit(ShowDetailsEffect.OpenImageView(imageIndex, urlList))
                 }
             }
         }
@@ -134,12 +135,12 @@ sealed interface ShowDetailsEvent {
     object OnFollowClick : ShowDetailsEvent
     data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowDetailsEvent
     data class OnActorClick(val id: Int) : ShowDetailsEvent
-    data class OnGalleryClick(val i: Int) : ShowDetailsEvent
+    data class OnGalleryClick(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEvent
 }
 
 sealed interface ShowDetailsEffect {
     data class OpenUrl(val url: String) : ShowDetailsEffect
     data class OpenActorCard(val id: Int) : ShowDetailsEffect
     data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowDetailsEffect
-    data class OpenImageView(val imageId: Int) : ShowDetailsEffect
+    data class OpenImageView(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEffect
 }

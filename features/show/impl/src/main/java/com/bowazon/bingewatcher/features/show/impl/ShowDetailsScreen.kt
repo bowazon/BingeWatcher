@@ -104,7 +104,7 @@ fun ShowDetailsScreen(
     onBackClicked: () -> Unit,
     navigateToActor: (Int) -> Unit,
     navigateToSeason: (Int, Int) -> Unit,
-    navigateToImageView: (Int) -> Unit
+    navigateToImageView: (Int, List<String>) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -123,7 +123,7 @@ fun ShowDetailsScreen(
                     navigateToSeason(effect.showId, effect.seasonId)
                 }
                 is ShowDetailsEffect.OpenImageView -> {
-                    navigateToImageView(effect.imageId)
+                    navigateToImageView(effect.imageIndex, effect.urlList)
                 }
             }
         }
@@ -286,7 +286,8 @@ internal fun ShowDetailsScreen(
                             modifier = Modifier
                                 .height(150.dp)
                                 .clickable {
-                                    onEvent(ShowDetailsEvent.OnGalleryClick(i))
+                                    onEvent(ShowDetailsEvent.OnGalleryClick(
+                                        i, uiData.pictures)) // TODO is it safe to call uiData.pictures? Can't it change concurrently?
                                 }
                         )
                     }
