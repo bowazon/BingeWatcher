@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -32,6 +33,10 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val BingeWatcherColorScheme = darkColorScheme()
+
+val gradientDarkColor = BingeWatcherColorScheme.surface // TODO I'm not fucking sure
+
 @Composable
 fun BingeWatcherTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -39,6 +44,7 @@ fun BingeWatcherTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    /*
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -49,8 +55,10 @@ fun BingeWatcherTheme(
         else -> LightColorScheme
     }
 
+     */
+
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = BingeWatcherColorScheme,
         typography = Typography,
         content = content
     )

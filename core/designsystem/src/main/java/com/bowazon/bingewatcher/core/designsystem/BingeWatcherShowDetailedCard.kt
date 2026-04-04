@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.bowazon.bingewatcher.core.designsystem.theme.gradientDarkColor
 import com.bowazon.bingewatcher.core.designsystem.utils.HtmlText
 
 
@@ -43,7 +44,7 @@ fun BingeWatcherShowRestDescription(
     genres: String,
     description: String,
 ) {
-    Surface(color = Color.Black,
+    Surface(//color = Color.Black,
         modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -74,7 +75,8 @@ fun BingeWatcherShowShortDescription(
     premiered: String,
     rating: String
 ) {
-    Surface(color = Color.Black) {
+    Surface(//color = Color.Black
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -127,7 +129,8 @@ fun BingeWatcherShowImageWithGradient(
             .fillMaxWidth()
             .height(imageHeight)
     ) {
-        Surface(color = Color.Black) {
+        Surface(//color = Color.Black
+        ) {
             Image(
                 painter = imagePainter,
                 contentDescription = null,
@@ -141,7 +144,7 @@ fun BingeWatcherShowImageWithGradient(
                 .matchParentSize()
                 .drawWithCache {
                     val gradient = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black),
+                        colors = listOf(Color.Transparent, gradientDarkColor),
                         startY = size.height * 0.95f,
                         endY = size.height
                     )

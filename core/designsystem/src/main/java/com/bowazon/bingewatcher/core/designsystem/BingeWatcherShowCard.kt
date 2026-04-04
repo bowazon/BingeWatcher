@@ -51,7 +51,7 @@ fun BingeWatcherShowCard(
 
     Surface(
         modifier,
-        color = Color.Black
+        //color = Color.Black
     ) {
         Row(Modifier.padding(16.dp)) {
             Image(

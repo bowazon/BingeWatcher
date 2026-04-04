@@ -147,8 +147,8 @@ internal fun SeasonScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
-                .background(Color.Black),
+                .fillMaxSize(),
+                //.background(Color.Black),
             state = lazyListState
         ) {
             item {

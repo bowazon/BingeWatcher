@@ -181,7 +181,7 @@ fun ZoomableImage(url: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            //.background(Color.Black)
             .pointerInput(Unit) {
                 if (scale > 1f) {
                     /*
