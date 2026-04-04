@@ -1,5 +1,9 @@
 package com.bowazon.bingewatcher.features.imageview.impl
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,9 +43,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun ImageViewScreen(
@@ -50,6 +63,7 @@ fun ImageViewScreen(
     urlList: List<String>,
     onBackClicked: () -> Unit
 ) {
+    val context = LocalContext.current
 
     val pagerState = rememberPagerState(
         initialPage = imageIndex,
@@ -57,7 +71,7 @@ fun ImageViewScreen(
             urlList.size
         })
 
-    var controlsVisible by remember { mutableStateOf(false) }
+    var controlsVisible by remember { mutableStateOf(true) }
 
     val flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
 
@@ -139,7 +153,9 @@ fun ImageViewScreen(
                         }
                     }
 
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = {
+                        shareImage(context, urlList[pagerState.currentPage])
+                    }) {
                         Icon(
                             Icons.Default.Share,
                             contentDescription = null,
@@ -201,4 +217,42 @@ fun ZoomableImage(url: String) {
                 }
         )
     }
+}
+
+fun shareImage(context: Context, url: String) {
+    val scope = CoroutineScope(Dispatchers.IO)//rememberCoroutineScope { Dispatchers.IO }
+
+    //LaunchedEffect(Unit) {
+
+        scope.launch {
+
+            val loader = ImageLoader(context)
+            val request = ImageRequest.Builder(context)
+                .data(url)
+                .allowHardware(false)
+                .build()
+
+            val result = (loader.execute(request) as SuccessResult).drawable
+            val bitmap = (result as BitmapDrawable).bitmap
+
+            val file = File(context.cacheDir, "shared_image.png")
+            val stream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.flush()
+            stream.close()
+
+            val uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.provider",
+                file
+            )
+
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "image/*" // TODO or "image/jpg"?
+            }
+            context.startActivity(Intent.createChooser(shareIntent, null))
+        }
+    //}
 }

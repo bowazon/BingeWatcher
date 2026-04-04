@@ -297,7 +297,8 @@ internal fun ShowDetailsScreen(
             }
         }
 
-
+        // TODO do we really need it here, white arrow on white surface?
+        // TODO return adaptive background?
         IconButton(
             onClick = { onBackClicked() },
             modifier = Modifier
