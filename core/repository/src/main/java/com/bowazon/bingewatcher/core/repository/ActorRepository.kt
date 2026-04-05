@@ -6,4 +6,5 @@ import com.bowazon.bingewatcher.core.entities.ActorDetailed
 interface ActorRepository {
     suspend fun getActorInfo(id: Int): ActorDetailed
     suspend fun getActorCredits(id: Int): List<ActorCredits>
+    //suspend fun getCrewCredits(id: Int): List<CrewCredits>
 }

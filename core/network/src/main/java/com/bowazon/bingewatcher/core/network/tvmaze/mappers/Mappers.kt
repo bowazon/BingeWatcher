@@ -14,6 +14,9 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.Int
 import kotlin.String
 import kotlin.text.substringBefore
@@ -70,9 +73,15 @@ fun TvMazePerson.toActorDetailed(): ActorDetailed {
         name = name,
         image = image?.medium ?: "",
         country = country?.name ?: "",
-        birthday = birthday ?: "",
+        birthday = formatDate(birthday ?: ""),
         gender = gender ?: "",
     )
+}
+
+fun formatDate(input: String): String {
+    val parsedDate = LocalDate.parse(input)
+    val formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH)
+    return parsedDate.format(formatter)
 }
 
 fun TvMazeEpisode.toEpisode(): Episode {

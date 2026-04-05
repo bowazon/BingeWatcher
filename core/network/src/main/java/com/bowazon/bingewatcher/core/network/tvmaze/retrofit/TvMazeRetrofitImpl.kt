@@ -1,6 +1,7 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.retrofit
 
 
+import com.bowazon.bingewatcher.core.network.tvmaze.EmbedType
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
@@ -120,16 +121,16 @@ class TvMazeRetrofitImpl : TvMazeRemoteDataSource {
         return api.episode(id)
     }
 
-    override suspend fun personInfo(id: Int): TvMazePerson {
-        return api.personInfo(id)
+    override suspend fun personInfo(id: Int, embedded: EmbedType?): TvMazePerson {
+        return api.personInfo(id, embedded)
     }
 
-    override suspend fun personCastCredits(id: Int, embedded: String?): List<TvMazeCastCredit> {
+    override suspend fun personCastCredits(id: Int, embedded: EmbedType?): List<TvMazeCastCredit> {
         return api.personCastCredits(id, embedded)
     }
 
-    override suspend fun personCrewCredits(id: Int): List<TvMazeCrewCredit> {
-        return api.personCrewCredits(id)
+    override suspend fun personCrewCredits(id: Int, embedded: EmbedType?): List<TvMazeCrewCredit> {
+        return api.personCrewCredits(id, embedded)
     }
 
     // TODO move the shit out of here

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.size.Size
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherActorShortDescription
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherActorSmallCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowImageWithGradient
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowRestDescription
@@ -163,10 +164,10 @@ internal fun ActorScreen(
             }
 
             stickyHeader {
-                BingeWatcherShowShortDescription(
+                BingeWatcherActorShortDescription(
                     name = uiData.actorDetailed.name,  // TODO actor name
-                    premiered = "test 1",
-                    rating = "test 2"
+                    born = uiData.actorDetailed.birthday,
+                    credits = "test 2"
                 )
             }
 

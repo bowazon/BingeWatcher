@@ -3,6 +3,7 @@ package com.bowazon.bingewatcher.core.repository
 import android.util.Log
 import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.ActorDetailed
+import com.bowazon.bingewatcher.core.network.tvmaze.EmbedType
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toActorCredits
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toActorDetailed
@@ -22,7 +23,7 @@ class ActorRepositoryImpl@Inject constructor(
 
     override suspend fun getActorCredits(id: Int): List<ActorCredits> {
 
-        val a = api.personCastCredits(id, "show")
+        val a = api.personCastCredits(id, EmbedType.SHOW)
         val b = a.map { it.toActorCredits() }
 
         Log.i("ART_DBG_3", "model is " + a[0].toString())
@@ -30,4 +31,8 @@ class ActorRepositoryImpl@Inject constructor(
 
         return b
     }
+
+    //override suspend fun getCrewCredits(id: Int): List<CrewCredits> {
+    //    TODO("Not yet implemented")
+    //}
 }

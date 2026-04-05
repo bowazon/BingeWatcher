@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.retrofit
 
+import com.bowazon.bingewatcher.core.network.tvmaze.EmbedType
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
@@ -91,14 +92,20 @@ interface TvMazeRetrofitApi {
 
     // people
     @GET("people/{id}")
-    suspend fun personInfo(@Path("id") id: Int): TvMazePerson
+    suspend fun personInfo(
+        @Path("id") id: Int,
+        @Query("embed") embedded: EmbedType?
+    ): TvMazePerson
 
     @GET("people/{id}/castcredits")
     suspend fun personCastCredits(
         @Path("id") id: Int,
-        @Query("embed") embedded: String? = null
+        @Query("embed") embedded: EmbedType? = null
     ): List<TvMazeCastCredit>
 
     @GET("people/{id}/crewcredits")
-    suspend fun personCrewCredits(@Path("id") id: Int): List<TvMazeCrewCredit>
+    suspend fun personCrewCredits(
+        @Path("id") id: Int,
+        @Query("embed") embedded: EmbedType? = null
+    ): List<TvMazeCrewCredit>
 }

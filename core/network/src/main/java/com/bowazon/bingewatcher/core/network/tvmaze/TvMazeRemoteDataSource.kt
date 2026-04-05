@@ -42,10 +42,17 @@ interface TvMazeRemoteDataSource {
     suspend fun episode(id: Int): TvMazeEpisode
 
     // people
-    suspend fun personInfo(id: Int): TvMazePerson
-    suspend fun personCastCredits(id: Int, embedded: String?): List<TvMazeCastCredit>
-    suspend fun personCrewCredits(id: Int): List<TvMazeCrewCredit>
+    suspend fun personInfo(id: Int, embedded: EmbedType? = null): TvMazePerson
+    suspend fun personCastCredits(id: Int, embedded: EmbedType? = null): List<TvMazeCastCredit>
+    suspend fun personCrewCredits(id: Int, embedded: EmbedType? = null): List<TvMazeCrewCredit>
 
+}
+
+enum class EmbedType(private val value: String) {
+    SHOW("show"),
+    CASTCREDITS("castcredits");
+
+    override fun toString() = value
 }
 
 // skipped
