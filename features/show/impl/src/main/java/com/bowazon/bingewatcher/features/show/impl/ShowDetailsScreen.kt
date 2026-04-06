@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -197,7 +198,11 @@ internal fun ShowDetailsScreen(
             }
 
             item {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     Button(onClick = {
                         onEvent(ShowDetailsEvent.OnImdbClick)
                     }) {
@@ -247,6 +252,12 @@ internal fun ShowDetailsScreen(
             }
 
             item {
+                Text(modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                    text = "Cast")
+            }
+
+            item {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -268,6 +279,13 @@ internal fun ShowDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
+
+            item {
+                Text(modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                    text = "Gallery")
+            }
+
             item {
                 LazyRow(
                     modifier = Modifier

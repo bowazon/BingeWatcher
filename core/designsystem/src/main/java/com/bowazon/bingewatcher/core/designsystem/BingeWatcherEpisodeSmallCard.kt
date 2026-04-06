@@ -44,7 +44,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.bowazon.bingewatcher.core.designsystem.utils.HtmlText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Check
@@ -52,6 +51,8 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 
 @Composable
 fun BingeWatcherEpisodeSmallCard(
@@ -150,9 +151,9 @@ fun BingeWatcherEpisodeSmallCard(
         }
 
         if (showDescription && description != null) {
-            HtmlText(
+            Text(
                 modifier = Modifier.padding(horizontal = 18.dp),
-                html = description,
+                text = AnnotatedString.Companion.fromHtml(description),
                 color = Color.White.copy(alpha = 0.9f),
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 6,

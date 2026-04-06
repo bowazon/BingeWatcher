@@ -28,15 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.gradientDarkColor
-import com.bowazon.bingewatcher.core.designsystem.utils.HtmlText
 
 
-// TODO all Color.Black should be borrowed from theme
 
 @Composable
 fun BingeWatcherShowRestDescription(
@@ -44,27 +44,23 @@ fun BingeWatcherShowRestDescription(
     genres: String,
     description: String,
 ) {
-    Surface(//color = Color.Black,
-        modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = genres,
-                color = Color.White.copy(alpha = 0.7f),
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    Column(modifier = modifier.padding(16.dp)) {
+        Text(
+            text = genres,
+            color = Color.White.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
-            HtmlText(
-                html = description,
-                color = Color.White.copy(alpha = 0.9f),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 6,
-                overflow = TextOverflow.Ellipsis
-            )
-
-        }
+        Text(
+            text = AnnotatedString.Companion.fromHtml(description),
+            color = Color.White.copy(alpha = 0.9f),
+            style = MaterialTheme.typography.bodySmall,
+            maxLines = 6,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -75,44 +71,40 @@ fun BingeWatcherShowShortDescription(
     premiered: String,
     rating: String
 ) {
-    Surface(//color = Color.Black
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = name,
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = premiered,
-                    color = Color.White.copy(alpha = 0.8f),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = name,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = premiered,
+                color = Color.White.copy(alpha = 0.8f),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
-            if (rating.isNotEmpty()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = rating,
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Image(
-                        painter = painterResource(R.drawable.star),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+        if (rating.isNotEmpty()) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = rating,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Image(
+                    painter = painterResource(R.drawable.star),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }
@@ -124,13 +116,11 @@ fun BingeWatcherShowImageWithGradient(
     imageHeight: Dp,
     imagePainter: Painter
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(imageHeight)
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .height(imageHeight)
     ) {
-        Surface(//color = Color.Black
-        ) {
+        Surface {
             Image(
                 painter = imagePainter,
                 contentDescription = null,
@@ -139,20 +129,19 @@ fun BingeWatcherShowImageWithGradient(
             )
         }
 
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .drawWithCache {
-                    val gradient = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, gradientDarkColor),
-                        startY = size.height * 0.95f,
-                        endY = size.height
-                    )
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(gradient)
-                    }
+        Box(modifier = Modifier
+            .matchParentSize()
+            .drawWithCache {
+                val gradient = Brush.verticalGradient(
+                    colors = listOf(Color.Transparent, gradientDarkColor),
+                    startY = size.height * 0.95f,
+                    endY = size.height
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(gradient)
                 }
+            }
         )
     }
 }
@@ -165,10 +154,10 @@ fun BingeWatcherSmallSeasonCard(
     imagePainter: Painter,
     premiereDate: String
 ) {
-    Column {
+    Column(modifier) {
         Text(text = "Season $season", color = Color.White)
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .height(150.dp)
                 .width(120.dp)
         ) {
@@ -211,12 +200,10 @@ fun BingeWatcherPersonSmallCard(
     imagePainter: Painter
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = modifier
-                .size(100.dp)
-        ) {
+        Box(Modifier.size(100.dp)) {
             Image(
                 painter = imagePainter,
                 contentDescription = personName,
