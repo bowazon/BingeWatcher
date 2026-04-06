@@ -1,10 +1,12 @@
 package com.bowazon.bingewatcher.core.repository
 
 import com.bowazon.bingewatcher.core.entities.ActorSummary
+import com.bowazon.bingewatcher.core.entities.CrewSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toActor
+import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toCrew
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toImageUrl
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toSeason
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toShowDetailed
@@ -20,6 +22,10 @@ class ShowRepositoryImpl @Inject constructor(
 
     override suspend fun getActorsForShow(showId: Int): List<ActorSummary> {
         return api.cast(showId).map { it.toActor() }
+    }
+
+    override suspend fun getCrewForShow(showId: Int): List<CrewSummary> {
+        return api.crew(showId).map { it.toCrew() }
     }
 
     override suspend fun getSeasonsForShow(showId: Int): List<Season> {

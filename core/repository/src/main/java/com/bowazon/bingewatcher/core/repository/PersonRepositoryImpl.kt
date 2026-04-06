@@ -23,8 +23,12 @@ class PersonRepositoryImpl@Inject constructor(
         val a = api.personCastCredits(id, EmbedType.SHOW)
         val b = a.map { it.toActorCredits() }
 
-        Log.i("ART_DBG_3", "model is " + a[0].toString())
-        Log.i("ART_DBG_3", "entity is " + b[0].toString())
+        if (a.isNotEmpty()) {
+            Log.i("ART_DBG_3", "model is ${a[0]}")
+        }
+        if (b.isNotEmpty()) {
+            Log.i("ART_DBG_3", "entity is ${b[0]}")
+        }
 
         return b
     }

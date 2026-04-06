@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -197,12 +199,25 @@ fun BingeWatcherSmallSeasonCard(
 fun BingeWatcherPersonSmallCard(
     modifier: Modifier = Modifier,
     personName: String,
-    imagePainter: Painter
+    imagePainter: Painter,
+    additionalInfo: String? = null,
+    additionalInfoHeight: Dp = 0.dp
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (additionalInfo != null) {
+            Box(modifier = Modifier.heightIn(min = additionalInfoHeight)) {
+                Text(
+                    text = additionalInfo,
+                    color = Color.White,
+                    maxLines = 3,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
+
         Box(Modifier.size(100.dp)) {
             Image(
                 painter = imagePainter,

@@ -3,6 +3,7 @@ package com.bowazon.bingewatcher.features.show.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bowazon.bingewatcher.core.entities.ActorSummary
+import com.bowazon.bingewatcher.core.entities.CrewSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.repository.ShowRepository
@@ -37,13 +38,30 @@ class ShowDetailsViewModel @AssistedInject constructor(
                 coroutineScope {
                     val showDetails = async { repository.getShow(showId) }
                     val cast = async { repository.getActorsForShow(showId) }
+                    val crew = async { repository.getCrewForShow(showId) }
                     val pictures = async { repository.getImagesForShow(showId) }
                     val seasons = async { repository.getSeasonsForShow(showId) }
+
+                    val crewMerged = crew
+                        .await()
+                        .groupBy { crewSummary ->
+                            crewSummary.name
+                        }.map { (_, personsCrewRoles) ->
+                            val first = personsCrewRoles.first()
+
+                            val mergedRoles = personsCrewRoles
+                                .map { it.role }
+                                .distinct()
+                                .joinToString("\n")
+
+                            first.copy(role = mergedRoles)
+                        }
 
                     _state.value = ShowDetailsUiState.Success(
                         ShowDetailsUiModel(
                             showDetails.await(),
                             cast.await(),
+                            crewMerged,
                             pictures.await(),
                             seasons.await()
                         )
@@ -85,10 +103,10 @@ class ShowDetailsViewModel @AssistedInject constructor(
                     ))
                 }
             }
-            is ShowDetailsEvent.OnActorClick -> {
-                val actorId = event.id
+            is ShowDetailsEvent.OnPersonClick -> {
+                val personId = event.id
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenActorCard(actorId))
+                    _effects.emit(ShowDetailsEffect.OpenPersonCard(personId))
                 }
             }
             is ShowDetailsEvent.OnGalleryClick -> {
@@ -125,6 +143,7 @@ sealed class ShowDetailsUiState {
 data class ShowDetailsUiModel(
     val showDetails: ShowDetailed,
     val cast: List<ActorSummary>,
+    val crew: List<CrewSummary>,
     val pictures: List<String>,
     val seasons: List<Season>
 )
@@ -134,13 +153,13 @@ sealed interface ShowDetailsEvent {
     object OnOfficialSiteClick : ShowDetailsEvent
     object OnFollowClick : ShowDetailsEvent
     data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowDetailsEvent
-    data class OnActorClick(val id: Int) : ShowDetailsEvent
+    data class OnPersonClick(val id: Int) : ShowDetailsEvent
     data class OnGalleryClick(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEvent
 }
 
 sealed interface ShowDetailsEffect {
     data class OpenUrl(val url: String) : ShowDetailsEffect
-    data class OpenActorCard(val id: Int) : ShowDetailsEffect
+    data class OpenPersonCard(val id: Int) : ShowDetailsEffect
     data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowDetailsEffect
     data class OpenImageView(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEffect
 }

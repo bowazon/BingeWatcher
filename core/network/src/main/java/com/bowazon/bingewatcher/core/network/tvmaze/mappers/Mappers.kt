@@ -4,6 +4,7 @@ import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.Person
 import com.bowazon.bingewatcher.core.entities.ActorSummary
 import com.bowazon.bingewatcher.core.entities.CrewCredits
+import com.bowazon.bingewatcher.core.entities.CrewSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.entities.ShowSummary
@@ -11,6 +12,7 @@ import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewMember
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
@@ -18,6 +20,7 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShow
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 import kotlin.String
 import kotlin.text.substringBefore
@@ -58,7 +61,6 @@ fun TvMazeActor.toActor(): ActorSummary {
 fun TvMazeSeason.toSeason(): Season {
     return Season (
         id = id.toInt(),
-        //showName = links?.show?.name ?: "",
         episodesAmount = episodeOrder?.toInt() ?: 0,
         image = image?.medium ?: "",
         premiereDate = premiereDate.substringBefore("-")
@@ -80,10 +82,16 @@ fun TvMazePerson.toPerson(): Person {
     )
 }
 
-fun formatDate(input: String): String {
-    val parsedDate = LocalDate.parse(input)
-    val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)
-    return parsedDate.format(formatter)
+private val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)
+
+fun formatDate(input: String?): String {
+    if (input.isNullOrBlank()) return ""
+
+    return try {
+        LocalDate.parse(input).format(formatter)
+    } catch (e: DateTimeParseException) {
+        ""
+    }
 }
 
 fun TvMazeEpisode.toEpisode(): Episode {
@@ -122,5 +130,14 @@ fun TvMazeCrewCredit.toCrewCredits(): CrewCredits {
         showGenre = embedded?.show?.genres?.joinToString(separator = "/") ?: "",
         showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
         showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
+    )
+}
+
+fun TvMazeCrewMember.toCrew(): CrewSummary {
+    return CrewSummary(
+        id = person.id.toInt(),
+        name = person.name,
+        image = person.image?.medium ?: "",
+        role = type
     )
 }

@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +54,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowShortDescripti
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.R
 
 private val SHOW_IMAGE_HEIGHT = 600.dp
 private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
@@ -103,7 +105,7 @@ fun ShowDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: ShowDetailsViewModel = hiltViewModel(),
     onBackClicked: () -> Unit,
-    navigateToActor: (Int) -> Unit,
+    navigateToPerson: (Int) -> Unit,
     navigateToSeason: (Int, Int) -> Unit,
     navigateToImageView: (Int, List<String>) -> Unit
 ) {
@@ -117,8 +119,8 @@ fun ShowDetailsScreen(
                     val intent = Intent(Intent.ACTION_VIEW, effect.url.toUri())
                     context.startActivity(intent)
                 }
-                is ShowDetailsEffect.OpenActorCard -> {
-                    navigateToActor(effect.id)
+                is ShowDetailsEffect.OpenPersonCard -> {
+                    navigateToPerson(effect.id)
                 }
                 is ShowDetailsEffect.OpenSeasonCard -> {
                     navigateToSeason(effect.showId, effect.seasonId)
@@ -265,13 +267,49 @@ internal fun ShowDetailsScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(uiData.cast) { actor ->
-                        val painter = loadPainter(actor.image, painterLargeImage)
+                        val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
 
                         BingeWatcherPersonSmallCard(
                             modifier.clickable {
-                                onEvent(ShowDetailsEvent.OnActorClick(actor.id))
+                                onEvent(ShowDetailsEvent.OnPersonClick(actor.id))
                             },
                             personName = actor.name,
+                            imagePainter = painter
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            item {
+                Text(modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                    text = "Crew")
+            }
+
+            // TODO showing crew this way is pain in the ass. Do we need it here? Should we do separate full crew feature, like in IMDB?
+            item {
+                val maxLines = uiData.crew.maxOfOrNull { it.role.lines().size } ?: 1
+                val lineHeight = 20.dp
+                val infoHeight = lineHeight * maxLines
+
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiData.crew) { crewMember ->
+                        val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
+
+                        BingeWatcherPersonSmallCard(
+                            modifier.clickable {
+                                onEvent(ShowDetailsEvent.OnPersonClick(crewMember.id))
+                            },
+                            personName = crewMember.name,
+                            additionalInfo = crewMember.role,
+                            additionalInfoHeight = infoHeight,
                             imagePainter = painter
                         )
                     }

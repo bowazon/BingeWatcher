@@ -13,7 +13,7 @@ fun EntryProviderScope<NavKey>.showDetailsEntry(navigator: Navigator) {
     entry<ShowDetailsNavKey> { navKey ->
         ShowDetailsScreen(
             onBackClicked = navigator::goBack,
-            navigateToActor = navigator::navigateToPerson,
+            navigateToPerson = navigator::navigateToPerson,
             navigateToSeason = navigator::navigateToSeason,
             navigateToImageView = navigator::navigateToImageView,
             viewModel = hiltViewModel<ShowDetailsViewModel, ShowDetailsViewModel.Factory>(
