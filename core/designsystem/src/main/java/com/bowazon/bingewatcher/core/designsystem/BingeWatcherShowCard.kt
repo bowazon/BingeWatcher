@@ -1,5 +1,3 @@
-@file:JvmName("BingeWatcherShowCardKt")
-
 package com.bowazon.bingewatcher.core.designsystem
 
 import androidx.compose.foundation.Image

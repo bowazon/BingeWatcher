@@ -6,6 +6,7 @@ import android.text.style.StyleSpan
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.AnnotatedString
@@ -24,6 +25,7 @@ fun getReadableTextColor(bgColor: Color): Color {
 
 @Composable
 fun HtmlText(
+    modifier: Modifier = Modifier,
     html: String,
     color: Color,
     style: TextStyle,
@@ -35,6 +37,7 @@ fun HtmlText(
     }
 
     Text(
+        modifier = modifier,
         text = spanned.toAnnotatedString(),
         color = color,
         style = style,

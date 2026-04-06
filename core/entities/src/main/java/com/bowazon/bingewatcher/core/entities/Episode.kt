@@ -9,5 +9,8 @@ data class Episode(
     val runtime: Int,
     val rating: String,
     val image: String,
-    val summary: String
+    val summary: String,
+    val showName: String,
+    val watched: Boolean = false,
+    val isUpdatingWatched: Boolean = false // TODO should really be in UI model
 )

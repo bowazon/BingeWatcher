@@ -68,4 +68,6 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":features:discover:api"))
     implementation(project(":features:search:api"))
+
+    implementation(libs.androidx.compose.material.icons.extended)
 }

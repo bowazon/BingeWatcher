@@ -180,24 +180,14 @@ fun BingeWatcherSmallSeasonCard(
             )
 
             if (episodesAmount != 0) {
-                val horizontalPadding = if (episodesAmount >= 10) 2.dp else 7.dp
-                Image(
-                    painter = painterResource(R.drawable.episodes_icon),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .height(50.dp)
-                )
-
                 Text(
-                    text = episodesAmount.toString(),
+                    text = "E$episodesAmount",
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         //.padding(8.dp)
-                        //.background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
-                        .padding(horizontal = horizontalPadding, vertical = 1.dp),
-                    color = Color.Black
+                        .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                    color = Color.White
                 )
             }
 

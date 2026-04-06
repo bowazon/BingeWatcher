@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,7 +19,7 @@ data class TvMazeEpisode(
     val image: TvMazeImage? = null,
     val summary: String? = null,
     //@JsonProperty("_links")
-    val links: TvMazeLinks? = null,
+    @SerialName("_links") val links: TvMazeLinks? = null,
     //@JsonProperty("_embedded")
-    val embedded: TvMazeEmbedded? = null,
+    //val embedded: TvMazeEmbedded? = null,
 )

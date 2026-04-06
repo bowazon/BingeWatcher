@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowShortDescripti
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherEpisodeSmallCard
 
 private val SHOW_IMAGE_HEIGHT = 600.dp
 private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
@@ -106,7 +108,14 @@ fun SeasonScreen(
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
+            when(effect) {
+                is SeasonEffect.OnWatchedLoading -> {
 
+                }
+                is SeasonEffect.OnWatchedLoaded -> {
+
+                }
+            }
         }
     }
 
@@ -162,44 +171,65 @@ internal fun SeasonScreen(
 
             stickyHeader {
                 BingeWatcherShowShortDescription(
-                    name = "season123456",
-                    premiered = "test 1",
-                    rating = "test 2"
+                    name = uiData.episodes[0].showName + ", season " + uiData.episodes[0].season,
+                    premiered = uiData.season.premiereDate,
+                    rating = ""
                 )
             }
 
             item {
                 BingeWatcherShowRestDescription(
-                    genres = "test 3",
-                    description = "test 4"
+                    genres = uiData.season.episodesAmount.toString() +
+                            if(uiData.season.episodesAmount == 1) " episode"
+                            else " episodes",
+                    description = ""
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
             item {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Button(onClick = {
-                        //onEvent(ShowDetailsEvent.OnImdbClick)
-                    }) {
-                        Text("IMDB")
-                    }
+                Row(modifier = Modifier.padding(16.dp)) {
                     Button(onClick = {
                         //onEvent(ShowDetailsEvent.OnOfficialSiteClick)
                     }) {
-                        Text("Official site")
+                        Text("Like")
                     }
                     Button(onClick = {
                         //onEvent(ShowDetailsEvent.OnFollowClick)
                     }) {
-                        // TODO should be like if show ended and follow in ongoing
-                        Text("Follow")
+                        Text("Mark watched")
+                    }
+                    Button(onClick = {
+                        //onEvent(ShowDetailsEvent.OnFollowClick)
+                    }) {
+                        Text("Share")
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
+            item {
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text ="Episodes:")
+            }
+
+            items(uiData.episodes) { episode ->
+                BingeWatcherEpisodeSmallCard (
+                    name = episode.name,
+                    pictureUrl = episode.image,
+                    date = episode.airdate,
+                    rating = episode.rating,
+                    description = episode.summary,
+                    onToggle = { onEvent(SeasonEvent.OnWatchedClicked(episode.id)) },
+                    isEpiWatched = episode.watched,
+                    isEpiLoading = episode.isUpdatingWatched
+                )
+            }
+
+            // TODO buttons next season previous season
         }
 
 

@@ -58,6 +58,7 @@ fun TvMazeActor.toActor(): ActorSummary {
 fun TvMazeSeason.toSeason(): Season {
     return Season (
         id = id.toInt(),
+        //showName = links?.show?.name ?: "",
         episodesAmount = episodeOrder?.toInt() ?: 0,
         image = image?.medium ?: "",
         premiereDate = premiereDate.substringBefore("-")
@@ -81,7 +82,7 @@ fun TvMazePerson.toPerson(): Person {
 
 fun formatDate(input: String): String {
     val parsedDate = LocalDate.parse(input)
-    val formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH)
+    val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)
     return parsedDate.format(formatter)
 }
 
@@ -91,11 +92,12 @@ fun TvMazeEpisode.toEpisode(): Episode {
         name = name,
         season = season.toInt(),
         episode = number.toInt(),
-        airdate = airdate ?: "",
+        airdate = formatDate(airdate ?: ""),
         runtime = runtime?.toInt() ?: 0,
         rating = rating?.average?.let { it.toString() } ?: "",
         image = image?.medium ?: "",
-        summary = summary ?: ""
+        summary = summary ?: "",
+        showName = links?.show?.name ?: ""
     )
 }
 

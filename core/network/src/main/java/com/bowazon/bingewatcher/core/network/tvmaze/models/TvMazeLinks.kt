@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TvMazeLinks(
-    val self: TvMazeSelf,
-    val previousEpisode: TvMazePreviousEpisode,
+    val self: TvMazeSelf ?= null,
+    val show: TvMazeShowLink ?= null,
 )

@@ -14,7 +14,7 @@ class SeasonRepositoryImpl @Inject constructor(
         showId: Int,
         seasonId: Int
     ): Season {
-        return api.seasons(showId).filter { it.id.toInt() ==  seasonId }[0].toSeason()
+        return api.seasons(showId).first { it.id.toInt() == seasonId }.toSeason()
     }
 
     override suspend fun getEpisodes(seasonId: Int): List<Episode> {
