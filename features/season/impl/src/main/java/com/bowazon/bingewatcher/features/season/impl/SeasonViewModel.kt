@@ -38,7 +38,6 @@ class SeasonViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 coroutineScope {
-                    Log.i("ART_DBG", "showId is " + showId + "; seasonId is " + seasonId)
                     val season = async { repository.getSeasonInfo(showId, seasonId) }
                     val episodes = async { repository.getEpisodes(seasonId) }
 
@@ -51,7 +50,6 @@ class SeasonViewModel @AssistedInject constructor(
                 }
             } catch (e: Exception) { // TODO generic error bad
                 _state.value = SeasonUiState.Error
-                Log.i("ART_DBG", "error is " + e.toString())
             }
         }
     }
@@ -59,35 +57,49 @@ class SeasonViewModel @AssistedInject constructor(
     fun onEvent(event: SeasonEvent) {
         when(event) {
             is SeasonEvent.OnWatchedClicked -> {
+                // TODO move to reduce
                 viewModelScope.launch {
+                    // 1. So first, we're getting current value
+                    val currentState = _state.value
+                    val data = (currentState as? SeasonUiState.Success)?.data ?: return@launch
+
+                    val episode = data.episodes.find { it.id == event.episodeId } ?: return@launch
+                    val newValue = !episode.watched // TOGGLE HERE
+
+                    // 2. Then, we're marking loading (via isUpdatingWatched = true)
                     _state.update { oldState ->
-                        val data = (oldState as? SeasonUiState.Success)?.data ?: return@launch // TODO return oldState?
-                        val updatedEpisodes = data.episodes.map {
+                        val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                        val updatedEpisodes = oldData.episodes.map {
                             if (it.id == event.episodeId) it.copy(isUpdatingWatched = true) else it
                         }
-                        oldState.copy(data = data.copy(episodes = updatedEpisodes))
+                        oldState.copy(data = oldData.copy(episodes = updatedEpisodes))
                     }
 
                     try {
-                        val result = true
-                        delay(1000) // TODO emulate long IO
+                        // 3. Request to repo
+                        delay(1000) // emulate IO
+                        val result = newValue // emulate data from repo
+
+                        // 4. Apply result
                         _state.update { oldState ->
-                            val data = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
-                            val updatedEpisodes = data.episodes.map {
+                            val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                            val updatedEpisodes = oldData.episodes.map {
                                 if (it.id == event.episodeId) it.copy(
                                     watched = result,
                                     isUpdatingWatched = false
                                 ) else it
                             }
-                            oldState.copy(data = data.copy(episodes = updatedEpisodes))
+                            oldState.copy(data = oldData.copy(episodes = updatedEpisodes))
                         }
+
                     } catch(e: Exception) {
+                        // 5. If error just mark it not loading
                         _state.update { oldState ->
-                            val data = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
-                            val updatedEpisodes = data.episodes.map {
+                            val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                            val updatedEpisodes = oldData.episodes.map {
                                 if (it.id == event.episodeId) it.copy(isUpdatingWatched = false) else it
                             }
-                            oldState.copy(data = data.copy(episodes = updatedEpisodes))
+                            oldState.copy(data = oldData.copy(episodes = updatedEpisodes))
                         }
                     }
                 }
@@ -121,6 +133,7 @@ sealed interface SeasonEvent {
     data class OnWatchedClicked(val episodeId: Int) : SeasonEvent
 }
 
+// TODO no need OnWatchedLoading OnWatchedLoaded - to delete
 sealed interface SeasonEffect {
     data class OnWatchedLoading(val episodeId: Int) : SeasonEffect
 
