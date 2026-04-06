@@ -1,14 +1,16 @@
 package com.bowazon.bingewatcher.core.network.tvmaze.mappers
 
 import com.bowazon.bingewatcher.core.entities.ActorCredits
-import com.bowazon.bingewatcher.core.entities.ActorDetailed
+import com.bowazon.bingewatcher.core.entities.Person
 import com.bowazon.bingewatcher.core.entities.ActorSummary
+import com.bowazon.bingewatcher.core.entities.CrewCredits
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.entities.ShowSummary
 import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeActor
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCastCredit
+import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeCrewCredit
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeEpisode
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazePerson
 import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeSeason
@@ -17,7 +19,6 @@ import com.bowazon.bingewatcher.core.network.tvmaze.models.TvMazeShowImage
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.Int
 import kotlin.String
 import kotlin.text.substringBefore
 
@@ -67,8 +68,8 @@ fun TvMazeShowImage.toImageUrl(): String? {
     return resolutions?.original?.url
 }
 
-fun TvMazePerson.toActorDetailed(): ActorDetailed {
-    return ActorDetailed(
+fun TvMazePerson.toPerson(): Person {
+    return Person(
         id = id.toInt(),
         name = name,
         image = image?.medium ?: "",
@@ -107,5 +108,17 @@ fun TvMazeCastCredit.toActorCredits(): ActorCredits {
         showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
         showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
         character = links.character.name,
+    )
+}
+
+fun TvMazeCrewCredit.toCrewCredits(): CrewCredits {
+    return CrewCredits(
+        type = type,
+        showId = embedded?.show?.id ?: 0,
+        showName = embedded?.show?.name ?: "",
+        showPicture = embedded?.show?.image?.medium ?: "",
+        showGenre = embedded?.show?.genres?.joinToString(separator = "/") ?: "",
+        showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
+        showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
     )
 }

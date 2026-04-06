@@ -4,9 +4,11 @@ package com.bowazon.bingewatcher.core.designsystem
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,7 +38,7 @@ fun BingeWatcherShowCard(
     date: String,
     genre: String,
     rating: String,
-    characterName: String? = null,
+    additional: String? = null,
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
@@ -49,47 +51,48 @@ fun BingeWatcherShowCard(
         },
     )
 
-    Surface(
-        modifier,
-        //color = Color.Black
-    ) {
-        Row(Modifier.padding(16.dp)) {
-            Image(
-                modifier = Modifier.size(150.dp),
-                // TODO no need for image loader, change for AsyncImage from coil
-                painter = if (isError.not()) {
-                    imageLoader
-                } else {
-                    // TODO image for error
-                    painterResource(R.drawable.ic_launcher_foreground)
-                },
-                contentDescription = null
-            )
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+    Surface(modifier) {
+        Box(Modifier.padding(16.dp)) {
+            Row {
+                Image(
+                    modifier = Modifier.size(150.dp),
+                    painter = if (!isError) {
+                        imageLoader
+                    } else {
+                        painterResource(R.drawable.ic_launcher_foreground)
+                    },
+                    contentDescription = null
+                )
+
+                Column(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxWidth()
+                ) {
                     Text(text = showName, color = Color.White)
-                    characterName?.let { Text(text = it, color = Color.White) }
+                    additional?.let { Text(text = it, color = Color.White) }
                     Text(text = date, color = Color.White)
                     Text(text = genre, color = Color.White)
                 }
-                // TODO this block repeats! Should be separate component
-                if (rating.isNotEmpty()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = rating,
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Image(
-                            painter = painterResource(R.drawable.star),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+            }
+
+            if (rating.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Text(
+                        text = rating,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.star),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
         }

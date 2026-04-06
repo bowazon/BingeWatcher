@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.features.person.impl
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
@@ -90,14 +92,19 @@ private fun loadPainter(
 fun PersonScreen(
     modifier: Modifier = Modifier,
     viewModel: PersonViewModel = hiltViewModel(),
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onShowClicked: (Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
-
+            when(effect) {
+                is PersonEffect.OpenShowCard -> {
+                    onShowClicked(effect.id)
+                }
+            }
         }
     }
 
@@ -155,17 +162,8 @@ internal fun PersonScreen(
                 BingeWatcherPersonShortDescription(
                     name = uiData.personDetailed.name,  // TODO actor name
                     born = uiData.personDetailed.birthday,
-                    credits = "test 2"
+                    credits = uiData.creditsSummary
                 )
-            }
-
-            item {
-                BingeWatcherShowRestDescription(
-                    genres = "test 3",
-                    description = "test 4"
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
             }
 
             item {
@@ -181,19 +179,55 @@ internal fun PersonScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            items(uiData.personCredits) { credits ->
+            if (uiData.actorCredits.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Acting career",
+                        color = Color.White.copy(alpha = 0.8f),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            items(uiData.actorCredits) { actorCredits ->
                 BingeWatcherShowCard(
-                    showName = credits.showName,
-                    characterName = credits.character,
-                    pictureUrl = credits.showPicture,
-                    date = credits.showPremiered,
-                    genre = credits.showGenre,
-                    rating = credits.showRating
+                    modifier = Modifier.clickable{
+                        onEvent(PersonEvent.OnShowClick(actorCredits.showId))
+                    },
+                    showName = actorCredits.showName,
+                    additional = actorCredits.character,
+                    pictureUrl = actorCredits.showPicture,
+                    date = actorCredits.showPremiered,
+                    genre = actorCredits.showGenre,
+                    rating = actorCredits.showRating
                 )
             }
+
+            if (uiData.crewCredits.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Crew credits",
+                        color = Color.White.copy(alpha = 0.8f),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            items(uiData.crewCredits) { crewCredits ->
+                BingeWatcherShowCard(
+                    modifier = Modifier.clickable{
+                        onEvent(PersonEvent.OnShowClick(crewCredits.showId))
+                    },
+                    showName = crewCredits.showName,
+                    additional = crewCredits.type, // TODO temp
+                    pictureUrl = crewCredits.showPicture,
+                    date = crewCredits.showPremiered,
+                    genre = crewCredits.showGenre,
+                    rating = crewCredits.showRating
+                )
+            }
+
         }
-
-
 
         IconButton(
             onClick = { onBackClicked() },

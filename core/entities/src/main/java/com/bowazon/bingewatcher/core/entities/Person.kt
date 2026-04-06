@@ -1,6 +1,6 @@
 package com.bowazon.bingewatcher.core.entities
 
-data class ActorDetailed(
+data class Person(
     val id: Int,
     val name: String,
     val image: String,
