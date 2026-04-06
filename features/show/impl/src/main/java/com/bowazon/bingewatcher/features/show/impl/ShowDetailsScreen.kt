@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.size.Size
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherActorSmallCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonSmallCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowImageWithGradient
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowRestDescription
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowShortDescription
@@ -256,11 +256,11 @@ internal fun ShowDetailsScreen(
                     items(uiData.cast) { actor ->
                         val painter = loadPainter(actor.image, painterLargeImage)
 
-                        BingeWatcherActorSmallCard(
+                        BingeWatcherPersonSmallCard(
                             modifier.clickable {
                                 onEvent(ShowDetailsEvent.OnActorClick(actor.id))
                             },
-                            actorName = actor.name,
+                            personName = actor.name,
                             imagePainter = painter
                         )
                     }

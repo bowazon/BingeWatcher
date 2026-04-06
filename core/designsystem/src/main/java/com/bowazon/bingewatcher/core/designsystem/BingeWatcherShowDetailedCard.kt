@@ -215,9 +215,9 @@ fun BingeWatcherSmallSeasonCard(
 }
 
 @Composable
-fun BingeWatcherActorSmallCard(
+fun BingeWatcherPersonSmallCard(
     modifier: Modifier = Modifier,
-    actorName: String,
+    personName: String,
     imagePainter: Painter
 ) {
     Column(
@@ -229,7 +229,7 @@ fun BingeWatcherActorSmallCard(
         ) {
             Image(
                 painter = imagePainter,
-                contentDescription = actorName,
+                contentDescription = personName,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
@@ -240,7 +240,7 @@ fun BingeWatcherActorSmallCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = actorName,
+            text = personName,
             color = Color.White
         )
     }
@@ -249,10 +249,10 @@ fun BingeWatcherActorSmallCard(
 @Preview
 @Composable
 fun BingeWatcherActorSmallCardPreview() {
-    BingeWatcherActorSmallCard(
-        actorName = "Jone Jones",
-        imagePainter = painterResource(R.drawable.ic_launcher_foreground)
-    )
+    //BingeWatcherActorSmallCard(
+    //    actorName = "Jone Jones",
+    //    imagePainter = painterResource(R.drawable.ic_launcher_foreground)
+    //)
 }
 
 @Preview

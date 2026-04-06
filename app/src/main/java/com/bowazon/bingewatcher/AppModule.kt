@@ -2,8 +2,8 @@ package com.bowazon.bingewatcher
 
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.retrofit.TvMazeRetrofitImpl
-import com.bowazon.bingewatcher.core.repository.ActorRepository
-import com.bowazon.bingewatcher.core.repository.ActorRepositoryImpl
+import com.bowazon.bingewatcher.core.repository.PersonRepository
+import com.bowazon.bingewatcher.core.repository.PersonRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.SearchRepository
 import com.bowazon.bingewatcher.core.repository.SearchRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.SeasonRepository
@@ -40,8 +40,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideActorRepository(remoteDataSource: TvMazeRemoteDataSource): ActorRepository {
-        return ActorRepositoryImpl(remoteDataSource)
+    fun providePersonRepository(remoteDataSource: TvMazeRemoteDataSource): PersonRepository {
+        return PersonRepositoryImpl(remoteDataSource)
     }
 
     @Provides

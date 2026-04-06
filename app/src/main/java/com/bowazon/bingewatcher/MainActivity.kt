@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -20,7 +19,7 @@ import com.bowazon.bingewatcher.features.search.impl.searchEntry
 import com.bowazon.bingewatcher.features.show.impl.showDetailsEntry
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.navigation.toEntries
-import com.bowazon.bingewatcher.features.actor.impl.actorEntry
+import com.bowazon.bingewatcher.features.person.impl.personEntry
 import com.bowazon.bingewatcher.features.imageview.impl.imageViewEntry
 import com.bowazon.bingewatcher.features.season.impl.seasonEntry
 
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         discoverEntry(navigator)
                         searchEntry(navigator)
                         showDetailsEntry(navigator)
-                        actorEntry(navigator)
+                        personEntry(navigator)
                         seasonEntry(navigator)
                         imageViewEntry(navigator)
                     }
