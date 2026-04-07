@@ -34,7 +34,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowSmallCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
@@ -77,7 +77,7 @@ fun ShowCardClickable(
     Surface(
         onClick = { onDetailsClicked(showDetailed.id) }
     ) { //onDetailsClicked(show)
-        BingeWatcherShowCard(
+        BingeWatcherShowSmallCard(
             modifier = Modifier.fillMaxWidth(),
             showName = showDetailed.summary.name,
             picturePainter = painter,

@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowSmallCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
@@ -41,7 +41,7 @@ fun Greeting(
                     show.summary.image,
                     painterResource(R.drawable.show_placeholder)
                 )
-                BingeWatcherShowCard(
+                BingeWatcherShowSmallCard(
                     showName = show.summary.name,
                     picturePainter = painter,
                     date = show.summary.premiered,

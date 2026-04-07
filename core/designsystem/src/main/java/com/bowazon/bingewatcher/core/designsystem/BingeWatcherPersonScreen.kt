@@ -45,11 +45,13 @@ fun BingeWatcherPersonShortDescription(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "Born $born",
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium
-            )
+            if(born.isNotEmpty()) {
+                Text(
+                    text = "Born $born",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
 
     }
