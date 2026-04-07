@@ -63,7 +63,7 @@ fun BingeWatcherShowCard(
     additional: String? = null,
 ) {
 
-    Box(Modifier.padding(16.dp)) {
+    Box(modifier.padding(16.dp)) {
         Row {
             Image(
                 modifier = Modifier.size(150.dp),
@@ -202,10 +202,10 @@ fun BingeWatcherEpisodeSmallCard(
 
 @Composable
 fun WatchedToggle(
+    modifier: Modifier = Modifier,
     isWatched: Boolean,
     isLoading: Boolean = false,
     onToggle: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 

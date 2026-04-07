@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.features.show.impl
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bowazon.bingewatcher.core.entities.ActorSummary
@@ -69,6 +70,7 @@ class ShowDetailsViewModel @AssistedInject constructor(
                 }
             } catch (e: Exception) { // TODO generic error bad
                 _state.value = ShowDetailsUiState.Error
+                Log.i("ART_DBG_5", "e is " + e.toString())
             }
         }
     }

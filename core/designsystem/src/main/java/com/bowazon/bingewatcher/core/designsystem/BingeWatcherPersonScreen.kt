@@ -23,7 +23,7 @@ fun BingeWatcherPersonShortDescription(
     credits: String
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

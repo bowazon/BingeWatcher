@@ -54,28 +54,9 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowShortDescripti
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.R
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
-
-private val SHOW_IMAGE_HEIGHT = 600.dp
-private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
-
-@Composable
-private fun rememberFirstElementScrollOffset(
-    lazyListState: LazyListState
-): Dp {
-    val density = LocalDensity.current
-
-    return remember(lazyListState, density) {
-        derivedStateOf {
-            if (lazyListState.firstVisibleItemIndex == 0) {
-                with(density) {
-                    lazyListState.firstVisibleItemScrollOffset.toDp()
-                }
-            } else SHOW_IMAGE_HEIGHT
-        }
-    }.value
-}
 
 @Composable
 fun ShowDetailsScreen(
@@ -135,13 +116,8 @@ internal fun ShowDetailsScreen(
     onEvent: (ShowDetailsEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
-    val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
+
     val painterLargeImage = rememberAsyncImagePainter(model = uiData.showDetails.largeImage)
-
-    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.7f, 1f)
-
-    val imageHeight = (SHOW_IMAGE_HEIGHT - firstElementScrollOffset)
-        .coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -151,12 +127,10 @@ internal fun ShowDetailsScreen(
             state = lazyListState
         ) {
             item {
-                BingeWatcherShowImageWithGradient(
-                    modifier = Modifier.graphicsLayer {
-                        this.alpha = alpha
-                    },
-                    imageHeight = imageHeight,
-                    imagePainter = painterLargeImage)
+                BingeWatcherParallaxPicture(
+                    lazyListState = lazyListState,
+                    picturePainter = painterLargeImage
+                )
             }
 
             stickyHeader {

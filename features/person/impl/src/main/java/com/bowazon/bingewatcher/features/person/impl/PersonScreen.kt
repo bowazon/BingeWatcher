@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.features.person.impl
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.size.Size
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonShortDescription
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowImageWithGradient
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowRestDescription
@@ -46,50 +48,6 @@ import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
-
-private val SHOW_IMAGE_HEIGHT = 600.dp
-private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
-
-@Composable
-private fun rememberFirstElementScrollOffset(
-    lazyListState: LazyListState
-): Dp {
-    val density = LocalDensity.current
-
-    return remember(lazyListState, density) {
-        derivedStateOf {
-            if (lazyListState.firstVisibleItemIndex == 0) {
-                with(density) {
-                    lazyListState.firstVisibleItemScrollOffset.toDp()
-                }
-            } else SHOW_IMAGE_HEIGHT
-        }
-    }.value
-}
-
-@Composable
-private fun loadPainter(
-    url: String,
-    placeholder: Painter
-): Painter {
-    val localContext = LocalContext.current
-    val request = remember(url) {
-        ImageRequest.Builder(localContext)
-            .data(url)
-            .size(Size.ORIGINAL)
-            .build()
-    }
-    val painter = rememberAsyncImagePainter(
-        model = request
-    )
-
-    val painterState = painter.state
-
-    return when (painterState) {
-        is AsyncImagePainter.State.Success -> painterState.painter
-        else -> placeholder
-    }
-}
 
 @Composable
 fun PersonScreen(
@@ -137,13 +95,8 @@ internal fun PersonScreen(
     onEvent: (PersonEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
-    val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
+
     val painterLargeImage = rememberAsyncImagePainter(model = uiData.personDetailed.image) // TODO actor image
-
-    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.7f, 1f)
-
-    val imageHeight = (SHOW_IMAGE_HEIGHT - firstElementScrollOffset)
-        .coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -153,17 +106,15 @@ internal fun PersonScreen(
             state = lazyListState
         ) {
             item {
-                BingeWatcherShowImageWithGradient(
-                    modifier = Modifier.graphicsLayer {
-                        this.alpha = alpha
-                    },
-                    imageHeight = imageHeight,
-                    imagePainter = painterLargeImage)
+                BingeWatcherParallaxPicture(
+                    lazyListState = lazyListState,
+                    picturePainter = painterLargeImage
+                )
             }
 
             stickyHeader {
                 BingeWatcherPersonShortDescription(
-                    name = uiData.personDetailed.name,  // TODO actor name
+                    name = uiData.personDetailed.name,
                     born = uiData.personDetailed.birthday,
                     credits = uiData.creditsSummary
                 )
@@ -195,10 +146,11 @@ internal fun PersonScreen(
             items(uiData.actorCredits) { actorCredits ->
                 val painter = loadPainter(
                     actorCredits.showPicture,
-                    painterResource(R.drawable.person_placeholder)
+                    painterResource(R.drawable.show_placeholder)
                 )
                 BingeWatcherShowCard(
                     modifier = Modifier.clickable{
+                        Log.i("ART_DBG_4", "here")
                         onEvent(PersonEvent.OnShowClick(actorCredits.showId))
                     },
                     showName = actorCredits.showName,
@@ -223,7 +175,7 @@ internal fun PersonScreen(
             items(uiData.crewCredits) { crewCredits ->
                 val painter = loadPainter(
                     crewCredits.showPicture,
-                    painterResource(R.drawable.person_placeholder)
+                    painterResource(R.drawable.show_placeholder)
                 )
                 BingeWatcherShowCard(
                     modifier = Modifier.clickable{

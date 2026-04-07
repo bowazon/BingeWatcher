@@ -12,13 +12,13 @@ import com.bowazon.bingewatcher.core.navigation.Navigator
 
 @Composable
 fun BingeWatcherBottomNavigation(
+    modifier: Modifier = Modifier,
     navigator: Navigator,
     first: NavKey,
     second: NavKey,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    NavigationSuiteScaffold(
+    NavigationSuiteScaffold(modifier = modifier,
         navigationSuiteItems = {
             item(
                 selected = true,

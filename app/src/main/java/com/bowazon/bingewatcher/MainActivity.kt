@@ -40,9 +40,9 @@ class MainActivity : ComponentActivity() {
                     })
                 )
                 BingeWatcherBottomNavigation(
-                    navigator,
-                    DiscoverNavKey,
-                    SearchNavKey
+                    navigator = navigator,
+                    first = DiscoverNavKey,
+                    second = SearchNavKey
                 ) {
                     //Scaffold(modifier = Modifier.fillMaxSize()) {
                     val entryProvider = entryProvider {

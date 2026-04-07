@@ -52,50 +52,8 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import androidx.core.net.toUri
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherEpisodeSmallCard
-
-private val SHOW_IMAGE_HEIGHT = 600.dp
-private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
-
-@Composable
-private fun rememberFirstElementScrollOffset(
-    lazyListState: LazyListState
-): Dp {
-    val density = LocalDensity.current
-
-    return remember(lazyListState, density) {
-        derivedStateOf {
-            if (lazyListState.firstVisibleItemIndex == 0) {
-                with(density) {
-                    lazyListState.firstVisibleItemScrollOffset.toDp()
-                }
-            } else SHOW_IMAGE_HEIGHT
-        }
-    }.value
-}
-
-@Composable
-private fun loadPainter(
-    url: String,
-    placeholder: Painter
-): Painter {
-    val localContext = LocalContext.current
-    val request = remember(url) {
-        ImageRequest.Builder(localContext)
-            .data(url)
-            .size(Size.ORIGINAL)
-            .build()
-    }
-    val painter = rememberAsyncImagePainter(
-        model = request
-    )
-
-    val painterState = painter.state
-
-    return when (painterState) {
-        is AsyncImagePainter.State.Success -> painterState.painter
-        else -> placeholder
-    }
-}
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
+import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 @Composable
 fun SeasonScreen(
@@ -145,28 +103,20 @@ internal fun SeasonScreen(
     onEvent: (SeasonEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
-    val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
+
     val painterLargeImage = rememberAsyncImagePainter(model = uiData.season.image)
-
-    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.7f, 1f)
-
-    val imageHeight = (SHOW_IMAGE_HEIGHT - firstElementScrollOffset)
-        .coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
-                //.background(Color.Black),
             state = lazyListState
         ) {
             item {
-                BingeWatcherShowImageWithGradient(
-                    modifier = Modifier.graphicsLayer {
-                        this.alpha = alpha
-                    },
-                    imageHeight = imageHeight,
-                    imagePainter = painterLargeImage)
+                BingeWatcherParallaxPicture(
+                    lazyListState = lazyListState,
+                    picturePainter = painterLargeImage
+                )
             }
 
             stickyHeader {
