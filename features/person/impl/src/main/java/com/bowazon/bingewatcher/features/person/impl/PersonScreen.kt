@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -30,10 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumShowCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonShortDescription
-import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowSmallCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonTopBadge
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
 
@@ -101,7 +99,7 @@ internal fun PersonScreen(
             }
 
             stickyHeader {
-                BingeWatcherPersonShortDescription(
+                BingeWatcherPersonTopBadge(
                     name = uiData.personDetailed.name,
                     born = uiData.personDetailed.birthday,
                     credits = uiData.creditsSummary
@@ -135,7 +133,8 @@ internal fun PersonScreen(
                     actorCredits.showPicture,
                     painterResource(R.drawable.show_placeholder)
                 )
-                BingeWatcherShowSmallCard(
+
+                BingeWatcherMediumShowCard(
                     modifier = Modifier.clickable{
                         Log.i("ART_DBG_4", "here")
                         onEvent(PersonEvent.OnShowClick(actorCredits.showId))
@@ -163,7 +162,7 @@ internal fun PersonScreen(
                     crewCredits.showPicture,
                     painterResource(R.drawable.show_placeholder)
                 )
-                BingeWatcherShowSmallCard(
+                BingeWatcherMediumShowCard(
                     modifier = Modifier.clickable{
                         onEvent(PersonEvent.OnShowClick(crewCredits.showId))
                     },
@@ -187,7 +186,6 @@ internal fun PersonScreen(
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                 contentDescription = null,
-                tint = getReadableTextColor(Color.Black)
             )
         }
     }

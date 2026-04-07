@@ -1,270 +1,165 @@
 package com.bowazon.bingewatcher.core.designsystem
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.fromHtml
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlin.text.isNotEmpty
+import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
 
-
-
-
-@Composable
-fun BingeWatcherShowSmallCard(
-    modifier: Modifier = Modifier,
-    showName: String,
-    picturePainter: Painter,
-    date: String,
-    genre: String,
-    rating: String,
-    additional: String? = null,
-) {
-
-    Box(modifier.padding(16.dp)) {
-        Row {
-            Image(
-                modifier = Modifier.size(150.dp),
-                painter = picturePainter,
-                contentDescription = null
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(text = showName)
-                additional?.let { Text(text = it) }
-                Text(text = date)
-                Text(text = genre)
-            }
-        }
-
-        if (rating.isNotEmpty()) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopEnd),
-                verticalAlignment = Alignment.Top
-            ) {
-                Text(
-                    text = rating,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Image(
-                    painter = painterResource(R.drawable.star),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
-    }
-}
+val SMALL_PERSON_CARD_SIZE = 100.dp
+val SMALL_SEASON_CARD_WIDTH = 120.dp
+val SMALL_SEASON_CARD_HEIGHT = 150.dp
 
 @Composable
-fun BingeWatcherEpisodeSmallCard(
+fun BingeWatcherSmallPersonCard(
     modifier: Modifier = Modifier,
-    name: String,
-    picturePainter: Painter,
-    date: String,
-    rating: String,
-    description: String? = null,
-    isEpiWatched: Boolean,
-    isEpiLoading: Boolean = false,
-    onToggle: () -> Unit,
+    personName: String,
+    imagePainter: Painter,
+    additionalInfo: String? = null,
+    additionalInfoHeight: Dp = 0.dp
 ) {
-    var showDescription by remember { mutableStateOf(false) }
-
-    Column(modifier = modifier
-        .border(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline,
-            shape = MaterialTheme.shapes.medium
-        )
-        .padding(8.dp)) {
-        Box(Modifier.padding(16.dp)) {
-            Row {
-                Image(
-                    modifier = Modifier.size(150.dp),
-                    painter = picturePainter,
-                    contentDescription = null
-                )
-
-                Column(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 40.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        modifier = Modifier.padding(end = 40.dp),
-                        text = name,
-                        maxLines = 3,
-                        //modifier = Modifier.basicMarquee()
-                    )
-                    Text(text = date)
-                }
-            }
-
-            if (rating.isNotEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd),
-                ) {
-                    Row(verticalAlignment = Alignment.Top) {
-                        Text(
-                            text = rating,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Image(
-                            painter = painterResource(R.drawable.star),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-
-                    WatchedToggle(
-                        isWatched = isEpiWatched,
-                        isLoading = isEpiLoading,
-                        onToggle = onToggle
-                    )
-                }
-            }
-        }
-
-        Button(
-            onClick = { showDescription = !showDescription },
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(if (showDescription) "Hide" else "Description")
-        }
-
-        if (showDescription && description != null) {
-            Text(
-                modifier = Modifier.padding(horizontal = 18.dp),
-                text = AnnotatedString.Companion.fromHtml(description),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 6,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-@Composable
-fun WatchedToggle(
-    modifier: Modifier = Modifier,
-    isWatched: Boolean,
-    isLoading: Boolean = false,
-    onToggle: () -> Unit,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-
-    val animatedColor by animateColorAsState(
-        targetValue = if (isWatched)
-            MaterialTheme.colorScheme.primary
-        else
-            MaterialTheme.colorScheme.outline,
-        label = "colorAnim"
-    )
-
-    val scale by animateFloatAsState(
-        targetValue = if (isWatched) 1f else 0.9f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "scaleAnim"
-    )
-
-    val pressed by interactionSource.collectIsPressedAsState()
-
-    val pressScale by animateFloatAsState(
-        targetValue = if (pressed) 0.85f else scale,
-        label = "pressScale"
-    )
-
-    Box(
-        modifier = modifier
-            .size(40.dp)
-            .graphicsLayer {
-                scaleX = pressScale
-                scaleY = pressScale
-            }.border(
-                width = 2.dp,
-                color = if (isWatched)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.outline,
-                shape = CircleShape
-            )
-            .clip(CircleShape)
-            .background(animatedColor)
-            .clickable(
-                interactionSource = interactionSource,
-                onClick = onToggle
-            ),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp, modifier = Modifier.size(20.dp))
-        } else if (isWatched) {
-            AnimatedVisibility(
-                visible = isWatched,
-                enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) +
-                        fadeIn(),
-                exit = fadeOut()
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = "Watched",
-                    modifier = Modifier.size(22.dp)
+        if (additionalInfo != null) {
+            Box(modifier = Modifier.heightIn(min = additionalInfoHeight)) {
+                Text(
+                    text = additionalInfo,
+                    maxLines = 3,
+                    textAlign = TextAlign.Center,
                 )
             }
+        }
+
+        Box(Modifier.size(SMALL_PERSON_CARD_SIZE)) {
+            Image(
+                painter = imagePainter,
+                contentDescription = personName,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(text = personName)
+    }
+}
+
+
+@Composable
+fun BingeWatcherSmallSeasonCard(
+    modifier: Modifier = Modifier,
+    season: Int,
+    episodesAmount: Int,
+    imagePainter: Painter,
+    premiereDate: String
+) {
+    Column(modifier) {
+        Text(text = "Season $season")
+        Box(
+            modifier = Modifier
+                .height(SMALL_SEASON_CARD_HEIGHT)
+                .width(SMALL_SEASON_CARD_WIDTH)
+        ) {
+            Image(
+                painter = imagePainter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            if (episodesAmount != 0) {
+                Text(
+                    text = "E$episodesAmount",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        //.padding(8.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            }
+
+            Text(
+                text = premiereDate,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    //.padding(8.dp)
+                    .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 6.dp, vertical = 2.dp),
+            )
+        }
+    }
+}
+
+
+@Preview(
+    widthDp = 110,
+    heightDp = 110,
+)
+@Composable
+fun BingeWatcherSmallPersonCardPreview() {
+    BingeWatcherTheme(
+        darkTheme = true,
+        dynamicColor = false,
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides Color.White
+        ) {
+            BingeWatcherSmallPersonCard(
+                personName = "Bryan Cranston",
+                imagePainter = painterResource(R.drawable.bryan_cranston),
+            )
+        }
+    }
+}
+
+@Preview(
+    widthDp = 130,
+    heightDp = 160,
+)
+@Composable
+fun BingeWatcherSmallSeasonCardPreview() {
+    BingeWatcherTheme(
+        darkTheme = true,
+        dynamicColor = false,
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides Color.White
+        ) {
+            BingeWatcherSmallSeasonCard(
+                season = 1,
+                episodesAmount = 7,
+                imagePainter = painterResource(R.drawable.breaking_bad_s1),
+                premiereDate = "2008"
+            )
         }
     }
 }

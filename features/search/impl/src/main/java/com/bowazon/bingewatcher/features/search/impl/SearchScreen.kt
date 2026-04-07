@@ -34,7 +34,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowSmallCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumShowCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
@@ -47,7 +47,7 @@ fun SearchScreen(
 ) {
     val shows by viewModel.searchState.collectAsState()
 
-    Scaffold(Modifier.fillMaxSize()) { padding ->
+    Scaffold(modifier.fillMaxSize()) { padding ->
         Column(Modifier.padding(padding)) {
             SimpleTextField(viewModel::search)
 
@@ -76,8 +76,8 @@ fun ShowCardClickable(
     )
     Surface(
         onClick = { onDetailsClicked(showDetailed.id) }
-    ) { //onDetailsClicked(show)
-        BingeWatcherShowSmallCard(
+    ) {
+        BingeWatcherMediumShowCard(
             modifier = Modifier.fillMaxWidth(),
             showName = showDetailed.summary.name,
             picturePainter = painter,
