@@ -32,14 +32,12 @@ fun BingeWatcherPersonShortDescription(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
-                color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = credits,
-                color = Color.White.copy(alpha = 0.8f),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -48,7 +46,6 @@ fun BingeWatcherPersonShortDescription(
             if(born.isNotEmpty()) {
                 Text(
                     text = "Born $born",
-                    color = Color.White,
                     style = MaterialTheme.typography.titleMedium
                 )
             }

@@ -125,7 +125,6 @@ internal fun PersonScreen(
                 item {
                     Text(
                         text = "Acting career",
-                        color = Color.White.copy(alpha = 0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -154,7 +153,6 @@ internal fun PersonScreen(
                 item {
                     Text(
                         text = "Crew credits",
-                        color = Color.White.copy(alpha = 0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

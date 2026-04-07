@@ -75,10 +75,10 @@ fun BingeWatcherShowSmallCard(
                     .padding(start = 8.dp)
                     .fillMaxWidth()
             ) {
-                Text(text = showName, color = Color.White)
-                additional?.let { Text(text = it, color = Color.White) }
-                Text(text = date, color = Color.White)
-                Text(text = genre, color = Color.White)
+                Text(text = showName)
+                additional?.let { Text(text = it) }
+                Text(text = date)
+                Text(text = genre)
             }
         }
 
@@ -90,7 +90,6 @@ fun BingeWatcherShowSmallCard(
             ) {
                 Text(
                     text = rating,
-                    color = Color.White,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -141,11 +140,10 @@ fun BingeWatcherEpisodeSmallCard(
                     Text(
                         modifier = Modifier.padding(end = 40.dp),
                         text = name,
-                        color = Color.White,
                         maxLines = 3,
                         //modifier = Modifier.basicMarquee()
                     )
-                    Text(text = date, color = Color.White)
+                    Text(text = date)
                 }
             }
 
@@ -157,7 +155,6 @@ fun BingeWatcherEpisodeSmallCard(
                     Row(verticalAlignment = Alignment.Top) {
                         Text(
                             text = rating,
-                            color = Color.White,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -190,7 +187,6 @@ fun BingeWatcherEpisodeSmallCard(
             Text(
                 modifier = Modifier.padding(horizontal = 18.dp),
                 text = AnnotatedString.Companion.fromHtml(description),
-                color = Color.White.copy(alpha = 0.9f),
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis
@@ -266,7 +262,6 @@ fun WatchedToggle(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Watched",
-                    tint = Color.White,
                     modifier = Modifier.size(22.dp)
                 )
             }

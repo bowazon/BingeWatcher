@@ -89,7 +89,7 @@ fun ImageViewScreen(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures {
@@ -120,8 +120,7 @@ fun ImageViewScreen(
                     IconButton(onClick = { onBackClicked() }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
+                            contentDescription = null
                         )
                     }
                 }
@@ -160,15 +159,13 @@ fun ImageViewScreen(
                     }) {
                         Icon(
                             Icons.Default.Share,
-                            contentDescription = null,
-                            tint = Color.White
+                            contentDescription = null
                         )
                     }
                 }
             }
         }
     }
-
 }
 
 @Composable

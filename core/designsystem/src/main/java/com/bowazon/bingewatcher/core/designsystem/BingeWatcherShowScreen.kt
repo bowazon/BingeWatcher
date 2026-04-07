@@ -48,7 +48,6 @@ fun BingeWatcherShowRestDescription(
     Column(modifier = modifier.padding(16.dp)) {
         Text(
             text = genres,
-            color = Color.White.copy(alpha = 0.7f),
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -57,7 +56,6 @@ fun BingeWatcherShowRestDescription(
 
         Text(
             text = AnnotatedString.Companion.fromHtml(description),
-            color = Color.White.copy(alpha = 0.9f),
             style = MaterialTheme.typography.bodySmall,
             maxLines = 6,
             overflow = TextOverflow.Ellipsis
@@ -81,14 +79,12 @@ fun BingeWatcherShowShortDescription(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
-                color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = premiered,
-                color = Color.White.copy(alpha = 0.8f),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -97,7 +93,6 @@ fun BingeWatcherShowShortDescription(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = rating,
-                    color = Color.White,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -156,7 +151,7 @@ fun BingeWatcherSmallSeasonCard(
     premiereDate: String
 ) {
     Column(modifier) {
-        Text(text = "Season $season", color = Color.White)
+        Text(text = "Season $season")
         Box(
             modifier = Modifier
                 .height(150.dp)
@@ -177,7 +172,6 @@ fun BingeWatcherSmallSeasonCard(
                         //.padding(8.dp)
                         .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
                         .padding(horizontal = 6.dp, vertical = 2.dp),
-                    color = Color.White
                 )
             }
 
@@ -188,7 +182,6 @@ fun BingeWatcherSmallSeasonCard(
                     //.padding(8.dp)
                     .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 6.dp, vertical = 2.dp),
-                color = Color.White
             )
         }
     }
@@ -210,7 +203,6 @@ fun BingeWatcherPersonSmallCard(
             Box(modifier = Modifier.heightIn(min = additionalInfoHeight)) {
                 Text(
                     text = additionalInfo,
-                    color = Color.White,
                     maxLines = 3,
                     textAlign = TextAlign.Center,
                 )
@@ -230,10 +222,7 @@ fun BingeWatcherPersonSmallCard(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = personName,
-            color = Color.White
-        )
+        Text(text = personName)
     }
 }
 
