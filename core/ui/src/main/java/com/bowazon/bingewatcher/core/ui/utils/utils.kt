@@ -18,6 +18,7 @@ fun loadPainter(
     val request = remember(url) {
         ImageRequest.Builder(localContext)
             .data(url)
+            .crossfade(500)
             .size(Size.ORIGINAL)
             .build()
     }
