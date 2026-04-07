@@ -59,6 +59,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:entities"))
     implementation(project(":core:repository"))
+    implementation(project(":core:ui"))
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)

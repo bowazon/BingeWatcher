@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
@@ -35,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
+import com.bowazon.bingewatcher.core.ui.utils.loadPainter
+import com.bowazon.bingewatcher.core.designsystem.R
 
 @Composable
 fun SearchScreen(
@@ -67,13 +70,17 @@ fun ShowCardClickable(
     onDetailsClicked: (Int) -> Unit,
     showDetailed: ShowDetailed
 ) {
+    val painter = loadPainter(
+        showDetailed.summary.image,
+        painterResource(R.drawable.show_placeholder)
+    )
     Surface(
         onClick = { onDetailsClicked(showDetailed.id) }
     ) { //onDetailsClicked(show)
         BingeWatcherShowCard(
             modifier = Modifier.fillMaxWidth(),
             showName = showDetailed.summary.name,
-            pictureUrl = showDetailed.summary.image,
+            picturePainter = painter,
             date = showDetailed.summary.premiered,
             genre = showDetailed.summary.genres,
             rating = showDetailed.summary.rating

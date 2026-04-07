@@ -1,6 +1,5 @@
 package com.bowazon.bingewatcher.core.designsystem
 
-import android.R.attr.scaleY
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -11,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,9 +23,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,27 +38,78 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import kotlin.text.isNotEmpty
+
+
+
+
+@Composable
+fun BingeWatcherShowCard(
+    modifier: Modifier = Modifier,
+    showName: String,
+    picturePainter: Painter,
+    date: String,
+    genre: String,
+    rating: String,
+    additional: String? = null,
+) {
+
+    Box(Modifier.padding(16.dp)) {
+        Row {
+            Image(
+                modifier = Modifier.size(150.dp),
+                painter = picturePainter,
+                contentDescription = null
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = showName, color = Color.White)
+                additional?.let { Text(text = it, color = Color.White) }
+                Text(text = date, color = Color.White)
+                Text(text = genre, color = Color.White)
+            }
+        }
+
+        if (rating.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    text = rating,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Image(
+                    painter = painterResource(R.drawable.star),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun BingeWatcherEpisodeSmallCard(
     modifier: Modifier = Modifier,
     name: String,
-    pictureUrl: String,
+    picturePainter: Painter,
     date: String,
     rating: String,
     description: String? = null,
@@ -66,17 +117,7 @@ fun BingeWatcherEpisodeSmallCard(
     isEpiLoading: Boolean = false,
     onToggle: () -> Unit,
 ) {
-    var isLoading by remember { mutableStateOf(true) }
-    var isError by remember { mutableStateOf(false) }
     var showDescription by remember { mutableStateOf(false) }
-    // TODO we need to pass Painter in designsystem
-    val imageLoader = rememberAsyncImagePainter(
-        model = pictureUrl,
-        onState = { state ->
-            isLoading = state is AsyncImagePainter.State.Loading
-            isError = state is AsyncImagePainter.State.Error
-        },
-    )
 
     Column(modifier = modifier
         .border(
@@ -89,11 +130,7 @@ fun BingeWatcherEpisodeSmallCard(
             Row {
                 Image(
                     modifier = Modifier.size(150.dp),
-                    painter = if (!isError) {
-                        imageLoader
-                    } else {
-                        painterResource(R.drawable.ic_launcher_foreground)
-                    },
+                    painter = picturePainter,
                     contentDescription = null
                 )
 

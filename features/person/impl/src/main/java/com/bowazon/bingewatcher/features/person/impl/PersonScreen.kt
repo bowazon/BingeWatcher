@@ -34,6 +34,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +44,8 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowImageWithGradi
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowRestDescription
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowCard
+import com.bowazon.bingewatcher.core.ui.utils.loadPainter
+import com.bowazon.bingewatcher.core.designsystem.R
 
 private val SHOW_IMAGE_HEIGHT = 600.dp
 private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
@@ -190,13 +193,17 @@ internal fun PersonScreen(
             }
 
             items(uiData.actorCredits) { actorCredits ->
+                val painter = loadPainter(
+                    actorCredits.showPicture,
+                    painterResource(R.drawable.person_placeholder)
+                )
                 BingeWatcherShowCard(
                     modifier = Modifier.clickable{
                         onEvent(PersonEvent.OnShowClick(actorCredits.showId))
                     },
                     showName = actorCredits.showName,
                     additional = actorCredits.character,
-                    pictureUrl = actorCredits.showPicture,
+                    picturePainter = painter,
                     date = actorCredits.showPremiered,
                     genre = actorCredits.showGenre,
                     rating = actorCredits.showRating
@@ -214,13 +221,17 @@ internal fun PersonScreen(
             }
 
             items(uiData.crewCredits) { crewCredits ->
+                val painter = loadPainter(
+                    crewCredits.showPicture,
+                    painterResource(R.drawable.person_placeholder)
+                )
                 BingeWatcherShowCard(
                     modifier = Modifier.clickable{
                         onEvent(PersonEvent.OnShowClick(crewCredits.showId))
                     },
                     showName = crewCredits.showName,
                     additional = crewCredits.type, // TODO temp
-                    pictureUrl = crewCredits.showPicture,
+                    picturePainter = painter,
                     date = crewCredits.showPremiered,
                     genre = crewCredits.showGenre,
                     rating = crewCredits.showRating

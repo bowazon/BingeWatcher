@@ -217,9 +217,12 @@ internal fun SeasonScreen(
             }
 
             items(uiData.episodes) { episode ->
+                val painter = loadPainter(
+                    episode.image,
+                    painterLargeImage)
                 BingeWatcherEpisodeSmallCard (
                     name = episode.name,
-                    pictureUrl = episode.image,
+                    picturePainter = painter,
                     date = episode.airdate,
                     rating = episode.rating,
                     description = episode.summary,

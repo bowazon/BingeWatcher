@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.gradientDarkColor
 
 
-
 @Composable
 fun BingeWatcherShowRestDescription(
     modifier: Modifier = Modifier,

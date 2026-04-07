@@ -55,6 +55,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import com.bowazon.bingewatcher.core.designsystem.utils.getReadableTextColor
 import androidx.core.net.toUri
 import com.bowazon.bingewatcher.core.designsystem.R
+import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 private val SHOW_IMAGE_HEIGHT = 600.dp
 private val SHOW_IMAGE_HEIGHT_LEAST = 200.dp
@@ -74,30 +75,6 @@ private fun rememberFirstElementScrollOffset(
             } else SHOW_IMAGE_HEIGHT
         }
     }.value
-}
-
-@Composable
-private fun loadPainter(
-    url: String,
-    placeholder: Painter
-): Painter {
-    val localContext = LocalContext.current
-    val request = remember(url) {
-        ImageRequest.Builder(localContext)
-            .data(url)
-            .size(Size.ORIGINAL)
-            .build()
-    }
-    val painter = rememberAsyncImagePainter(
-        model = request
-    )
-
-    val painterState = painter.state
-
-    return when (painterState) {
-        is AsyncImagePainter.State.Success -> painterState.painter
-        else -> placeholder
-    }
 }
 
 @Composable
