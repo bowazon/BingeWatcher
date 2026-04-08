@@ -115,7 +115,7 @@ internal fun ShowDetailsScreen(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
-                //.background(Color.Black),
+            //.background(Color.Black),
             state = lazyListState
         ) {
             item {
@@ -173,12 +173,10 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(uiData.seasons[i].image, painterLargeImage)
 
                         BingeWatcherSmallSeasonCard(
-                            modifier = Modifier.clickable{
-                                onEvent(ShowDetailsEvent.OnSeasonClick(
-                                    uiData.showDetails.id,
-                                    uiData.seasons[i].id
-                                ))
-                            },
+                            onClick = { onEvent(ShowDetailsEvent.OnSeasonClick(
+                                uiData.showDetails.id,
+                                uiData.seasons[i].id
+                            )) },
                             season = i + 1,
                             episodesAmount = uiData.seasons[i].episodesAmount,
                             premiereDate = uiData.seasons[i].premiereDate,
@@ -210,9 +208,7 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
 
                         BingeWatcherSmallPersonCard(
-                            modifier.clickable {
-                                onEvent(ShowDetailsEvent.OnPersonClick(actor.id))
-                            },
+                            onClick = { onEvent(ShowDetailsEvent.OnPersonClick(actor.id)) },
                             personName = actor.name,
                             imagePainter = painter
                         )
@@ -248,9 +244,7 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
 
                         BingeWatcherSmallPersonCard(
-                            modifier.clickable {
-                                onEvent(ShowDetailsEvent.OnPersonClick(crewMember.id))
-                            },
+                            onClick = { onEvent(ShowDetailsEvent.OnPersonClick(crewMember.id)) },
                             personName = crewMember.name,
                             additionalInfo = crewMember.role,
                             additionalInfoHeight = infoHeight,
