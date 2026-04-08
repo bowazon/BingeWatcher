@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 data class TvMazeEpisode(
     val id: Long,
     val url: String,
-    val name: String,
-    val season: Long,
-    val number: Long,
+    val name: String? = null,
+    val season: Long? = null,
+    val number: Long? = null,
     val type: String? = null,
     val airdate: String? = null,
     val airtime: String? = null,

@@ -58,9 +58,11 @@ fun TvMazeActor.toActor(): ActorSummary {
     )
 }
 
-fun TvMazeSeason.toSeason(): Season {
+fun TvMazeSeason.toSeason(showName: String): Season {
     return Season (
         id = id.toInt(),
+        showName = showName,
+        seasonNumber = number.toInt(),
         episodesAmount = episodeOrder?.toInt() ?: 0,
         image = image?.medium ?: "",
         premiereDate = premiereDate?.substringBefore("-") ?: ""
@@ -97,9 +99,9 @@ fun formatDate(input: String?): String {
 fun TvMazeEpisode.toEpisode(): Episode {
     return Episode(
         id = id.toInt(),
-        name = name,
-        season = season.toInt(),
-        episode = number.toInt(),
+        name = name ?: "",
+        season = season?.toInt() ?: 0,
+        episode = number?.toInt() ?: 0,
         airdate = formatDate(airdate ?: ""),
         runtime = runtime?.toInt() ?: 0,
         rating = rating?.average?.let { it.toString() } ?: "",

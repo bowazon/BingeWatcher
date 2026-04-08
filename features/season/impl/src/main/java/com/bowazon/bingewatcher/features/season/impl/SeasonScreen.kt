@@ -104,7 +104,7 @@ internal fun SeasonScreen(
 
             stickyHeader {
                 BingeWatcherShowTopBadge(
-                    name = uiData.episodes[0].showName + ", season " + uiData.episodes[0].season,
+                    name = uiData.season.showName + ", season " + uiData.season.seasonNumber,
                     premiered = uiData.season.premiereDate,
                     rating = ""
                 )

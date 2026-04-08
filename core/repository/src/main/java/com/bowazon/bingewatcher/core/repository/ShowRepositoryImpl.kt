@@ -29,7 +29,7 @@ class ShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSeasonsForShow(showId: Int): List<Season> {
-        return api.seasons(showId).map { it.toSeason() }
+        return api.seasons(showId).map { it.toSeason("") } // TODO this season and season with show name should be separate models probably
     }
 
     override suspend fun getImagesForShow(showId: Int): List<String> {
