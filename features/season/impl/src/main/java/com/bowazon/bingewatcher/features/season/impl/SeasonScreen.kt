@@ -110,15 +110,23 @@ internal fun SeasonScreen(
                 )
             }
 
-            item {
-                BingeWatcherShowBottomBadge(
-                    genres = uiData.season.episodesAmount.toString() +
-                            if(uiData.season.episodesAmount == 1) " episode"
-                            else " episodes",
-                    description = ""
-                )
+            if(uiData.season.episodesAmount != 0) { // TODO strange things happen -
+                // sometime there are some amount of episodes in "season",
+                // but "season" has null as episode amount parameter.
+                // In such cases we can change repository to call season info
+                // and episode info together, and if season has null in episode
+                // amount parameter we can simply get size of list of episodes,
+                // but we will do it in the future.
+                item {
+                    BingeWatcherShowBottomBadge(
+                        genres = uiData.season.episodesAmount.toString() +
+                                if(uiData.season.episodesAmount == 1) " episode"
+                                else " episodes",
+                        description = ""
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
             item {
