@@ -20,13 +20,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherBackIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowBottomBadge
@@ -176,10 +176,7 @@ internal fun SeasonScreen(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = null,
-            )
+            BingeWatcherBackIcon(onClick = onBackClicked)
         }
     }
 }

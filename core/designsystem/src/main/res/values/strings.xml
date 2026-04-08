@@ -1,0 +1,22 @@
+<resources>
+    <string name="season">Season </string>
+    <string name="open_season_card">Open season card</string>
+    <string name="imdb">IMDB</string>
+    <string name="description_imdb">Open IMDB</string>
+    <string name="like">Like</string>
+    <string name="description_like">Press like</string>
+    <string name="official_site">Official\nsite</string>
+    <string name="description_official_site">Open official site</string>
+    <string name="share">Share</string>
+    <string name="description_share">Press share</string>
+    <string name="description_back">Press back</string>
+    <string name="discover">Discover</string>
+    <string name="description_discover">Discover navigation</string>
+    <string name="search">Search</string>
+    <string name="description_search">Search navigation</string>
+    <string name="my_library">My Library</string>
+    <string name="description_my_library">My Library navigation</string>
+    <string name="born">Born </string>
+    <string name="description_open_image">Open image</string>
+    <string name="description_watched">Press watched</string>
+</resources>

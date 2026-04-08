@@ -26,10 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -43,12 +39,14 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallPersonCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowBottomBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherBackIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallImageCard
 import com.bowazon.bingewatcher.core.designsystem.R
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
@@ -282,23 +280,13 @@ internal fun ShowDetailsScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(uiData.pictures.size) { i ->
-
                         val painter = loadPainter(uiData.pictures[i], painterLargeImage)
 
-                        Image(
+                        BingeWatcherSmallImageCard(
                             painter = painter,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillHeight,
-                            modifier = Modifier
-                                .height(150.dp)
-                                .clickable {
-                                    onEvent(
-                                        ShowDetailsEvent.OnGalleryClick(
-                                            i, uiData.pictures
-                                        )
-                                    ) // TODO is it safe to call uiData.pictures? Can't it change concurrently?
-                                }
-                        )
+                            onClick = {
+                                ShowDetailsEvent.OnGalleryClick(i, uiData.pictures)
+                            })
                     }
                 }
 
@@ -314,10 +302,7 @@ internal fun ShowDetailsScreen(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = null,
-            )
+            BingeWatcherBackIcon(onClick = onBackClicked)
         }
     }
 }

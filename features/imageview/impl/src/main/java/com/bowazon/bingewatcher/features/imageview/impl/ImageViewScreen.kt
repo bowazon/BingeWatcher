@@ -22,9 +22,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +47,8 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherBackIcon
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -117,12 +116,7 @@ fun ImageViewScreen(
                         .background(Color.Black.copy(alpha = 0.5f))
                         .padding(16.dp)
                 ) {
-                    IconButton(onClick = { onBackClicked() }) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    BingeWatcherBackIcon(onClick = onBackClicked)
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -154,14 +148,7 @@ fun ImageViewScreen(
                         }
                     }
 
-                    IconButton(onClick = {
-                        shareImage(context, urlList[pagerState.currentPage])
-                    }) {
-                        Icon(
-                            Icons.Default.Share,
-                            contentDescription = null
-                        )
-                    }
+                    BingeWatcherShareIcon(onClick = { shareImage(context, urlList[pagerState.currentPage]) })
                 }
             }
         }

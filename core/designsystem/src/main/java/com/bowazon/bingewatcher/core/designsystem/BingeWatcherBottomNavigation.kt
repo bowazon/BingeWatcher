@@ -11,6 +11,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavKey
 import com.bowazon.bingewatcher.core.navigation.Navigator
 
@@ -19,7 +20,7 @@ import com.bowazon.bingewatcher.core.navigation.Navigator
 fun BingeWatcherBottomNavigation(
     modifier: Modifier = Modifier,
     navigator: Navigator,
-    homeKey: NavKey,
+    discoverKey: NavKey,
     searchKey: NavKey,
     myLibraryKey: NavKey,
     content: @Composable () -> Unit
@@ -28,36 +29,27 @@ fun BingeWatcherBottomNavigation(
         navigationSuiteItems = {
             item(
                 selected = true,
-                onClick =  { navigator.navigate(homeKey) } ,
+                onClick =  { navigator.navigate(discoverKey) } ,
                 icon = {
-                    Icon(
-                        imageVector = Icons.Rounded.Home,
-                        contentDescription = null,
-                    )
+                    BingeWatcherDiscoverIcon()
                 },
-                label = { Text("Discover") }
+                label = { Text(stringResource(R.string.discover)) }
             )
             item(
                 selected = true,
                 onClick =  { navigator.navigate(searchKey) } ,
                 icon = {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = null,
-                    )
+                    BingeWatcherSearchIcon()
                 },
-                label = { Text("Search") }
+                label = { Text(stringResource(R.string.search)) }
             )
             item(
                 selected = true,
                 onClick =  { navigator.navigate(myLibraryKey) } ,
                 icon = {
-                    Icon(
-                        imageVector = Icons.Rounded.LocalLibrary,
-                        contentDescription = null,
-                    )
+                    BingeWatcherMyLibraryIcon()
                 },
-                label = { Text("My Library") }
+                label = { Text(stringResource(R.string.my_library)) }
             )
         }
     ) {

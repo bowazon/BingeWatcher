@@ -9,10 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Link
+import androidx.compose.material.icons.rounded.LocalLibrary
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,21 +53,22 @@ sealed class BaseIcon {
 private fun BaseIcon(
     modifier: Modifier = Modifier,
     icon: BaseIcon,
-    text: String,
-    onClick: () -> Unit
+    text: String? = null,
+    contentDescription: String? = null,
+    onClick: (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = CenterHorizontally
     ) {
         IconButton(
-            onClick = { onClick() }
+            onClick = { onClick?.let{ it() } }
         ) {
             when(icon) {
                 is BaseIcon.ImageIcon ->
                     Icon(
                         imageVector = icon.iconVector,
-                        contentDescription = null,
+                        contentDescription = contentDescription,
                     )
                 is BaseIcon.TextIcon ->
                     Box(
@@ -79,12 +85,14 @@ private fun BaseIcon(
                     }
             }
         }
-        Text(
-            textAlign = TextAlign.Center,
-            text = text,
-            style = MaterialTheme.typography.bodySmall,
-            color = LocalContentColor.current.copy(alpha = 0.5f)
-        )
+        text?.let {
+            Text(
+                textAlign = TextAlign.Center,
+                text = it,
+                style = MaterialTheme.typography.bodySmall,
+                color = LocalContentColor.current.copy(alpha = 0.5f)
+            )
+        }
     }
 }
 
@@ -95,8 +103,9 @@ fun BingeWatcherImdbIcon(
 ) {
     BaseIcon(
         modifier = modifier,
-        icon = BaseIcon.TextIcon("IMDB"),
-        text = "IMDB",
+        icon = BaseIcon.TextIcon(stringResource(R.string.imdb)),
+        text = stringResource(R.string.imdb),
+        contentDescription = stringResource(R.string.description_imdb),
         onClick = onClick
     )
 }
@@ -109,7 +118,8 @@ fun BingeWatcherLikeIcon(
     BaseIcon(
         modifier = modifier,
         icon = BaseIcon.ImageIcon(Icons.Rounded.Favorite),
-        text = "Like",
+        text = stringResource(R.string.like),
+        contentDescription = stringResource(R.string.description_like),
         onClick = onClick
     )
 }
@@ -122,7 +132,8 @@ fun BingeWatcherOfficialSiteIcon(
     BaseIcon(
         modifier = modifier,
         icon = BaseIcon.ImageIcon(Icons.Rounded.Link),
-        text = "Official\nsite",
+        text = stringResource(R.string.official_site),
+        contentDescription = stringResource(R.string.description_official_site),
         onClick = onClick
     )
 }
@@ -135,8 +146,55 @@ fun BingeWatcherShareIcon(
     BaseIcon(
         modifier = modifier,
         icon = BaseIcon.ImageIcon(Icons.Rounded.Share),
-        text = "Share",
+        text = stringResource(R.string.share),
+        contentDescription = stringResource(R.string.description_share),
         onClick = onClick
+    )
+}
+
+@Composable
+fun BingeWatcherBackIcon(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    BaseIcon(
+        modifier = modifier,
+        icon = BaseIcon.ImageIcon(Icons.AutoMirrored.Rounded.ArrowBack),
+        contentDescription = stringResource(R.string.description_back),
+        onClick = onClick,
+    )
+}
+
+@Composable
+internal fun BingeWatcherDiscoverIcon(
+    modifier: Modifier = Modifier,
+) {
+    BaseIcon(
+        modifier = modifier,
+        icon = BaseIcon.ImageIcon(Icons.Rounded.Home),
+        contentDescription = stringResource(R.string.discover),
+    )
+}
+
+@Composable
+internal fun BingeWatcherSearchIcon(
+    modifier: Modifier = Modifier,
+) {
+    BaseIcon(
+        modifier = modifier,
+        icon = BaseIcon.ImageIcon(Icons.Rounded.Search),
+        contentDescription = stringResource(R.string.search),
+    )
+}
+
+@Composable
+internal fun BingeWatcherMyLibraryIcon(
+    modifier: Modifier = Modifier,
+) {
+    BaseIcon(
+        modifier = modifier,
+        icon = BaseIcon.ImageIcon(Icons.Rounded.LocalLibrary),
+        contentDescription = stringResource(R.string.my_library),
     )
 }
 

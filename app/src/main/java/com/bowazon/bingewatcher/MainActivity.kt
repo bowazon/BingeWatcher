@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 )
                 BingeWatcherBottomNavigation(
                     navigator = navigator,
-                    homeKey = DiscoverNavKey,
+                    discoverKey = DiscoverNavKey,
                     searchKey = SearchNavKey,
                     myLibraryKey = SearchNavKey
                 ) {

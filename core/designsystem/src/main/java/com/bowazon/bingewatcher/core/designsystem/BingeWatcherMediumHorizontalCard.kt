@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextOverflow
@@ -255,7 +256,7 @@ private fun WatchedToggle(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
-                    contentDescription = "Watched",
+                    contentDescription = stringResource(R.string.description_watched),
                     modifier = Modifier.size(22.dp)
                 )
             }

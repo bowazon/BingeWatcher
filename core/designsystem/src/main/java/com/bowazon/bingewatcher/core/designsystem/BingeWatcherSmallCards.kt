@@ -2,6 +2,7 @@ package com.bowazon.bingewatcher.core.designsystem
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -83,7 +85,7 @@ fun BingeWatcherSmallSeasonCard(
     premiereDate: String
 ) {
     Column(modifier) {
-        Text(text = "Season $season")
+        Text(text = stringResource(R.string.season) + season)
         Box(
             modifier = Modifier
                 .height(SMALL_SEASON_CARD_HEIGHT)
@@ -91,7 +93,7 @@ fun BingeWatcherSmallSeasonCard(
         ) {
             Image(
                 painter = imagePainter,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.open_season_card),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
@@ -117,6 +119,24 @@ fun BingeWatcherSmallSeasonCard(
             )
         }
     }
+}
+
+@Composable
+fun BingeWatcherSmallImageCard(
+    modifier: Modifier = Modifier,
+    painter: Painter,
+    onClick: () -> Unit
+) {
+    Image(
+        painter = painter,
+        contentDescription = stringResource(R.string.description_open_image),
+        contentScale = ContentScale.FillHeight,
+        modifier = modifier
+            .height(150.dp)
+            .clickable {
+                onClick()
+            }
+    )
 }
 
 
