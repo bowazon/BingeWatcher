@@ -55,7 +55,7 @@ fun BingeWatcherParallaxPicture(
 ) {
     val firstElementScrollOffset = rememberFirstElementScrollOffset(lazyListState)
 
-    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.7f, 1f)
+    val alpha = (1f - (firstElementScrollOffset / SHOW_IMAGE_HEIGHT)).coerceIn(0.5f, 1f)
 
     val imageHeight = (SHOW_IMAGE_HEIGHT - firstElementScrollOffset)
         .coerceAtLeast(SHOW_IMAGE_HEIGHT_LEAST)
@@ -84,7 +84,7 @@ private fun LargeImageWithGradient(
                 painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillHeight
             )
         }
 
