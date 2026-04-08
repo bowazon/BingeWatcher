@@ -2,10 +2,13 @@ package com.bowazon.bingewatcher.features.person.impl
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,9 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumShowCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonTopBadge
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
 
@@ -107,13 +114,16 @@ internal fun PersonScreen(
             }
 
             item {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Button(onClick = {
-                        //onEvent(ShowDetailsEvent.OnFollowClick)
-                    }) {
-                        // TODO should be like if show ended and follow in ongoing
-                        Text("Follow")
-                    }
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    BingeWatcherLikeIcon(onClick = { onEvent(PersonEvent.OnFollowClick) })
+
+                    BingeWatcherShareIcon(onClick = {
+                        // TODO share
+                    })
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

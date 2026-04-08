@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,10 +27,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -37,7 +43,11 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallPersonCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowBottomBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import androidx.core.net.toUri
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
 import com.bowazon.bingewatcher.core.designsystem.R
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
@@ -140,22 +150,15 @@ internal fun ShowDetailsScreen(
                     .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(onClick = {
-                        onEvent(ShowDetailsEvent.OnImdbClick)
-                    }) {
-                        Text("IMDB")
-                    }
-                    Button(onClick = {
-                        onEvent(ShowDetailsEvent.OnOfficialSiteClick)
-                    }) {
-                        Text("Official site")
-                    }
-                    Button(onClick = {
-                        onEvent(ShowDetailsEvent.OnFollowClick)
-                    }) {
-                        // TODO should be like if show ended and follow in ongoing
-                        Text("Follow")
-                    }
+                    BingeWatcherImdbIcon(onClick = { onEvent(ShowDetailsEvent.OnImdbClick) })
+
+                    BingeWatcherLikeIcon(onClick = { onEvent(ShowDetailsEvent.OnFollowClick) })
+
+                    BingeWatcherOfficialSiteIcon( onClick = { onEvent(ShowDetailsEvent.OnOfficialSiteClick) } )
+
+                    BingeWatcherShareIcon(onClick = {
+                        // TODO share
+                    })
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

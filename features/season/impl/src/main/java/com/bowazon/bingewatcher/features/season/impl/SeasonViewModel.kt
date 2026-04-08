@@ -104,6 +104,10 @@ class SeasonViewModel @AssistedInject constructor(
                     }
                 }
             }
+
+            is SeasonEvent.OnLikeClicked -> {
+
+            }
         }
     }
 
@@ -130,6 +134,7 @@ data class SeasonUiModel(
 )
 
 sealed interface SeasonEvent {
+    data class OnLikeClicked(val seasonId: Int) : SeasonEvent
     data class OnWatchedClicked(val episodeId: Int) : SeasonEvent
 }
 
