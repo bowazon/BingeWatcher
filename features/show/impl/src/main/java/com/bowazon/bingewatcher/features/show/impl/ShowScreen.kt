@@ -279,15 +279,11 @@ internal fun ShowScreen(
             }
         }
 
-        // TODO do we really need it here, white arrow on white surface?
-        // TODO return adaptive background?
-        IconButton(
-            onClick = { onBackClicked() },
+        BingeWatcherBackIcon(
+            onClick = onBackClicked,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
-        ) {
-            BingeWatcherBackIcon(onClick = onBackClicked)
-        }
+        )
     }
 }

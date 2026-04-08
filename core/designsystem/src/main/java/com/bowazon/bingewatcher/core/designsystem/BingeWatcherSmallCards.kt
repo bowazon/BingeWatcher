@@ -54,7 +54,7 @@ internal fun BaseScalableCard(
     val pressed by interactionSource.collectIsPressedAsState()
 
     val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.9f else 1f
+        targetValue = if (pressed) 0.95f else 1f
     )
 
     val alpha by animateFloatAsState(

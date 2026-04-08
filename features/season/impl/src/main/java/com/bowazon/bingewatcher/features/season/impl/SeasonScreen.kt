@@ -172,14 +172,11 @@ internal fun SeasonScreen(
             // TODO buttons next season previous season
         }
 
-
-        IconButton(
-            onClick = { onBackClicked() },
+        BingeWatcherBackIcon(
+            onClick = onBackClicked,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
-        ) {
-            BingeWatcherBackIcon(onClick = onBackClicked)
-        }
+        )
     }
 }

@@ -187,13 +187,11 @@ internal fun PersonScreen(
 
         }
 
-        IconButton(
-            onClick = { onBackClicked() },
+        BingeWatcherBackIcon(
+            onClick = onBackClicked,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
-        ) {
-            BingeWatcherBackIcon(onClick = onBackClicked)
-        }
+        )
     }
 }
