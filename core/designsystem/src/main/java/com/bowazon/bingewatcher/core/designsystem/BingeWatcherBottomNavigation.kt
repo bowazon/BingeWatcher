@@ -1,5 +1,10 @@
 package com.bowazon.bingewatcher.core.designsystem
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.LocalLibrary
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -14,18 +19,19 @@ import com.bowazon.bingewatcher.core.navigation.Navigator
 fun BingeWatcherBottomNavigation(
     modifier: Modifier = Modifier,
     navigator: Navigator,
-    first: NavKey,
-    second: NavKey,
+    homeKey: NavKey,
+    searchKey: NavKey,
+    myLibraryKey: NavKey,
     content: @Composable () -> Unit
 ) {
     NavigationSuiteScaffold(modifier = modifier,
         navigationSuiteItems = {
             item(
                 selected = true,
-                onClick =  { navigator.navigate(first) } ,
+                onClick =  { navigator.navigate(homeKey) } ,
                 icon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_launcher_foreground),
+                        imageVector = Icons.Rounded.Home,
                         contentDescription = null,
                     )
                 },
@@ -33,14 +39,25 @@ fun BingeWatcherBottomNavigation(
             )
             item(
                 selected = true,
-                onClick =  { navigator.navigate(second) } ,
+                onClick =  { navigator.navigate(searchKey) } ,
                 icon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_launcher_foreground),
+                        imageVector = Icons.Rounded.Search,
                         contentDescription = null,
                     )
                 },
                 label = { Text("Search") }
+            )
+            item(
+                selected = true,
+                onClick =  { navigator.navigate(myLibraryKey) } ,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Rounded.LocalLibrary,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("My Library") }
             )
         }
     ) {
