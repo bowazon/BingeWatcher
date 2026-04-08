@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,23 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherBackIcon
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowBottomBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumEpisodeCard
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
-import com.bowazon.bingewatcher.core.designsystem.utils.CardClickable
+import com.bowazon.bingewatcher.core.designsystem.utils.ToggleState
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 @Composable
@@ -166,11 +161,11 @@ internal fun SeasonScreen(
                     date = episode.airdate,
                     rating = episode.rating,
                     description = episode.summary,
-                    click = CardClickable(
-                        flag = episode.watched,
-                        isFlagLoading = episode.isUpdatingWatched,
-                        onToggle = { onEvent(SeasonEvent.OnWatchedClicked(episode.id)) }
-                    )
+                    toggleState = ToggleState(
+                        isChecked = episode.watched,
+                        isLoading = episode.isUpdatingWatched,
+                    ),
+                    onToggle = { onEvent(SeasonEvent.OnWatchedClicked(episode.id)) }
                 )
             }
 

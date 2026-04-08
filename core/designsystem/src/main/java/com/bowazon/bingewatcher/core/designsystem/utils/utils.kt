@@ -17,18 +17,19 @@ import com.bowazon.bingewatcher.core.designsystem.R
 @JvmInline
 internal value class Rating(val rating: String)
 
+internal fun Rating.isNotEmpty() = rating.isNotEmpty()
+
 // TODO can be private or internal, and we can pass all these things as parameters in BingeWatcherMediumEpisodeCard
-class CardClickable(
-    val flag: Boolean,
-    val isFlagLoading: Boolean = false,
-    val onToggle: () -> Unit,
+class ToggleState(
+    val isChecked: Boolean,
+    val isLoading: Boolean = false,
 )
 
 @Composable
-internal fun RatingWithStar(rating: String) {
+internal fun RatingWithStar(rating: Rating) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            text = rating,
+            text = rating.rating,
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.width(4.dp))

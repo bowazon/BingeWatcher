@@ -16,7 +16,7 @@ import com.bowazon.bingewatcher.features.discover.api.DiscoverNavKey
 import com.bowazon.bingewatcher.features.discover.impl.discoverEntry
 import com.bowazon.bingewatcher.features.search.api.SearchNavKey
 import com.bowazon.bingewatcher.features.search.impl.searchEntry
-import com.bowazon.bingewatcher.features.show.impl.showDetailsEntry
+import com.bowazon.bingewatcher.features.show.impl.showEntry
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.navigation.toEntries
 import com.bowazon.bingewatcher.features.person.impl.personEntry
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     val entryProvider = entryProvider {
                         discoverEntry(navigator)
                         searchEntry(navigator)
-                        showDetailsEntry(navigator)
+                        showEntry(navigator)
                         personEntry(navigator)
                         seasonEntry(navigator)
                         imageViewEntry(navigator)

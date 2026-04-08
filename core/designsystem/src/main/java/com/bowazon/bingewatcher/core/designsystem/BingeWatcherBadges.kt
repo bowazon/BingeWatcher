@@ -25,12 +25,13 @@ import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
 import com.bowazon.bingewatcher.core.designsystem.utils.Rating
 import com.bowazon.bingewatcher.core.designsystem.utils.RatingWithStar
+import com.bowazon.bingewatcher.core.designsystem.utils.isNotEmpty
 import kotlin.text.isNotEmpty
 
 @Composable
 private fun BaseTopBadge(
     modifier: Modifier = Modifier,
-    largeText: String = "", // TODO move everything to null; too bad it means we should rewrite UI models
+    largeText: String = "",
     smallText: String = "",
     rightText: String = "",
     rating: Rating = Rating("")
@@ -56,8 +57,8 @@ private fun BaseTopBadge(
         }
         Row(verticalAlignment = Alignment.Top,
             modifier = Modifier.align(Alignment.TopEnd)) {
-            if (rating.rating.isNotEmpty()) {
-                RatingWithStar(rating.rating)
+            if (rating.isNotEmpty()) {
+                RatingWithStar(rating)
             }
             if(rightText.isNotEmpty()) {
                 Text(

@@ -1,8 +1,6 @@
 package com.bowazon.bingewatcher.features.show.impl
 
 import android.content.Intent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -11,13 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,13 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,9 +42,9 @@ import com.bowazon.bingewatcher.core.designsystem.R
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 @Composable
-fun ShowDetailsScreen(
+fun ShowScreen(
     modifier: Modifier = Modifier,
-    viewModel: ShowDetailsViewModel = hiltViewModel(),
+    viewModel: ShowViewModel = hiltViewModel(),
     onBackClicked: () -> Unit,
     navigateToPerson: (Int) -> Unit,
     navigateToSeason: (Int, Int) -> Unit,
@@ -65,17 +56,17 @@ fun ShowDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is ShowDetailsEffect.OpenUrl -> {
+                is ShowScreenEffect.OpenUrl -> {
                     val intent = Intent(Intent.ACTION_VIEW, effect.url.toUri())
                     context.startActivity(intent)
                 }
-                is ShowDetailsEffect.OpenPersonCard -> {
+                is ShowScreenEffect.OpenPersonCard -> {
                     navigateToPerson(effect.id)
                 }
-                is ShowDetailsEffect.OpenSeasonCard -> {
+                is ShowScreenEffect.OpenSeasonCard -> {
                     navigateToSeason(effect.showId, effect.seasonId)
                 }
-                is ShowDetailsEffect.OpenImageView -> {
+                is ShowScreenEffect.OpenImageView -> {
                     navigateToImageView(effect.imageIndex, effect.urlList)
                 }
             }
@@ -83,16 +74,16 @@ fun ShowDetailsScreen(
     }
 
     when(uiState) {
-        is ShowDetailsUiState.Loading -> {
+        is ShowScreenUiState.Loading -> {
             // TODO show loading
         }
-        is ShowDetailsUiState.Error -> {
+        is ShowScreenUiState.Error -> {
             // TODO show error
         }
-        is ShowDetailsUiState.Success -> {
-            ShowDetailsScreen(
+        is ShowScreenUiState.Success -> {
+            ShowScreen(
                 modifier = modifier,
-                uiData = (uiState as ShowDetailsUiState.Success).data,
+                uiData = (uiState as ShowScreenUiState.Success).data,
                 onBackClicked = onBackClicked,
                 onEvent = viewModel::onEvent,
             )
@@ -101,15 +92,15 @@ fun ShowDetailsScreen(
 }
 
 @Composable
-internal fun ShowDetailsScreen(
+internal fun ShowScreen(
     modifier: Modifier = Modifier,
-    uiData: ShowDetailsUiModel,
+    uiData: ShowUiModel,
     onBackClicked: () -> Unit,
-    onEvent: (ShowDetailsEvent) -> Unit,
+    onEvent: (ShowScreenEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
 
-    val painterLargeImage = rememberAsyncImagePainter(model = uiData.showDetails.largeImage)
+    val painterLargeImage = rememberAsyncImagePainter(model = uiData.show.largeImage)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -127,16 +118,16 @@ internal fun ShowDetailsScreen(
 
             stickyHeader {
                 BingeWatcherShowTopBadge(
-                    name = uiData.showDetails.summary.name,
-                    premiered = uiData.showDetails.summary.premiered,
-                    rating = uiData.showDetails.summary.rating
+                    name = uiData.show.summary.name,
+                    premiered = uiData.show.summary.premiered,
+                    rating = uiData.show.summary.rating
                 )
             }
 
             item {
                 BingeWatcherShowBottomBadge(
-                    genres = uiData.showDetails.summary.genres,
-                    description = uiData.showDetails.description
+                    genres = uiData.show.summary.genres,
+                    description = uiData.show.description
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -148,11 +139,11 @@ internal fun ShowDetailsScreen(
                     .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    BingeWatcherImdbIcon(onClick = { onEvent(ShowDetailsEvent.OnImdbClick) })
+                    BingeWatcherImdbIcon(onClick = { onEvent(ShowScreenEvent.OnImdbClick) })
 
-                    BingeWatcherLikeIcon(onClick = { onEvent(ShowDetailsEvent.OnFollowClick) })
+                    BingeWatcherLikeIcon(onClick = { onEvent(ShowScreenEvent.OnFollowClick) })
 
-                    BingeWatcherOfficialSiteIcon( onClick = { onEvent(ShowDetailsEvent.OnOfficialSiteClick) } )
+                    BingeWatcherOfficialSiteIcon( onClick = { onEvent(ShowScreenEvent.OnOfficialSiteClick) } )
 
                     BingeWatcherShareIcon(onClick = {
                         // TODO share
@@ -173,8 +164,8 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(uiData.seasons[i].image, painterLargeImage)
 
                         BingeWatcherSmallSeasonCard(
-                            onClick = { onEvent(ShowDetailsEvent.OnSeasonClick(
-                                uiData.showDetails.id,
+                            onClick = { onEvent(ShowScreenEvent.OnSeasonClick(
+                                uiData.show.id,
                                 uiData.seasons[i].id
                             )) },
                             season = i + 1,
@@ -208,7 +199,7 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
 
                         BingeWatcherSmallPersonCard(
-                            onClick = { onEvent(ShowDetailsEvent.OnPersonClick(actor.id)) },
+                            onClick = { onEvent(ShowScreenEvent.OnPersonClick(actor.id)) },
                             personName = actor.name,
                             imagePainter = painter
                         )
@@ -244,7 +235,7 @@ internal fun ShowDetailsScreen(
                         val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
 
                         BingeWatcherSmallPersonCard(
-                            onClick = { onEvent(ShowDetailsEvent.OnPersonClick(crewMember.id)) },
+                            onClick = { onEvent(ShowScreenEvent.OnPersonClick(crewMember.id)) },
                             personName = crewMember.name,
                             additionalInfo = crewMember.role,
                             additionalInfoHeight = infoHeight,
@@ -279,7 +270,7 @@ internal fun ShowDetailsScreen(
                         BingeWatcherSmallImageCard(
                             painter = painter,
                             onClick = {
-                                ShowDetailsEvent.OnGalleryClick(i, uiData.pictures)
+                                ShowScreenEvent.OnGalleryClick(i, uiData.pictures)
                             })
                     }
                 }

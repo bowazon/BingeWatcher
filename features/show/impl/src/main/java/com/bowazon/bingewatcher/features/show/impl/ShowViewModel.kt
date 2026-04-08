@@ -20,16 +20,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = ShowDetailsViewModel.Factory::class)
-class ShowDetailsViewModel @AssistedInject constructor(
+@HiltViewModel(assistedFactory = ShowViewModel.Factory::class)
+class ShowViewModel @AssistedInject constructor(
     @Assisted val showId: Int,
     val repository: ShowRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<ShowDetailsUiState>(ShowDetailsUiState.Loading)
-    val state: StateFlow<ShowDetailsUiState> = _state
+    private val _state = MutableStateFlow<ShowScreenUiState>(ShowScreenUiState.Loading)
+    val state: StateFlow<ShowScreenUiState> = _state
 
-    private val _effects = MutableSharedFlow<ShowDetailsEffect>()
+    private val _effects = MutableSharedFlow<ShowScreenEffect>()
     val effects = _effects.asSharedFlow()
 
     init {
@@ -37,7 +37,7 @@ class ShowDetailsViewModel @AssistedInject constructor(
             // TODO exceptions handler? Supervisor Job?
             try {
                 coroutineScope {
-                    val showDetails = async { repository.getShow(showId) }
+                    val show = async { repository.getShow(showId) }
                     val cast = async { repository.getActorsForShow(showId) }
                     val crew = async { repository.getCrewForShow(showId) }
                     val pictures = async { repository.getImagesForShow(showId) }
@@ -58,9 +58,9 @@ class ShowDetailsViewModel @AssistedInject constructor(
                             first.copy(role = mergedRoles)
                         }
 
-                    _state.value = ShowDetailsUiState.Success(
-                        ShowDetailsUiModel(
-                            showDetails.await(),
+                    _state.value = ShowScreenUiState.Success(
+                        ShowUiModel(
+                            show.await(),
                             cast.await(),
                             crewMerged,
                             pictures.await(),
@@ -69,53 +69,53 @@ class ShowDetailsViewModel @AssistedInject constructor(
                     )
                 }
             } catch (e: Exception) { // TODO generic error bad
-                _state.value = ShowDetailsUiState.Error
+                _state.value = ShowScreenUiState.Error
                 Log.i("ART_DBG_5", "e is " + e.toString())
             }
         }
     }
 
-    fun onEvent(event: ShowDetailsEvent) {
+    fun onEvent(event: ShowScreenEvent) {
         when (event) {
-            is ShowDetailsEvent.OnImdbClick -> {
+            is ShowScreenEvent.OnImdbClick -> {
                 // TODO should have analytics
                 val currentState = _state.value
-                if (currentState is ShowDetailsUiState.Success) {
-                    openUrl(currentState.data.showDetails.imdb)
+                if (currentState is ShowScreenUiState.Success) {
+                    openUrl(currentState.data.show.imdb)
                 }
             }
-            is ShowDetailsEvent.OnOfficialSiteClick -> {
+            is ShowScreenEvent.OnOfficialSiteClick -> {
                 val currentState = _state.value
-                if (currentState is ShowDetailsUiState.Success) {
-                    openUrl(currentState.data.showDetails.officialSite)
+                if (currentState is ShowScreenUiState.Success) {
+                    openUrl(currentState.data.show.officialSite)
                 }
             }
-            is ShowDetailsEvent.OnFollowClick -> {
+            is ShowScreenEvent.OnFollowClick -> {
                 // TODO
                 // to follow repository
             }
-            is ShowDetailsEvent.OnSeasonClick -> {
+            is ShowScreenEvent.OnSeasonClick -> {
                 // TODO showId and seasonId is good place to use inline value classes
                 val showId = event.showId
                 val seasonId = event.seasonId
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenSeasonCard(
+                    _effects.emit(ShowScreenEffect.OpenSeasonCard(
                         showId,
                         seasonId
                     ))
                 }
             }
-            is ShowDetailsEvent.OnPersonClick -> {
+            is ShowScreenEvent.OnPersonClick -> {
                 val personId = event.id
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenPersonCard(personId))
+                    _effects.emit(ShowScreenEffect.OpenPersonCard(personId))
                 }
             }
-            is ShowDetailsEvent.OnGalleryClick -> {
+            is ShowScreenEvent.OnGalleryClick -> {
                 val imageIndex = event.imageIndex
                 val urlList = event.urlList
                 viewModelScope.launch {
-                    _effects.emit(ShowDetailsEffect.OpenImageView(imageIndex, urlList))
+                    _effects.emit(ShowScreenEffect.OpenImageView(imageIndex, urlList))
                 }
             }
         }
@@ -123,7 +123,7 @@ class ShowDetailsViewModel @AssistedInject constructor(
 
     private fun openUrl(url: String) {
         viewModelScope.launch {
-            _effects.emit(ShowDetailsEffect.OpenUrl(url))
+            _effects.emit(ShowScreenEffect.OpenUrl(url))
         }
     }
 
@@ -131,37 +131,37 @@ class ShowDetailsViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             showId: Int,
-        ): ShowDetailsViewModel
+        ): ShowViewModel
     }
 }
 
-sealed class ShowDetailsUiState {
-    object Error: ShowDetailsUiState()
-    object Loading: ShowDetailsUiState()
-    data class Success(val data: ShowDetailsUiModel): ShowDetailsUiState()
+sealed class ShowScreenUiState {
+    object Error: ShowScreenUiState()
+    object Loading: ShowScreenUiState()
+    data class Success(val data: ShowUiModel): ShowScreenUiState()
 }
 
 // TODO dumb model
-data class ShowDetailsUiModel(
-    val showDetails: ShowDetailed,
+data class ShowUiModel(
+    val show: ShowDetailed,
     val cast: List<ActorSummary>,
     val crew: List<CrewSummary>,
     val pictures: List<String>,
     val seasons: List<Season>
 )
 
-sealed interface ShowDetailsEvent {
-    object OnImdbClick : ShowDetailsEvent
-    object OnOfficialSiteClick : ShowDetailsEvent
-    object OnFollowClick : ShowDetailsEvent
-    data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowDetailsEvent
-    data class OnPersonClick(val id: Int) : ShowDetailsEvent
-    data class OnGalleryClick(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEvent
+sealed interface ShowScreenEvent {
+    object OnImdbClick : ShowScreenEvent
+    object OnOfficialSiteClick : ShowScreenEvent
+    object OnFollowClick : ShowScreenEvent
+    data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowScreenEvent
+    data class OnPersonClick(val id: Int) : ShowScreenEvent
+    data class OnGalleryClick(val imageIndex: Int, val urlList: List<String>) : ShowScreenEvent
 }
 
-sealed interface ShowDetailsEffect {
-    data class OpenUrl(val url: String) : ShowDetailsEffect
-    data class OpenPersonCard(val id: Int) : ShowDetailsEffect
-    data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowDetailsEffect
-    data class OpenImageView(val imageIndex: Int, val urlList: List<String>) : ShowDetailsEffect
+sealed interface ShowScreenEffect {
+    data class OpenUrl(val url: String) : ShowScreenEffect
+    data class OpenPersonCard(val id: Int) : ShowScreenEffect
+    data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowScreenEffect
+    data class OpenImageView(val imageIndex: Int, val urlList: List<String>) : ShowScreenEffect
 }

@@ -5,12 +5,12 @@ import com.bowazon.bingewatcher.core.navigation.Navigator
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ShowDetailsNavKey(
+data class ShowNavKey(
     val showId: Int
 ) : NavKey
 
-fun Navigator.navigateToShowDetails(
+fun Navigator.navigateToShow(
     showId: Int,
 ) {
-    navigate(ShowDetailsNavKey(showId))
+    navigate(ShowNavKey(showId))
 }

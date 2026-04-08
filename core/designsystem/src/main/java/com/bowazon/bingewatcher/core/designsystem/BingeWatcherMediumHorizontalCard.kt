@@ -17,11 +17,9 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -50,9 +48,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
-import com.bowazon.bingewatcher.core.designsystem.utils.CardClickable
+import com.bowazon.bingewatcher.core.designsystem.utils.ToggleState
 import com.bowazon.bingewatcher.core.designsystem.utils.Rating
 import com.bowazon.bingewatcher.core.designsystem.utils.RatingWithStar
+import com.bowazon.bingewatcher.core.designsystem.utils.isNotEmpty
 import kotlin.text.isNotEmpty
 
 val MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT = 150.dp
@@ -63,11 +62,17 @@ private fun BaseMediumHorizontalCard(
     modifier: Modifier = Modifier,
     name: String,
     picturePainter: Painter,
+
+    // I decided to use "" instead of nulls, because I still want
+    // elements to present on card and take space if some data came
+    // as null.
     text1: String = "",
     text2: String = "",
     text3: String = "",
     rating: Rating = Rating(""),
-    click: CardClickable? = null
+
+    toggleState: ToggleState? = null,
+    onToggle: (() -> Unit)? = null,
 ) {
     Box(modifier.padding(MEDIUM_HORIZONTAL_CARD_PADDING)) {
         Row {
@@ -111,15 +116,15 @@ private fun BaseMediumHorizontalCard(
             modifier = Modifier
                 .align(Alignment.TopEnd),
         ) {
-            if (rating.rating.isNotEmpty()) {
-                RatingWithStar(rating.rating)
+            if (rating.isNotEmpty()) {
+                RatingWithStar(rating)
             }
 
-            if (click != null) {
+            if (toggleState != null && onToggle != null) {
                 WatchedToggle(
-                    isWatched = click.flag,
-                    isLoading = click.isFlagLoading,
-                    onToggle = click.onToggle
+                    isWatched = toggleState.isChecked,
+                    isLoading = toggleState.isLoading,
+                    onToggle = onToggle
                 )
             }
         }
@@ -154,10 +159,11 @@ fun BingeWatcherMediumEpisodeCard(
     date: String,
     rating: String,
     description: String? = null,
-    click: CardClickable? = null
+    toggleState: ToggleState? = null,
+    onToggle: (() -> Unit)? = null
 ) {
     var showDescription by remember { mutableStateOf(
-        click?.flag ?: false) }
+        toggleState?.isChecked ?: false) }
 
     Column(modifier = modifier
         .border(
@@ -174,7 +180,8 @@ fun BingeWatcherMediumEpisodeCard(
             picturePainter = picturePainter,
             text1 = date,
             rating = Rating(rating),
-            click = click
+            toggleState = toggleState,
+            onToggle = onToggle
         )
 
         if (showDescription && description != null) {
@@ -311,11 +318,11 @@ fun BingeWatcherMediumEpisodeCardPreview() {
                         "to use and teams with an ex-student (Aaron Paul) to manufacture " +
                         "top-grade crystal meth in hopes of providing for his family after" +
                         " he's gone.",
-                click = CardClickable(
-                    flag = true,
-                    isFlagLoading = false,
-                    onToggle = {}
-                )
+                toggleState = ToggleState(
+                    isChecked = true,
+                    isLoading = false,
+                ),
+                onToggle = {}
             )
         }
     }
