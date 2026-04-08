@@ -5,6 +5,7 @@ import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toEpisode
 import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toSeason
+import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toShowSummary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
@@ -16,8 +17,12 @@ class SeasonRepositoryImpl @Inject constructor(
         showId: Int,
         seasonId: Int
     ): Season {
-        val showName = api.showInfo(showId).name
-        val season = api.seasons(showId).first { it.id.toInt() == seasonId }.toSeason(showName)
+        val show = api.showInfo(showId)
+        val season = api.seasons(showId).first { it.id.toInt() == seasonId }.toSeason(show.name)
+
+        if (season.image.isEmpty()) {
+            return season.copy(image = show.toShowSummary().image)
+        }
 
         return season
         // TODO I know it's stupid - two consecutive suspend calls.
