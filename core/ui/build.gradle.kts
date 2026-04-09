@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(project(":core:designsystem"))
 }

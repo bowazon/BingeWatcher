@@ -1,11 +1,11 @@
 package com.bowazon.bingewatcher.features.season.impl
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.repository.SeasonRepository
+import com.bowazon.bingewatcher.core.ui.ScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,8 +28,8 @@ class SeasonViewModel @AssistedInject constructor(
     val repository: SeasonRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<SeasonUiState>(SeasonUiState.Loading)
-    val state: StateFlow<SeasonUiState> = _state.asStateFlow() // TODO "= _state" or "= _state.asStateFlow()"???
+    private val _state = MutableStateFlow<ScreenState<SeasonUiModel>>(ScreenState.Loading)
+    val state: StateFlow<ScreenState<SeasonUiModel>> = _state.asStateFlow() // TODO "= _state" or "= _state.asStateFlow()"???
 
     private val _effects = MutableSharedFlow<SeasonEffect>()
     val effects = _effects.asSharedFlow()
@@ -41,7 +41,7 @@ class SeasonViewModel @AssistedInject constructor(
                     val season = async { repository.getSeasonInfo(showId, seasonId) }
                     val episodes = async { repository.getEpisodes(seasonId) }
 
-                    _state.value = SeasonUiState.Success(
+                    _state.value = ScreenState.Success(
                         SeasonUiModel(
                             season.await(),
                             episodes.await()
@@ -49,7 +49,7 @@ class SeasonViewModel @AssistedInject constructor(
                     )
                 }
             } catch (e: Exception) { // TODO generic error bad
-                _state.value = SeasonUiState.Error
+                _state.value = ScreenState.Error
             }
         }
     }
@@ -61,14 +61,14 @@ class SeasonViewModel @AssistedInject constructor(
                 viewModelScope.launch {
                     // 1. So first, we're getting current value
                     val currentState = _state.value
-                    val data = (currentState as? SeasonUiState.Success)?.data ?: return@launch
+                    val data = (currentState as? ScreenState.Success<SeasonUiModel>)?.data ?: return@launch
 
                     val episode = data.episodes.find { it.id == event.episodeId } ?: return@launch
                     val newValue = !episode.watched // TOGGLE HERE
 
                     // 2. Then, we're marking loading (via isUpdatingWatched = true)
                     _state.update { oldState ->
-                        val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                        val oldData = (oldState as? ScreenState.Success<SeasonUiModel>)?.data ?: return@update oldState
                         val updatedEpisodes = oldData.episodes.map {
                             if (it.id == event.episodeId) it.copy(isUpdatingWatched = true) else it
                         }
@@ -82,7 +82,7 @@ class SeasonViewModel @AssistedInject constructor(
 
                         // 4. Apply result
                         _state.update { oldState ->
-                            val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                            val oldData = (oldState as? ScreenState.Success<SeasonUiModel>)?.data ?: return@update oldState
                             val updatedEpisodes = oldData.episodes.map {
                                 if (it.id == event.episodeId) it.copy(
                                     watched = result,
@@ -95,7 +95,7 @@ class SeasonViewModel @AssistedInject constructor(
                     } catch(e: Exception) {
                         // 5. If error just mark it not loading
                         _state.update { oldState ->
-                            val oldData = (oldState as? SeasonUiState.Success)?.data ?: return@update oldState
+                            val oldData = (oldState as? ScreenState.Success<SeasonUiModel>)?.data ?: return@update oldState
                             val updatedEpisodes = oldData.episodes.map {
                                 if (it.id == event.episodeId) it.copy(isUpdatingWatched = false) else it
                             }
@@ -121,11 +121,15 @@ class SeasonViewModel @AssistedInject constructor(
 }
 
 
+
+/*
 sealed class SeasonUiState {
     object Error: SeasonUiState()
     object Loading: SeasonUiState()
     data class Success(val data: SeasonUiModel): SeasonUiState()
 }
+
+ */
 
 // TODO probably should be it's own dumb model
 data class SeasonUiModel(

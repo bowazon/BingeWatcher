@@ -31,6 +31,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
 import com.bowazon.bingewatcher.core.designsystem.utils.ToggleState
+import com.bowazon.bingewatcher.core.ui.ScreenState
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 @Composable
@@ -56,16 +57,16 @@ fun SeasonScreen(
     }
 
     when(uiState) {
-        is SeasonUiState.Loading -> {
+        is ScreenState.Loading -> {
             // TODO show loading
         }
-        is SeasonUiState.Error -> {
+        is ScreenState.Error -> {
             // TODO show error
         }
-        is SeasonUiState.Success -> {
+        is ScreenState.Success -> {
             SeasonScreen(
                 modifier = modifier,
-                uiData = (uiState as SeasonUiState.Success).data,
+                uiData = (uiState as ScreenState.Success).data,
                 onBackClicked = onBackClicked,
                 onEvent = viewModel::onEvent,
             )
