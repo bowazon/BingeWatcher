@@ -1,6 +1,5 @@
 package com.bowazon.bingewatcher.core.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,84 +60,70 @@ private fun ScreenError(
 }
 
 @Composable
-fun <T>BingeWatcherRootScreen(
-    modifier: Modifier = Modifier,
+fun <T> BingeWatcherDetailsScreen(
     uiState: ScreenState<T>,
     onBackClicked: () -> Unit,
-    content: @Composable (T) -> Unit
+    largeImageUrl: (T) -> String?,
+    header: @Composable (T) -> Unit,
+    badge: @Composable ((T) -> Unit)? = null,
+    actions: @Composable RowScope.(T) -> Unit,
+    content: LazyListScope.(T) -> Unit
 ) {
-    when(uiState) {
+    when (uiState) {
         is ScreenState.Loading -> {
-            ScreenLoading(modifier)
+            ScreenLoading()
         }
+
         is ScreenState.Error -> {
-            ScreenError(modifier = modifier, onBackClicked = onBackClicked)
+            ScreenError(onBackClicked = onBackClicked)
         }
+
         is ScreenState.Success -> {
-            content(uiState.data)
+            val data = uiState.data
+            val lazyListState = rememberLazyListState()
+
+            Box(Modifier.fillMaxSize()) {
+                LazyColumn(state = lazyListState) {
+
+                    largeImageUrl(data)?.let { url ->
+                        item {
+                            val painter = rememberAsyncImagePainter(url)
+                            BingeWatcherParallaxPicture(
+                                lazyListState = lazyListState,
+                                picturePainter = painter
+                            )
+                        }
+                    }
+
+                    stickyHeader {
+                        header(data)
+                    }
+
+                    badge?.let {
+                        item { it(data) }
+                    }
+
+                    item {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            actions(data)
+                        }
+                    }
+
+                    content(data)
+                }
+
+                BingeWatcherBackIcon(
+                    onClick = onBackClicked,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }
-
-@Composable
-fun BingeWatcherTemplateScreen(
-    modifier: Modifier = Modifier,
-    largeImageUrl: String?,
-    onBackClicked: () -> Unit,
-    stickyHeaderContent: @Composable (() -> Unit)?,
-    lowerBadgeContent: @Composable (() -> Unit)?,
-    actionRow: @Composable RowScope.() -> Unit,
-    contentColumn: LazyListScope.() -> Unit
-) {
-    val lazyListState = rememberLazyListState()
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize(),
-            state = lazyListState
-        ) {
-            largeImageUrl?.let {
-                item {
-                    val painterLargeImage = rememberAsyncImagePainter(model = it)
-                    BingeWatcherParallaxPicture (
-                        lazyListState = lazyListState,
-                        picturePainter = painterLargeImage
-                    )
-                }
-            }
-
-            stickyHeader {
-                stickyHeaderContent?.let {
-                    it()
-                }
-            }
-
-            item {
-                lowerBadgeContent?.let {
-                    it()
-                }
-            }
-
-            item {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    actionRow()
-                }
-            }
-
-            contentColumn()
-        }
-
-        BingeWatcherBackIcon(
-            onClick = onBackClicked,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-        )
-    }
-}
-
