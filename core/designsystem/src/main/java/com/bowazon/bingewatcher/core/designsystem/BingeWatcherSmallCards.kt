@@ -197,9 +197,6 @@ fun BingeWatcherSmallImageCard(
             contentScale = ContentScale.FillHeight,
             modifier = modifier
                 .height(150.dp)
-                .clickable {
-                    onClick()
-                }
         )
     }
 }

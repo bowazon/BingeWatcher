@@ -270,7 +270,7 @@ internal fun ShowScreen(
                         BingeWatcherSmallImageCard(
                             painter = painter,
                             onClick = {
-                                ShowScreenEvent.OnGalleryClick(i, uiData.pictures)
+                                onEvent(ShowScreenEvent.OnGalleryClick(i, uiData.pictures))
                             })
                     }
                 }
