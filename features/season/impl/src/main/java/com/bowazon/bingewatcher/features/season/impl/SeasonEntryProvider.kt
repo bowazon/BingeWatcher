@@ -8,7 +8,7 @@ import com.bowazon.bingewatcher.features.season.api.SeasonNavKey
 
 fun EntryProviderScope<NavKey>.seasonEntry(navigator: Navigator) {
     entry<SeasonNavKey> { navKey ->
-        TestScreen(//SeasonScreen(
+        SeasonScreen(
             onBackClicked = navigator::goBack,
             viewModel = hiltViewModel<SeasonViewModel, SeasonViewModel.Factory>(
                 // TODO all these "" things should be part of companion objects of view models or smth

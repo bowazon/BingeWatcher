@@ -39,6 +39,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallImageCard
 import com.bowazon.bingewatcher.core.designsystem.R
+import com.bowazon.bingewatcher.core.ui.BingeWatcherDetailsScreen
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 
 @Composable
@@ -73,217 +74,159 @@ fun ShowScreen(
         }
     }
 
-    when(uiState) {
-        is ShowScreenUiState.Loading -> {
-            // TODO show loading
-        }
-        is ShowScreenUiState.Error -> {
-            // TODO show error
-        }
-        is ShowScreenUiState.Success -> {
-            ShowScreen(
-                modifier = modifier,
-                uiData = (uiState as ShowScreenUiState.Success).data,
-                onBackClicked = onBackClicked,
-                onEvent = viewModel::onEvent,
+    BingeWatcherDetailsScreen(
+        modifier = modifier,
+        uiState = uiState,
+        onBackClicked = onBackClicked,
+        largeImageUrl = { it.show.largeImage },
+        header = { uiData ->
+            BingeWatcherShowTopBadge(
+                name = uiData.show.summary.name,
+                premiered = uiData.show.summary.premiered,
+                rating = uiData.show.summary.rating
             )
-        }
-    }
-}
+        },
+        badge = { uiData ->
+            BingeWatcherShowBottomBadge(
+                genres = uiData.show.summary.genres,
+                description = uiData.show.description
+            )
+        },
+        actions = { uiData ->
+            BingeWatcherImdbIcon(onClick = { viewModel.onEvent(ShowScreenEvent.OnImdbClick) })
 
-@Composable
-internal fun ShowScreen(
-    modifier: Modifier = Modifier,
-    uiData: ShowUiModel,
-    onBackClicked: () -> Unit,
-    onEvent: (ShowScreenEvent) -> Unit,
-) {
-    val lazyListState = rememberLazyListState()
+            BingeWatcherLikeIcon(onClick = { viewModel.onEvent(ShowScreenEvent.OnFollowClick) })
 
-    val painterLargeImage = rememberAsyncImagePainter(model = uiData.show.largeImage)
+            BingeWatcherOfficialSiteIcon( onClick = { viewModel.onEvent(ShowScreenEvent.OnOfficialSiteClick) } )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize(),
-            //.background(Color.Black),
-            state = lazyListState
-        ) {
-            item {
-                BingeWatcherParallaxPicture(
-                    lazyListState = lazyListState,
-                    picturePainter = painterLargeImage
-                )
-            }
-
-            stickyHeader {
-                BingeWatcherShowTopBadge(
-                    name = uiData.show.summary.name,
-                    premiered = uiData.show.summary.premiered,
-                    rating = uiData.show.summary.rating
-                )
-            }
-
-            item {
-                BingeWatcherShowBottomBadge(
-                    genres = uiData.show.summary.genres,
-                    description = uiData.show.description
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            item {
-                Row(modifier = Modifier
+            BingeWatcherShareIcon(onClick = {
+                // TODO share
+            })
+        },
+    ) { uiData ->
+        item {
+            LazyRow(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    BingeWatcherImdbIcon(onClick = { onEvent(ShowScreenEvent.OnImdbClick) })
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiData.seasons.size) { i ->
+                    val painter = loadPainter(uiData.seasons[i].image)
 
-                    BingeWatcherLikeIcon(onClick = { onEvent(ShowScreenEvent.OnFollowClick) })
-
-                    BingeWatcherOfficialSiteIcon( onClick = { onEvent(ShowScreenEvent.OnOfficialSiteClick) } )
-
-                    BingeWatcherShareIcon(onClick = {
-                        // TODO share
-                    })
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            item {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiData.seasons.size) { i ->
-                        val painter = loadPainter(uiData.seasons[i].image, painterLargeImage)
-
-                        BingeWatcherSmallSeasonCard(
-                            onClick = { onEvent(ShowScreenEvent.OnSeasonClick(
-                                uiData.show.id,
-                                uiData.seasons[i].id
-                            )) },
-                            season = i + 1,
-                            episodesAmount = uiData.seasons[i].episodesAmount,
-                            premiereDate = uiData.seasons[i].premiereDate,
-                            imagePainter = painter
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            item {
-                if(uiData.cast.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        text = "Cast"
+                    BingeWatcherSmallSeasonCard(
+                        onClick = { viewModel.onEvent(ShowScreenEvent.OnSeasonClick(
+                            uiData.show.id,
+                            uiData.seasons[i].id
+                        )) },
+                        season = i + 1,
+                        episodesAmount = uiData.seasons[i].episodesAmount,
+                        premiereDate = uiData.seasons[i].premiereDate,
+                        imagePainter = painter
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
 
-            item {
-                LazyRow(
+        item {
+            if(uiData.cast.isNotEmpty()) {
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiData.cast) { actor ->
-                        val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
-
-                        BingeWatcherSmallPersonCard(
-                            onClick = { onEvent(ShowScreenEvent.OnPersonClick(actor.id)) },
-                            personName = actor.name,
-                            imagePainter = painter
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            item {
-                if(uiData.crew.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        text = "Crew"
-                    )
-                }
-            }
-
-            // TODO showing crew this way is pain in the ass. Do we need it here? Should we do separate full crew feature, like in IMDB?
-            item {
-                val maxLines = uiData.crew.maxOfOrNull { it.role.lines().size } ?: 1
-                val lineHeight = 20.dp
-                val infoHeight = lineHeight * maxLines
-
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiData.crew) { crewMember ->
-                        val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
-
-                        BingeWatcherSmallPersonCard(
-                            onClick = { onEvent(ShowScreenEvent.OnPersonClick(crewMember.id)) },
-                            personName = crewMember.name,
-                            additionalInfo = crewMember.role,
-                            additionalInfoHeight = infoHeight,
-                            imagePainter = painter
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            item {
-                if (uiData.pictures.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        text = "Gallery"
-                    )
-                }
-            }
-
-            item {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiData.pictures.size) { i ->
-                        val painter = loadPainter(uiData.pictures[i], painterLargeImage)
-
-                        BingeWatcherSmallImageCard(
-                            painter = painter,
-                            onClick = {
-                                onEvent(ShowScreenEvent.OnGalleryClick(i, uiData.pictures))
-                            })
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
+                    text = "Cast"
+                )
             }
         }
 
-        BingeWatcherBackIcon(
-            onClick = onBackClicked,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-        )
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiData.cast) { actor ->
+                    val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
+
+                    BingeWatcherSmallPersonCard(
+                        onClick = { viewModel.onEvent(ShowScreenEvent.OnPersonClick(actor.id)) },
+                        personName = actor.name,
+                        imagePainter = painter
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        item {
+            if(uiData.crew.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    text = "Crew"
+                )
+            }
+        }
+
+        // TODO showing crew this way is pain in the ass. Do we need it here? Should we do separate full crew feature, like in IMDB?
+        item {
+            val maxLines = uiData.crew.maxOfOrNull { it.role.lines().size } ?: 1
+            val lineHeight = 20.dp
+            val infoHeight = lineHeight * maxLines
+
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiData.crew) { crewMember ->
+                    val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
+
+                    BingeWatcherSmallPersonCard(
+                        onClick = { viewModel.onEvent(ShowScreenEvent.OnPersonClick(crewMember.id)) },
+                        personName = crewMember.name,
+                        additionalInfo = crewMember.role,
+                        additionalInfoHeight = infoHeight,
+                        imagePainter = painter
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        item {
+            if (uiData.pictures.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    text = "Gallery"
+                )
+            }
+        }
+
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiData.pictures.size) { i ->
+                    val painter = loadPainter(uiData.pictures[i])
+
+                    BingeWatcherSmallImageCard(
+                        painter = painter,
+                        onClick = {
+                            viewModel.onEvent(ShowScreenEvent.OnGalleryClick(i, uiData.pictures))
+                        })
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }

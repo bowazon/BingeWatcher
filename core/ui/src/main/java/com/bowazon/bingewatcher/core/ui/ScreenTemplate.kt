@@ -61,6 +61,7 @@ private fun ScreenError(
 
 @Composable
 fun <T> BingeWatcherDetailsScreen(
+    modifier: Modifier = Modifier,
     uiState: ScreenState<T>,
     onBackClicked: () -> Unit,
     largeImageUrl: (T) -> String?,
@@ -82,7 +83,7 @@ fun <T> BingeWatcherDetailsScreen(
             val data = uiState.data
             val lazyListState = rememberLazyListState()
 
-            Box(Modifier.fillMaxSize()) {
+            Box(modifier.fillMaxSize()) {
                 LazyColumn(state = lazyListState) {
 
                     largeImageUrl(data)?.let { url ->

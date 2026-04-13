@@ -7,6 +7,7 @@ import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.CrewCredits
 import com.bowazon.bingewatcher.core.entities.Person
 import com.bowazon.bingewatcher.core.repository.PersonRepository
+import com.bowazon.bingewatcher.core.ui.ScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -29,8 +30,8 @@ class PersonViewModel @AssistedInject constructor(
     val repository: PersonRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<PersonUiState>(PersonUiState.Loading)
-    val state: StateFlow<PersonUiState> = _state.asStateFlow() // TODO "= _state" or "= _state.asStateFlow()"???
+    private val _state = MutableStateFlow<ScreenState<PersonUiModel>>(ScreenState.Loading)
+    val state: StateFlow<ScreenState<PersonUiModel>> = _state.asStateFlow() // TODO "= _state" or "= _state.asStateFlow()"???
 
     private val _effects = MutableSharedFlow<PersonEffect>()
     val effects = _effects.asSharedFlow()
@@ -60,7 +61,7 @@ class PersonViewModel @AssistedInject constructor(
                             first.copy(type = mergedRoles)
                         }
 
-                    _state.value = PersonUiState.Success(
+                    _state.value = ScreenState.Success(
                         PersonUiModel(
                             getCreditsSummary(p, a, c),
                             p, a, mergedCrew
@@ -68,7 +69,7 @@ class PersonViewModel @AssistedInject constructor(
                     )
                 }
             } catch (e: Exception) { // TODO generic error bad
-                _state.value = PersonUiState.Error
+                _state.value = ScreenState.Error
                 Log.i("ART_DBG", "e is " + e.toString())
             }
         }
@@ -116,13 +117,6 @@ class PersonViewModel @AssistedInject constructor(
 
         return roles.joinToString(separator = " · ")
     }
-}
-
-// TODO here and in every viewmodel - it probably should be common
-sealed class PersonUiState {
-    object Error: PersonUiState()
-    object Loading: PersonUiState()
-    data class Success(val data: PersonUiModel): PersonUiState()
 }
 
 // TODO probably should be it's own dumb model

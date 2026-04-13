@@ -41,6 +41,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherPersonTopBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
 import com.bowazon.bingewatcher.core.designsystem.R
+import com.bowazon.bingewatcher.core.ui.BingeWatcherDetailsScreen
 
 @Composable
 fun PersonScreen(
@@ -50,7 +51,6 @@ fun PersonScreen(
     onShowClicked: (Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -62,136 +62,82 @@ fun PersonScreen(
         }
     }
 
-    when(uiState) {
-        is PersonUiState.Loading -> {
-            // TODO show loading
+    BingeWatcherDetailsScreen(
+        modifier = modifier,
+        uiState = uiState,
+        onBackClicked = onBackClicked,
+        largeImageUrl = { it.personDetailed.image },
+        header = { uiData ->
+            BingeWatcherPersonTopBadge(
+                name = uiData.personDetailed.name,
+                born = uiData.personDetailed.birthday,
+                credits = uiData.creditsSummary
+            )
+        },
+        badge = null,
+        actions = { uiData ->
+            BingeWatcherLikeIcon(onClick = { viewModel.onEvent(PersonEvent.OnFollowClick) })
+
+            BingeWatcherShareIcon(onClick = {
+                // TODO share
+            })
         }
-        is PersonUiState.Error -> {
-            // TODO show error
+    ) { uiData ->
+
+        if (uiData.actorCredits.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Acting career",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
-        is PersonUiState.Success -> {
-            PersonScreen(
-                modifier = modifier,
-                uiData = (uiState as PersonUiState.Success).data,
-                onBackClicked = onBackClicked,
-                onEvent = viewModel::onEvent,
+
+        items(uiData.actorCredits) { actorCredits ->
+            val painter = loadPainter(
+                actorCredits.showPicture,
+                painterResource(R.drawable.show_placeholder)
+            )
+
+            BingeWatcherMediumShowCard(
+                modifier = Modifier.clickable{
+                    Log.i("ART_DBG_4", "here")
+                    viewModel.onEvent(PersonEvent.OnShowClick(actorCredits.showId))
+                },
+                showName = actorCredits.showName,
+                additional = actorCredits.character,
+                picturePainter = painter,
+                date = actorCredits.showPremiered,
+                genre = actorCredits.showGenre,
+                rating = actorCredits.showRating
             )
         }
-    }
-}
 
-@Composable
-internal fun PersonScreen(
-    modifier: Modifier = Modifier,
-    uiData: PersonUiModel,
-    onBackClicked: () -> Unit,
-    onEvent: (PersonEvent) -> Unit,
-) {
-    val lazyListState = rememberLazyListState()
-
-    val painterLargeImage = rememberAsyncImagePainter(model = uiData.personDetailed.image) // TODO actor image
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize(),
-                //.background(Color.Black),
-            state = lazyListState
-        ) {
+        if (uiData.crewCredits.isNotEmpty()) {
             item {
-                BingeWatcherParallaxPicture(
-                    lazyListState = lazyListState,
-                    picturePainter = painterLargeImage
+                Text(
+                    text = "Crew credits",
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
-
-            stickyHeader {
-                BingeWatcherPersonTopBadge(
-                    name = uiData.personDetailed.name,
-                    born = uiData.personDetailed.birthday,
-                    credits = uiData.creditsSummary
-                )
-            }
-
-            item {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    BingeWatcherLikeIcon(onClick = { onEvent(PersonEvent.OnFollowClick) })
-
-                    BingeWatcherShareIcon(onClick = {
-                        // TODO share
-                    })
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            if (uiData.actorCredits.isNotEmpty()) {
-                item {
-                    Text(
-                        text = "Acting career",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-
-            items(uiData.actorCredits) { actorCredits ->
-                val painter = loadPainter(
-                    actorCredits.showPicture,
-                    painterResource(R.drawable.show_placeholder)
-                )
-
-                BingeWatcherMediumShowCard(
-                    modifier = Modifier.clickable{
-                        Log.i("ART_DBG_4", "here")
-                        onEvent(PersonEvent.OnShowClick(actorCredits.showId))
-                    },
-                    showName = actorCredits.showName,
-                    additional = actorCredits.character,
-                    picturePainter = painter,
-                    date = actorCredits.showPremiered,
-                    genre = actorCredits.showGenre,
-                    rating = actorCredits.showRating
-                )
-            }
-
-            if (uiData.crewCredits.isNotEmpty()) {
-                item {
-                    Text(
-                        text = "Crew credits",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-
-            items(uiData.crewCredits) { crewCredits ->
-                val painter = loadPainter(
-                    crewCredits.showPicture,
-                    painterResource(R.drawable.show_placeholder)
-                )
-                BingeWatcherMediumShowCard(
-                    modifier = Modifier.clickable{
-                        onEvent(PersonEvent.OnShowClick(crewCredits.showId))
-                    },
-                    showName = crewCredits.showName,
-                    additional = crewCredits.type, // TODO temp
-                    picturePainter = painter,
-                    date = crewCredits.showPremiered,
-                    genre = crewCredits.showGenre,
-                    rating = crewCredits.showRating
-                )
-            }
-
         }
 
-        BingeWatcherBackIcon(
-            onClick = onBackClicked,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-        )
+        items(uiData.crewCredits) { crewCredits ->
+            val painter = loadPainter(
+                crewCredits.showPicture,
+                painterResource(R.drawable.show_placeholder)
+            )
+            BingeWatcherMediumShowCard(
+                modifier = Modifier.clickable{
+                    viewModel.onEvent(PersonEvent.OnShowClick(crewCredits.showId))
+                },
+                showName = crewCredits.showName,
+                additional = crewCredits.type, // TODO temp
+                picturePainter = painter,
+                date = crewCredits.showPremiered,
+                genre = crewCredits.showGenre,
+                rating = crewCredits.showRating
+            )
+        }
     }
 }

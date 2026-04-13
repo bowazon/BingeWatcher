@@ -33,3 +33,22 @@ fun loadPainter(
         else -> placeholder
     }
 }
+
+@Composable
+fun loadPainter(
+    url: String
+): Painter {
+    val localContext = LocalContext.current
+    val request = remember(url) {
+        ImageRequest.Builder(localContext)
+            .data(url)
+            .crossfade(500)
+            .size(Size.ORIGINAL)
+            .build()
+    }
+    val painter = rememberAsyncImagePainter(
+        model = request
+    )
+
+    return painter
+}

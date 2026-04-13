@@ -8,6 +8,7 @@ import com.bowazon.bingewatcher.core.entities.CrewSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.repository.ShowRepository
+import com.bowazon.bingewatcher.core.ui.ScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -26,8 +27,8 @@ class ShowViewModel @AssistedInject constructor(
     val repository: ShowRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<ShowScreenUiState>(ShowScreenUiState.Loading)
-    val state: StateFlow<ShowScreenUiState> = _state
+    private val _state = MutableStateFlow<ScreenState<ShowUiModel>>(ScreenState.Loading)
+    val state: StateFlow<ScreenState<ShowUiModel>> = _state
 
     private val _effects = MutableSharedFlow<ShowScreenEffect>()
     val effects = _effects.asSharedFlow()
@@ -58,7 +59,7 @@ class ShowViewModel @AssistedInject constructor(
                             first.copy(role = mergedRoles)
                         }
 
-                    _state.value = ShowScreenUiState.Success(
+                    _state.value = ScreenState.Success(
                         ShowUiModel(
                             show.await(),
                             cast.await(),
@@ -69,7 +70,7 @@ class ShowViewModel @AssistedInject constructor(
                     )
                 }
             } catch (e: Exception) { // TODO generic error bad
-                _state.value = ShowScreenUiState.Error
+                _state.value = ScreenState.Error
                 Log.i("ART_DBG_5", "e is " + e.toString())
             }
         }
@@ -80,13 +81,13 @@ class ShowViewModel @AssistedInject constructor(
             is ShowScreenEvent.OnImdbClick -> {
                 // TODO should have analytics
                 val currentState = _state.value
-                if (currentState is ShowScreenUiState.Success) {
+                if (currentState is ScreenState.Success) {
                     openUrl(currentState.data.show.imdb)
                 }
             }
             is ShowScreenEvent.OnOfficialSiteClick -> {
                 val currentState = _state.value
-                if (currentState is ShowScreenUiState.Success) {
+                if (currentState is ScreenState.Success) {
                     openUrl(currentState.data.show.officialSite)
                 }
             }
@@ -133,12 +134,6 @@ class ShowViewModel @AssistedInject constructor(
             showId: Int,
         ): ShowViewModel
     }
-}
-
-sealed class ShowScreenUiState {
-    object Error: ShowScreenUiState()
-    object Loading: ShowScreenUiState()
-    data class Success(val data: ShowUiModel): ShowScreenUiState()
 }
 
 // TODO dumb model
