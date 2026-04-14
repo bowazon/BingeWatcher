@@ -87,6 +87,8 @@ fun PersonScreen(
         if (uiData.actorCredits.isNotEmpty()) {
             item {
                 Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
                     text = "Acting career",
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -116,6 +118,8 @@ fun PersonScreen(
         if (uiData.crewCredits.isNotEmpty()) {
             item {
                 Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
                     text = "Crew credits",
                     style = MaterialTheme.typography.bodyMedium
                 )

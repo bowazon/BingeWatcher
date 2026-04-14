@@ -4,15 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.bowazon.bingewatcher.core.designsystem.R
 
 @Composable
 fun loadPainter(
     url: String,
-    placeholder: Painter
+    placeholder: Painter? = painterResource(R.drawable.show_placeholder)
 ): Painter {
     val localContext = LocalContext.current
     val request = remember(url) {
@@ -26,29 +28,8 @@ fun loadPainter(
         model = request
     )
 
-    val painterState = painter.state
-
-    return when (painterState) {
-        is AsyncImagePainter.State.Success -> painterState.painter
-        else -> placeholder
+    return when (painter.state) {
+        is AsyncImagePainter.State.Success -> painter.state.painter ?: painterResource(R.drawable.show_placeholder)
+        else -> placeholder ?: painterResource(R.drawable.show_placeholder)
     }
-}
-
-@Composable
-fun loadPainter(
-    url: String
-): Painter {
-    val localContext = LocalContext.current
-    val request = remember(url) {
-        ImageRequest.Builder(localContext)
-            .data(url)
-            .crossfade(500)
-            .size(Size.ORIGINAL)
-            .build()
-    }
-    val painter = rememberAsyncImagePainter(
-        model = request
-    )
-
-    return painter
 }

@@ -46,6 +46,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
 import com.bowazon.bingewatcher.core.designsystem.utils.ToggleState
@@ -55,7 +56,7 @@ import com.bowazon.bingewatcher.core.designsystem.utils.isNotEmpty
 import kotlin.text.isNotEmpty
 
 val MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT = 150.dp
-val MEDIUM_HORIZONTAL_CARD_PADDING = 16.dp
+val MEDIUM_CARD_PADDING = 16.dp
 
 @Composable
 private fun BaseMediumHorizontalCard(
@@ -71,13 +72,19 @@ private fun BaseMediumHorizontalCard(
     text3: String = "",
     rating: Rating = Rating(""),
 
+    height: Dp = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
+    width: Dp = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
     toggleState: ToggleState? = null,
     onToggle: (() -> Unit)? = null,
 ) {
-    Box(modifier.padding(MEDIUM_HORIZONTAL_CARD_PADDING)) {
-        Row {
+    Box(
+        modifier
+        .fillMaxWidth()
+        .padding(MEDIUM_CARD_PADDING)
+    ) {
+        Row(Modifier.fillMaxWidth()) {
             Image(
-                modifier = Modifier.size(MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT),
+                modifier = Modifier.size(height = height, width = width),
                 painter = picturePainter,
                 contentDescription = null
             )
@@ -148,7 +155,8 @@ fun BingeWatcherMediumShowCard(
         text1 = additional,
         text2 = date,
         text3 = genre,
-        rating = Rating(rating))
+        rating = Rating(rating),
+        width = 110.dp)
 }
 
 @Composable

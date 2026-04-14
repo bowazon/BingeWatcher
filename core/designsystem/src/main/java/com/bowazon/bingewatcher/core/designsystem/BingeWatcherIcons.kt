@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Link
@@ -171,7 +172,7 @@ internal fun BingeWatcherDiscoverIcon(
 ) {
     BaseIcon(
         modifier = modifier,
-        icon = BaseIcon.ImageIcon(Icons.Rounded.Home),
+        icon = BaseIcon.ImageIcon(Icons.Rounded.Explore),
         contentDescription = stringResource(R.string.discover),
     )
 }
