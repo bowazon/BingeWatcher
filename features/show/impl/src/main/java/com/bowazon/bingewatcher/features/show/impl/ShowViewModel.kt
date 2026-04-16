@@ -100,7 +100,7 @@ class ShowViewModel @AssistedInject constructor(
                 val showId = event.showId
                 val seasonId = event.seasonId
                 viewModelScope.launch {
-                    _effects.emit(ShowScreenEffect.OpenSeasonCard(
+                    _effects.emit(ShowScreenEffect.OpenSeasonScreen(
                         showId,
                         seasonId
                     ))
@@ -109,7 +109,13 @@ class ShowViewModel @AssistedInject constructor(
             is ShowScreenEvent.OnPersonClick -> {
                 val personId = event.id
                 viewModelScope.launch {
-                    _effects.emit(ShowScreenEffect.OpenPersonCard(personId))
+                    _effects.emit(ShowScreenEffect.OpenPersonScreen(personId))
+                }
+            }
+            is ShowScreenEvent.OnFullCrewClick -> {
+                val showId = event.showId
+                viewModelScope.launch {
+                    _effects.emit(ShowScreenEffect.OpenFullCrewScreen(showId))
                 }
             }
             is ShowScreenEvent.OnGalleryClick -> {
@@ -151,12 +157,14 @@ sealed interface ShowScreenEvent {
     object OnFollowClick : ShowScreenEvent
     data class OnSeasonClick(val showId: Int, val seasonId: Int) : ShowScreenEvent
     data class OnPersonClick(val id: Int) : ShowScreenEvent
+    data class OnFullCrewClick(val showId: Int) : ShowScreenEvent
     data class OnGalleryClick(val imageIndex: Int, val urlList: List<String>) : ShowScreenEvent
 }
 
 sealed interface ShowScreenEffect {
     data class OpenUrl(val url: String) : ShowScreenEffect
-    data class OpenPersonCard(val id: Int) : ShowScreenEffect
-    data class OpenSeasonCard(val showId: Int, val seasonId: Int) : ShowScreenEffect
+    data class OpenPersonScreen(val id: Int) : ShowScreenEffect
+    data class OpenSeasonScreen(val showId: Int, val seasonId: Int) : ShowScreenEffect
+    data class OpenFullCrewScreen(val showId: Int) : ShowScreenEffect
     data class OpenImageView(val imageIndex: Int, val urlList: List<String>) : ShowScreenEffect
 }

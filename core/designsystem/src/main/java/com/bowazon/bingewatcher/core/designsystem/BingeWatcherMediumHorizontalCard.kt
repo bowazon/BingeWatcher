@@ -204,6 +204,20 @@ fun BingeWatcherMediumEpisodeCard(
     }
 }
 
+@Composable
+fun BingeWatcherMediumPersonCard(
+    modifier: Modifier = Modifier,
+    name: String,
+    picturePainter: Painter,
+    role: String,
+) {
+    BaseMediumHorizontalCard(
+        modifier = modifier,
+        name = name,
+        picturePainter = picturePainter,
+        text1 = role
+    )
+}
 
 @Composable
 private fun WatchedToggle(

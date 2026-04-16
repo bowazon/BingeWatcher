@@ -2,27 +2,19 @@ package com.bowazon.bingewatcher.features.show.impl
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,12 +22,11 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallPersonCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowBottomBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallSeasonCard
 import androidx.core.net.toUri
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherBackIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherParallaxPicture
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowFullCrewCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallImageCard
 import com.bowazon.bingewatcher.core.designsystem.R
@@ -49,7 +40,8 @@ fun ShowScreen(
     onBackClicked: () -> Unit,
     navigateToPerson: (Int) -> Unit,
     navigateToSeason: (Int, Int) -> Unit,
-    navigateToImageView: (Int, List<String>) -> Unit
+    navigateToImageView: (Int, List<String>) -> Unit,
+    navigateToFullCrewShow: (Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -61,14 +53,18 @@ fun ShowScreen(
                     val intent = Intent(Intent.ACTION_VIEW, effect.url.toUri())
                     context.startActivity(intent)
                 }
-                is ShowScreenEffect.OpenPersonCard -> {
+                is ShowScreenEffect.OpenPersonScreen -> {
                     navigateToPerson(effect.id)
                 }
-                is ShowScreenEffect.OpenSeasonCard -> {
+                is ShowScreenEffect.OpenSeasonScreen -> {
                     navigateToSeason(effect.showId, effect.seasonId)
                 }
                 is ShowScreenEffect.OpenImageView -> {
                     navigateToImageView(effect.imageIndex, effect.urlList)
+                }
+
+                is ShowScreenEffect.OpenFullCrewScreen -> {
+                    navigateToFullCrewShow(effect.showId)
                 }
             }
         }
@@ -155,11 +151,17 @@ fun ShowScreen(
                         imagePainter = painter
                     )
                 }
+                item {
+                    BingeWatcherShowFullCrewCard(
+                        onClick = { viewModel.onEvent(ShowScreenEvent.OnFullCrewClick(uiData.show.id)) },
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
         }
 
+        /*
         item {
             if(uiData.crew.isNotEmpty()) {
                 Text(
@@ -197,6 +199,7 @@ fun ShowScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
         }
+         */
 
         item {
             if (uiData.pictures.isNotEmpty()) {

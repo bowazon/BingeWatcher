@@ -19,6 +19,7 @@ import com.bowazon.bingewatcher.features.search.impl.searchEntry
 import com.bowazon.bingewatcher.features.show.impl.showEntry
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.navigation.toEntries
+import com.bowazon.bingewatcher.features.fullcrew.impl.fullCrewEntry
 import com.bowazon.bingewatcher.features.person.impl.personEntry
 import com.bowazon.bingewatcher.features.imageview.impl.imageViewEntry
 import com.bowazon.bingewatcher.features.season.impl.seasonEntry
@@ -53,6 +54,7 @@ class MainActivity : ComponentActivity() {
                         personEntry(navigator)
                         seasonEntry(navigator)
                         imageViewEntry(navigator)
+                        fullCrewEntry(navigator)
                     }
                     NavDisplay(
                         entries = navigator.toEntries(entryProvider),

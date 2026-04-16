@@ -58,6 +58,7 @@ dependencies {
     implementation(project(":features:person:api"))
     implementation(project(":features:season:api"))
     implementation(project(":features:imageview:api"))
+    implementation(project(":features:fullcrew:api"))
     implementation(project(":core:navigation"))
     //implementation(project(":core:network"))
     implementation(project(":core:designsystem"))

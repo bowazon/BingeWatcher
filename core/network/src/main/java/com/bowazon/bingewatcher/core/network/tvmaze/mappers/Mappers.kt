@@ -58,6 +58,15 @@ fun TvMazeActor.toActor(): ActorSummary {
     )
 }
 
+fun TvMazeActor.toCrew() : CrewSummary {
+    return CrewSummary(
+        id = person?.id?.toInt() ?: 0,
+        name = person?.name ?: "",
+        image = person?.image?.medium ?: "",
+        role = "Actor"
+    )
+}
+
 fun TvMazeSeason.toSeason(showName: String): Season {
     return Season (
         id = id.toInt(),
