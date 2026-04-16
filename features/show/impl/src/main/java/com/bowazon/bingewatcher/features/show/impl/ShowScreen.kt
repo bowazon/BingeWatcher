@@ -26,7 +26,7 @@ import com.bowazon.bingewatcher.core.designsystem.BingeWatcherImdbIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherLikeIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherOfficialSiteIcon
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShareIcon
-import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowFullCrewCard
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallFullCrewCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherShowTopBadge
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherSmallImageCard
 import com.bowazon.bingewatcher.core.designsystem.R
@@ -152,7 +152,7 @@ fun ShowScreen(
                     )
                 }
                 item {
-                    BingeWatcherShowFullCrewCard(
+                    BingeWatcherSmallFullCrewCard(
                         onClick = { viewModel.onEvent(ShowScreenEvent.OnFullCrewClick(uiData.show.id)) },
                     )
                 }

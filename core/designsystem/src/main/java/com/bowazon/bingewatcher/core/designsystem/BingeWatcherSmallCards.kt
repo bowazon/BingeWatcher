@@ -128,7 +128,7 @@ fun BingeWatcherSmallPersonCard(
 }
 
 @Composable
-fun BingeWatcherShowFullCrewCard(
+fun BingeWatcherSmallFullCrewCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {

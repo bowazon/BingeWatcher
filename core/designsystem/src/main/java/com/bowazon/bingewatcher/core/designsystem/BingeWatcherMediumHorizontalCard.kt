@@ -210,9 +210,12 @@ fun BingeWatcherMediumPersonCard(
     name: String,
     picturePainter: Painter,
     role: String,
+    onClick: () -> Unit
 ) {
     BaseMediumHorizontalCard(
-        modifier = modifier,
+        modifier = modifier.clickable{
+            onClick()
+        },
         name = name,
         picturePainter = picturePainter,
         text1 = role

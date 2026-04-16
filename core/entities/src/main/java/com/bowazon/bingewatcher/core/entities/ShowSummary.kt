@@ -9,4 +9,4 @@ data class ShowSummary(
     val image: String, // TODO maybe bitmap?
     val genres: String,
     val rating: String
-)
+) : CrewSource

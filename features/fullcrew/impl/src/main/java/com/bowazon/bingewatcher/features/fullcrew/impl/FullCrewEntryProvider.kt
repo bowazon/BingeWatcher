@@ -6,16 +6,29 @@ import androidx.navigation3.runtime.NavKey
 import com.bowazon.bingewatcher.core.navigation.Navigator
 import com.bowazon.bingewatcher.core.repository.FullCrewRequest
 import com.bowazon.bingewatcher.features.fullcrew.api.FullCrewNavKey
+import com.bowazon.bingewatcher.features.person.api.navigateToPerson
 
 fun EntryProviderScope<NavKey>.fullCrewEntry(navigator: Navigator) {
-    entry<FullCrewNavKey> { navKey ->
-        val request = when (navKey) {
-            is FullCrewNavKey.Show -> FullCrewRequest.Show(navKey.id)
-            is FullCrewNavKey.Episode -> FullCrewRequest.Episode(navKey.id)
-        }
+    entry<FullCrewNavKey.Show> { navKey ->
+        val request = FullCrewRequest.Show(navKey.id)
 
         FullCrewScreen(
             onBackClicked = navigator::goBack,
+            navigateToPerson = navigator::navigateToPerson,
+            viewModel = hiltViewModel<FullCrewViewModel, FullCrewViewModel.Factory>(
+                // TODO all these "" things should be part of companion objects of view models or smth
+                key = "FullCrew_${request}",
+            ) { factory ->
+                factory.create(request)
+            }
+        )
+    }
+    entry<FullCrewNavKey.Episode> { navKey ->
+        val request = FullCrewRequest.Episode(navKey.id)
+
+        FullCrewScreen(
+            onBackClicked = navigator::goBack,
+            navigateToPerson = navigator::navigateToPerson,
             viewModel = hiltViewModel<FullCrewViewModel, FullCrewViewModel.Factory>(
                 // TODO all these "" things should be part of companion objects of view models or smth
                 key = "FullCrew_${request}",

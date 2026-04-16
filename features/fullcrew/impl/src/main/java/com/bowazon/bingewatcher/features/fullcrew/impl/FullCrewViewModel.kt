@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.CrewCredits
+import com.bowazon.bingewatcher.core.entities.CrewSource
 import com.bowazon.bingewatcher.core.entities.CrewSummary
+import com.bowazon.bingewatcher.core.entities.FullCrew
 import com.bowazon.bingewatcher.core.entities.Person
 import com.bowazon.bingewatcher.core.repository.FullCrewRepository
 import com.bowazon.bingewatcher.core.repository.FullCrewRequest
@@ -47,7 +49,14 @@ class FullCrewViewModel @AssistedInject constructor(
     }
 
     fun onEvent(event: FullCrewEvent) {
-
+        when(event) {
+            is FullCrewEvent.OnPersonClick -> {
+                val personId = event.id
+                viewModelScope.launch {
+                    _effects.emit(FullCrewEffect.OpenPersonScreen(personId))
+                }
+            }
+        }
     }
 
     @AssistedFactory
@@ -59,14 +68,13 @@ class FullCrewViewModel @AssistedInject constructor(
 }
 
 data class FullCrewUiModel(
-    val crew: List<CrewSummary>
+    val fullCrew: FullCrew<CrewSource>
 )
 
 sealed interface FullCrewEvent {
-    object OnFollowClick : FullCrewEvent
-    data class OnShowClick(val id: Int) : FullCrewEvent
+    data class OnPersonClick(val id: Int) : FullCrewEvent
 }
 
 sealed interface FullCrewEffect {
-    data class OpenShowCard(val id: Int) : FullCrewEffect
+    data class OpenPersonScreen(val id: Int) : FullCrewEffect
 }

@@ -13,4 +13,4 @@ data class Episode(
     val showName: String,
     val watched: Boolean = false,
     val isUpdatingWatched: Boolean = false // TODO should really be in UI model
-)
+) : CrewSource

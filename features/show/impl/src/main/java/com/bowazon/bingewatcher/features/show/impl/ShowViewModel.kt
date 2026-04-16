@@ -40,10 +40,10 @@ class ShowViewModel @AssistedInject constructor(
                 coroutineScope {
                     val show = async { repository.getShow(showId) }
                     val cast = async { repository.getActorsForShow(showId) }
-                    val crew = async { repository.getCrewForShow(showId) }
+                    //val crew = async { repository.getCrewForShow(showId) }
                     val pictures = async { repository.getImagesForShow(showId) }
                     val seasons = async { repository.getSeasonsForShow(showId) }
-
+                    /*
                     val crewMerged = crew
                         .await()
                         .groupBy { crewSummary ->
@@ -58,12 +58,13 @@ class ShowViewModel @AssistedInject constructor(
 
                             first.copy(role = mergedRoles)
                         }
+                        */
 
                     _state.value = ScreenState.Success(
                         ShowUiModel(
                             show.await(),
                             cast.await(),
-                            crewMerged,
+                            //crewMerged,
                             pictures.await(),
                             seasons.await()
                         )
@@ -146,7 +147,7 @@ class ShowViewModel @AssistedInject constructor(
 data class ShowUiModel(
     val show: ShowDetailed,
     val cast: List<ActorSummary>,
-    val crew: List<CrewSummary>,
+    //val crew: List<CrewSummary>,
     val pictures: List<String>,
     val seasons: List<Season>
 )
