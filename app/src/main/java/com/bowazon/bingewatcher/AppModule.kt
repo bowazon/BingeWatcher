@@ -4,6 +4,8 @@ import android.content.Context
 import com.bowazon.bingewatcher.core.database.BingeWatcherDatabase
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.retrofit.TvMazeRetrofitImpl
+import com.bowazon.bingewatcher.core.repository.DiscoverRepository
+import com.bowazon.bingewatcher.core.repository.DiscoverRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.FullCrewRepository
 import com.bowazon.bingewatcher.core.repository.FullCrewRepositoryImpl
 import com.bowazon.bingewatcher.core.repository.PersonRepository
@@ -68,6 +70,15 @@ object AppModule {
     @Singleton
     fun provideFullCrewRepository(remoteDataSource: TvMazeRemoteDataSource): FullCrewRepository {
         return FullCrewRepositoryImpl(remoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDiscoverRepository(
+        remoteDataSource: TvMazeRemoteDataSource,
+        database: BingeWatcherDatabase
+    ): DiscoverRepository {
+        return DiscoverRepositoryImpl(remoteDataSource, database)
     }
 
     @Provides

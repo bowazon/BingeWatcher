@@ -32,7 +32,7 @@ fun TvMazeShow.toShowSummary(): ShowSummary {
         name = name,
         premiered = premiered?.substringBefore("-") ?: "",
         image = image?.medium  ?: "" ,
-        genres = genres?.joinToString(separator = "/")  ?: "",
+        genres = genres ?: listOf(""),
         rating = rating?.average?.let { it.toString() } ?: ""
     )
 }

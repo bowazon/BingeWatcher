@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.TypeConverters
+import com.bowazon.bingewatcher.core.database.models.Converters
 import com.bowazon.bingewatcher.core.database.models.ShowDbo
 import kotlinx.coroutines.flow.Flow
 

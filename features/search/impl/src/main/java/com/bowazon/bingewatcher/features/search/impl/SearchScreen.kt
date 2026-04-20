@@ -75,7 +75,7 @@ fun SearchScreen(
                             showName = item.data.summary.name,
                             picturePainter = painter,
                             date = item.data.summary.premiered,
-                            genre = item.data.summary.genres,
+                            genre = item.data.summary.genres.joinToString(separator = "/"),
                             rating = item.data.summary.rating,
                             onClick = { onShowClicked(item.data.id) }
                         )

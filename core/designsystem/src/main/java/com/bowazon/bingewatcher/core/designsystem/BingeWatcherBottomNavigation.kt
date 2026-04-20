@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.core.designsystem
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
@@ -29,7 +30,10 @@ fun BingeWatcherBottomNavigation(
         navigationSuiteItems = {
             item(
                 selected = true,
-                onClick =  { navigator.navigate(discoverKey) } ,
+                onClick =  {
+                    Log.i("ART_DBG_4", "pressed")
+                    navigator.navigate(discoverKey)
+                           } ,
                 icon = {
                     BingeWatcherDiscoverIcon()
                 },

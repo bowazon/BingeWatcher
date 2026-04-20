@@ -84,7 +84,7 @@ fun ShowScreen(
         },
         badge = { uiData ->
             BingeWatcherShowBottomBadge(
-                genres = uiData.show.summary.genres,
+                genres = uiData.show.summary.genres.joinToString(separator = "/"),
                 description = uiData.show.description
             )
         },
