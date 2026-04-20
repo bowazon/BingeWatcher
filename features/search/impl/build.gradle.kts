@@ -56,6 +56,7 @@ dependencies {
 
     implementation(project(":features:search:api"))
     implementation(project(":features:show:api"))
+    implementation(project(":features:person:api"))
     implementation(project(":core:navigation"))
     //implementation(project(":core:network"))
     implementation(project(":core:designsystem"))

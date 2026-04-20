@@ -42,14 +42,7 @@ fun Greeting(
                     show.summary.image,
                     painterResource(R.drawable.show_placeholder)
                 )
-                BingeWatcherMediumShowCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    showName = show.summary.name,
-                    picturePainter = painter,
-                    date = show.summary.premiered,
-                    genre = show.summary.genres,
-                    rating = show.summary.rating
-                )
+
             }
         }
     }

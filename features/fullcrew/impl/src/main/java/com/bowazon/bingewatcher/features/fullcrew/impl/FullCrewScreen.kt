@@ -71,7 +71,7 @@ fun FullCrewScreen(
         items(uiData.fullCrew.crew) { crewMember ->
             val painter = loadPainter(
                 crewMember.image,
-                painterResource(R.drawable.show_placeholder)
+                painterResource(R.drawable.person_placeholder)
             )
 
             BingeWatcherMediumPersonCard(

@@ -17,6 +17,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,10 +37,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -72,10 +75,10 @@ private fun BaseMediumHorizontalCard(
     text3: String = "",
     rating: Rating = Rating(""),
 
-    height: Dp = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
-    width: Dp = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
     toggleState: ToggleState? = null,
     onToggle: (() -> Unit)? = null,
+    imageModifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit
 ) {
     Box(
         modifier
@@ -84,9 +87,10 @@ private fun BaseMediumHorizontalCard(
     ) {
         Row(Modifier.fillMaxWidth()) {
             Image(
-                modifier = Modifier.size(height = height, width = width),
+                modifier = imageModifier,//.size(height = height, width = width),
                 painter = picturePainter,
-                contentDescription = null
+                contentDescription = null,
+                contentScale = contentScale
             )
 
             Column(
@@ -147,16 +151,24 @@ fun BingeWatcherMediumShowCard(
     genre: String,
     rating: String,
     additional: String = "",
+    onClick: (() -> Unit)
 ) {
     BaseMediumHorizontalCard(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            onClick()
+        },
         name = showName,
         picturePainter = picturePainter,
         text1 = additional,
         text2 = date,
         text3 = genre,
         rating = Rating(rating),
-        width = 110.dp)
+        //width = 110.dp
+        imageModifier = Modifier.size(
+            height = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
+            width = 110.dp
+        )
+    )
 }
 
 @Composable
@@ -189,7 +201,11 @@ fun BingeWatcherMediumEpisodeCard(
             text1 = date,
             rating = Rating(rating),
             toggleState = toggleState,
-            onToggle = onToggle
+            onToggle = onToggle,
+            imageModifier = Modifier.size(
+                height = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
+                width = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT
+            )
         )
 
         if (showDescription && description != null) {
@@ -218,7 +234,11 @@ fun BingeWatcherMediumPersonCard(
         },
         name = name,
         picturePainter = picturePainter,
-        text1 = role
+        text1 = role,
+        imageModifier = Modifier
+            .clip(CircleShape)
+            .size(100.dp),
+        contentScale = ContentScale.Crop
     )
 }
 
@@ -314,7 +334,8 @@ fun BingeWatcherMediumShowCardPreview() {
                 picturePainter = painterResource(R.drawable.breaking_bad_official),
                 date = "2008",
                 genre = "Drama/Crime/Thriller",
-                rating = "9.2"
+                rating = "9.2",
+                onClick = {}
             )
         }
     }

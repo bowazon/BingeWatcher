@@ -17,6 +17,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -34,6 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumPersonCard
 import com.bowazon.bingewatcher.core.designsystem.BingeWatcherMediumShowCard
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.ui.utils.loadPainter
@@ -43,53 +46,63 @@ import com.bowazon.bingewatcher.core.designsystem.R
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
-    onDetailsClicked: (Int) -> Unit
+    onShowClicked: (Int) -> Unit,
+    onPersonClicked: (Int) -> Unit,
 ) {
-    val shows by viewModel.searchState.collectAsState()
+    val searchType by viewModel.searchType.collectAsState()
+    val items by viewModel.searchState.collectAsState()
 
-    Scaffold(modifier.fillMaxSize()) { padding ->
-        Column(Modifier.padding(padding)) {
-            SimpleTextField(viewModel::search)
+    //Scaffold(modifier.fillMaxSize()) { padding ->
+    Column {
+        SearchTextField(viewModel::search)
 
-            LazyColumn(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                items(shows) { show ->
-                    ShowCardClickable(
-                        showDetailed = show,
-                        onDetailsClicked = onDetailsClicked,
-                    )
+        SearchTabs(
+            selected = searchType,
+            onSelected = viewModel::setSearchType
+        )
+
+        LazyColumn {
+            items(items) { item ->
+                when (item) {
+                    is SearchItem.ShowItem -> {
+                        val painter = loadPainter(
+                            item.data.summary.image,
+                            painterResource(R.drawable.show_placeholder)
+                        )
+
+                        BingeWatcherMediumShowCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            showName = item.data.summary.name,
+                            picturePainter = painter,
+                            date = item.data.summary.premiered,
+                            genre = item.data.summary.genres,
+                            rating = item.data.summary.rating,
+                            onClick = { onShowClicked(item.data.id) }
+                        )
+                    }
+
+                    is SearchItem.PersonItem -> {
+                        val painter = loadPainter(
+                            item.data.image,
+                            painterResource(R.drawable.show_placeholder)
+                        )
+                        BingeWatcherMediumPersonCard(
+                            //modifier = Modifier.fillMaxWidth(),
+                            name = item.data.name,
+                            picturePainter = painter,
+                            role = "",
+                            onClick = { onPersonClicked(item.data.id) }
+                        )
+                    }
                 }
             }
         }
     }
+    //}
 }
 
 @Composable
-fun ShowCardClickable(
-    onDetailsClicked: (Int) -> Unit,
-    showDetailed: ShowDetailed
-) {
-    val painter = loadPainter(
-        showDetailed.summary.image,
-        painterResource(R.drawable.show_placeholder)
-    )
-    Surface(
-        onClick = { onDetailsClicked(showDetailed.id) }
-    ) {
-        BingeWatcherMediumShowCard(
-            modifier = Modifier.fillMaxWidth(),
-            showName = showDetailed.summary.name,
-            picturePainter = painter,
-            date = showDetailed.summary.premiered,
-            genre = showDetailed.summary.genres,
-            rating = showDetailed.summary.rating
-        )
-    }
-}
-
-@Composable
-fun SimpleTextField(
+fun SearchTextField(
     searchCallback: (String) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
@@ -100,60 +113,28 @@ fun SimpleTextField(
             text = it
             searchCallback(text)
         },
-        label = { Text("Введите текст") }
+        label = { Text("Enter text:") }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleSearchBar(
-    textFieldState: TextFieldState,
-    onSearch: (String) -> Unit,
-    searchResults: List<String>,
-    modifier: Modifier = Modifier
+fun SearchTabs(
+    selected: SearchType,
+    onSelected: (SearchType) -> Unit
 ) {
-    // Controls expansion state of the search bar
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    val tabs = listOf(SearchType.SHOWS, SearchType.PEOPLE)
 
-    Box(
-        modifier
-            .fillMaxSize()
-            .semantics { isTraversalGroup = true }
-    ) {
-        SearchBar(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .semantics { traversalIndex = 0f },
-            inputField = {
-                SearchBarDefaults.InputField(
-                    query = textFieldState.text.toString(),
-                    onQueryChange = { textFieldState.edit { replace(0, length, it) } },
-                    onSearch = {
-                        onSearch(textFieldState.text.toString())
-                        expanded = false
-                    },
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    placeholder = { Text("Search") }
-                )
-            },
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-        ) {
-            // Display search results in a scrollable column
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                searchResults.forEach { result ->
-                    ListItem(
-                        headlineContent = { Text(result) },
-                        modifier = Modifier
-                            .clickable {
-                                textFieldState.edit { replace(0, length, result) }
-                                expanded = false
-                            }
-                            .fillMaxWidth()
+    TabRow(selectedTabIndex = tabs.indexOf(selected)) {
+        tabs.forEach { type ->
+            Tab(
+                selected = type == selected,
+                onClick = { onSelected(type) },
+                text = {
+                    Text(
+                        if (type == SearchType.SHOWS) "Shows" else "People"
                     )
                 }
-            }
+            )
         }
     }
 }

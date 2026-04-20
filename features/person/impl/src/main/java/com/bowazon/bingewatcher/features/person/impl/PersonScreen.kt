@@ -102,16 +102,17 @@ fun PersonScreen(
             )
 
             BingeWatcherMediumShowCard(
-                modifier = Modifier.clickable{
-                    Log.i("ART_DBG_4", "here")
-                    viewModel.onEvent(PersonEvent.OnShowClick(actorCredits.showId))
-                },
+                //modifier = Modifier.clickable{
+                //    Log.i("ART_DBG_4", "here")
+                //    viewModel.onEvent(PersonEvent.OnShowClick(actorCredits.showId))
+                //},
                 showName = actorCredits.showName,
                 additional = actorCredits.character,
                 picturePainter = painter,
                 date = actorCredits.showPremiered,
                 genre = actorCredits.showGenre,
-                rating = actorCredits.showRating
+                rating = actorCredits.showRating,
+                onClick = { viewModel.onEvent(PersonEvent.OnShowClick(actorCredits.showId)) }
             )
         }
 
@@ -132,15 +133,16 @@ fun PersonScreen(
                 painterResource(R.drawable.show_placeholder)
             )
             BingeWatcherMediumShowCard(
-                modifier = Modifier.clickable{
-                    viewModel.onEvent(PersonEvent.OnShowClick(crewCredits.showId))
-                },
+                //modifier = Modifier.clickable{
+                //    viewModel.onEvent(PersonEvent.OnShowClick(crewCredits.showId))
+                //},
                 showName = crewCredits.showName,
                 additional = crewCredits.type, // TODO temp
                 picturePainter = painter,
                 date = crewCredits.showPremiered,
                 genre = crewCredits.showGenre,
-                rating = crewCredits.showRating
+                rating = crewCredits.showRating,
+                onClick = { viewModel.onEvent(PersonEvent.OnShowClick(crewCredits.showId)) }
             )
         }
     }
