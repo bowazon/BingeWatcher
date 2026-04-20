@@ -1,5 +1,7 @@
 package com.bowazon.bingewatcher
 
+import android.content.Context
+import com.bowazon.bingewatcher.core.database.BingeWatcherDatabase
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
 import com.bowazon.bingewatcher.core.network.tvmaze.retrofit.TvMazeRetrofitImpl
 import com.bowazon.bingewatcher.core.repository.FullCrewRepository
@@ -15,6 +17,7 @@ import com.bowazon.bingewatcher.core.repository.ShowRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -30,8 +33,11 @@ object AppModule {
     // TODO binds for my repositories???
     @Provides
     @Singleton
-    fun provideShowRepository(remoteDataSource: TvMazeRemoteDataSource): ShowRepository {
-        return ShowRepositoryImpl(remoteDataSource)
+    fun provideShowRepository(
+        remoteDataSource: TvMazeRemoteDataSource,
+        database: BingeWatcherDatabase
+    ): ShowRepository {
+        return ShowRepositoryImpl(remoteDataSource, database)
     }
 
     @Provides
@@ -42,19 +48,33 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePersonRepository(remoteDataSource: TvMazeRemoteDataSource): PersonRepository {
-        return PersonRepositoryImpl(remoteDataSource)
+    fun providePersonRepository(
+        remoteDataSource: TvMazeRemoteDataSource,
+        database: BingeWatcherDatabase
+    ): PersonRepository {
+        return PersonRepositoryImpl(remoteDataSource, database)
     }
 
     @Provides
     @Singleton
-    fun provideSeasonRepository(remoteDataSource: TvMazeRemoteDataSource): SeasonRepository {
-        return SeasonRepositoryImpl(remoteDataSource)
+    fun provideSeasonRepository(
+        remoteDataSource: TvMazeRemoteDataSource,
+        database: BingeWatcherDatabase
+    ): SeasonRepository {
+        return SeasonRepositoryImpl(remoteDataSource, database)
     }
 
     @Provides
     @Singleton
     fun provideFullCrewRepository(remoteDataSource: TvMazeRemoteDataSource): FullCrewRepository {
         return FullCrewRepositoryImpl(remoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ) : BingeWatcherDatabase {
+        return BingeWatcherDatabase(context)
     }
 }

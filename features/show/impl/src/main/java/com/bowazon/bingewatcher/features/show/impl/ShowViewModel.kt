@@ -8,6 +8,8 @@ import com.bowazon.bingewatcher.core.entities.CrewSummary
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.entities.ShowDetailed
 import com.bowazon.bingewatcher.core.repository.ShowRepository
+import com.bowazon.bingewatcher.core.repository.ShowTempModel
+import com.bowazon.bingewatcher.core.repository.toShowDetailed
 import com.bowazon.bingewatcher.core.ui.ScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ShowViewModel.Factory::class)
@@ -35,44 +38,12 @@ class ShowViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO exceptions handler? Supervisor Job?
-            try {
-                coroutineScope {
-                    val show = async { repository.getShow(showId) }
-                    val cast = async { repository.getActorsForShow(showId) }
-                    //val crew = async { repository.getCrewForShow(showId) }
-                    val pictures = async { repository.getImagesForShow(showId) }
-                    val seasons = async { repository.getSeasonsForShow(showId) }
-                    /*
-                    val crewMerged = crew
-                        .await()
-                        .groupBy { crewSummary ->
-                            crewSummary.name
-                        }.map { (_, personsCrewRoles) ->
-                            val first = personsCrewRoles.first()
-
-                            val mergedRoles = personsCrewRoles
-                                .map { it.role }
-                                .distinct()
-                                .joinToString("\n")
-
-                            first.copy(role = mergedRoles)
-                        }
-                        */
-
-                    _state.value = ScreenState.Success(
-                        ShowUiModel(
-                            show.await(),
-                            cast.await(),
-                            //crewMerged,
-                            pictures.await(),
-                            seasons.await()
-                        )
+            repository.observeShow(showId).collect {
+                _state.value = ScreenState.Success(
+                    ShowUiModel(
+                        it
                     )
-                }
-            } catch (e: Exception) { // TODO generic error bad
-                _state.value = ScreenState.Error
-                Log.i("ART_DBG_5", "e is " + e.toString())
+                )
             }
         }
     }
@@ -93,8 +64,12 @@ class ShowViewModel @AssistedInject constructor(
                 }
             }
             is ShowScreenEvent.OnFollowClick -> {
-                // TODO
-                // to follow repository
+                viewModelScope.launch {
+                    val show = (_state.value as? ScreenState.Success<ShowUiModel>)?.data?.show
+                    show?.let {
+                        repository.toggleFollowShow(it.toShowDetailed())
+                    }
+                }
             }
             is ShowScreenEvent.OnSeasonClick -> {
                 // TODO showId and seasonId is good place to use inline value classes
@@ -145,11 +120,7 @@ class ShowViewModel @AssistedInject constructor(
 
 // TODO dumb model
 data class ShowUiModel(
-    val show: ShowDetailed,
-    val cast: List<ActorSummary>,
-    //val crew: List<CrewSummary>,
-    val pictures: List<String>,
-    val seasons: List<Season>
+    val show: ShowTempModel
 )
 
 sealed interface ShowScreenEvent {

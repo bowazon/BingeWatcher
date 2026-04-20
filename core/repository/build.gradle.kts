@@ -44,6 +44,7 @@ dependencies {
 
     implementation(project(":core:entities"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)

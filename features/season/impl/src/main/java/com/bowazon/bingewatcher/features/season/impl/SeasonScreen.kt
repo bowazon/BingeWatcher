@@ -79,13 +79,16 @@ fun SeasonScreen(
             )
         },
         actions = { uiData ->
-            BingeWatcherLikeIcon(onClick = {
-                viewModel.onEvent(
-                    SeasonEvent.OnLikeClicked(
-                        uiData.season.id
+            BingeWatcherLikeIcon(
+                onClick = {
+                    viewModel.onEvent(
+                        SeasonEvent.OnLikeClicked(
+                            uiData.season.id
+                        )
                     )
-                )
-            })
+                },
+                isLiked = false
+            )
             BingeWatcherShareIcon(onClick = {
                 // TODO share
             })

@@ -21,30 +21,6 @@ fun DiscoverScreen(
     modifier: Modifier = Modifier,
     viewModel: DiscoverViewModel = hiltViewModel()
 ) {
-    val shows by viewModel.searchState.collectAsState()
 
-    Greeting(
-        shows = shows
-    )
 }
 
-@Composable
-fun Greeting(
-    modifier: Modifier = Modifier,
-    shows: List<ShowDetailed>
-) {
-    Scaffold { padding ->
-        LazyColumn(
-            modifier = Modifier.padding(padding)
-        ) {
-            items(shows) { show ->
-                val painter = loadPainter(
-                    show.summary.image,
-                    painterResource(R.drawable.show_placeholder)
-                )
-
-            }
-        }
-    }
-    //FilmReel()
-}

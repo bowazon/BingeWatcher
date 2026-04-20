@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.LocalLibrary
@@ -113,12 +114,15 @@ fun BingeWatcherImdbIcon(
 
 @Composable
 fun BingeWatcherLikeIcon(
+    isLiked: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     BaseIcon(
         modifier = modifier,
-        icon = BaseIcon.ImageIcon(Icons.Rounded.Favorite),
+        icon = BaseIcon.ImageIcon(
+            if (isLiked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+        ),
         text = stringResource(R.string.like),
         contentDescription = stringResource(R.string.description_like),
         onClick = onClick
@@ -219,7 +223,7 @@ fun BingeWatcherImdbIconPreview() {
             ) {
                 BingeWatcherImdbIcon(onClick = {})
 
-                BingeWatcherLikeIcon(onClick = {})
+                BingeWatcherLikeIcon(onClick = {}, isLiked = false)
 
                 BingeWatcherOfficialSiteIcon(onClick = {})
 

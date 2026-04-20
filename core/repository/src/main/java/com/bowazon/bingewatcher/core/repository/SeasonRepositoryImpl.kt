@@ -1,5 +1,6 @@
 package com.bowazon.bingewatcher.core.repository
 
+import com.bowazon.bingewatcher.core.database.BingeWatcherDatabase
 import com.bowazon.bingewatcher.core.entities.Episode
 import com.bowazon.bingewatcher.core.entities.Season
 import com.bowazon.bingewatcher.core.network.tvmaze.TvMazeRemoteDataSource
@@ -11,7 +12,8 @@ import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class SeasonRepositoryImpl @Inject constructor(
-    val api: TvMazeRemoteDataSource
+    val api: TvMazeRemoteDataSource,
+    val database: BingeWatcherDatabase,
 ) : SeasonRepository {
     override suspend fun getSeasonInfo(
         showId: Int,

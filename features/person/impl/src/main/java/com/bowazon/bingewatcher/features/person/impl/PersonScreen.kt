@@ -76,7 +76,10 @@ fun PersonScreen(
         },
         badge = null,
         actions = { uiData ->
-            BingeWatcherLikeIcon(onClick = { viewModel.onEvent(PersonEvent.OnFollowClick) })
+            BingeWatcherLikeIcon(
+                onClick = { viewModel.onEvent(PersonEvent.OnFollowClick) },
+                isLiked = false
+            )
 
             BingeWatcherShareIcon(onClick = {
                 // TODO share

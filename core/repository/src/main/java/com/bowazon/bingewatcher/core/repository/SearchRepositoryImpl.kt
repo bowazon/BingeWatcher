@@ -9,7 +9,7 @@ import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toShowDetailed
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    val api: TvMazeRemoteDataSource
+    val api: TvMazeRemoteDataSource,
 ) : SearchRepository {
     override suspend fun searchShow(name: String): List<ShowDetailed> {
         // TODO error processing

@@ -65,6 +65,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:navigation"))
     implementation(project(":core:repository"))
+    implementation(project(":core:database"))
     implementation(project(":features:discover:api"))
     implementation(project(":features:search:api"))
     implementation(project(":features:show:api"))

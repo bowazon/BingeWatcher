@@ -91,7 +91,10 @@ fun ShowScreen(
         actions = { uiData ->
             BingeWatcherImdbIcon(onClick = { viewModel.onEvent(ShowScreenEvent.OnImdbClick) })
 
-            BingeWatcherLikeIcon(onClick = { viewModel.onEvent(ShowScreenEvent.OnFollowClick) })
+            BingeWatcherLikeIcon(
+                onClick = { viewModel.onEvent(ShowScreenEvent.OnFollowClick) },
+                isLiked = uiData.show.followed
+            )
 
             BingeWatcherOfficialSiteIcon( onClick = { viewModel.onEvent(ShowScreenEvent.OnOfficialSiteClick) } )
 
@@ -107,17 +110,17 @@ fun ShowScreen(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiData.seasons.size) { i ->
-                    val painter = loadPainter(uiData.seasons[i].image)
+                items(uiData.show.seasons.size) { i ->
+                    val painter = loadPainter(uiData.show.seasons[i].image)
 
                     BingeWatcherSmallSeasonCard(
                         onClick = { viewModel.onEvent(ShowScreenEvent.OnSeasonClick(
                             uiData.show.id,
-                            uiData.seasons[i].id
+                            uiData.show.seasons[i].id
                         )) },
                         season = i + 1,
-                        episodesAmount = uiData.seasons[i].episodesAmount,
-                        premiereDate = uiData.seasons[i].premiereDate,
+                        episodesAmount = uiData.show.seasons[i].episodesAmount,
+                        premiereDate = uiData.show.seasons[i].premiereDate,
                         imagePainter = painter
                     )
                 }
@@ -126,7 +129,7 @@ fun ShowScreen(
         }
 
         item {
-            if(uiData.cast.isNotEmpty()) {
+            if(uiData.show.actors.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
@@ -142,7 +145,7 @@ fun ShowScreen(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiData.cast) { actor ->
+                items(uiData.show.actors) { actor ->
                     val painter = loadPainter(actor.image, painterResource(R.drawable.person_placeholder))
 
                     BingeWatcherSmallPersonCard(
@@ -161,48 +164,8 @@ fun ShowScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        /*
         item {
-            if(uiData.crew.isNotEmpty()) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    text = "Crew"
-                )
-            }
-        }
-
-        // TODO showing crew this way is pain in the ass. Do we need it here? Should we do separate full crew feature, like in IMDB?
-        item {
-            val maxLines = uiData.crew.maxOfOrNull { it.role.lines().size } ?: 1
-            val lineHeight = 20.dp
-            val infoHeight = lineHeight * maxLines
-
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(uiData.crew) { crewMember ->
-                    val painter = loadPainter(crewMember.image, painterResource(R.drawable.person_placeholder))
-
-                    BingeWatcherSmallPersonCard(
-                        onClick = { viewModel.onEvent(ShowScreenEvent.OnPersonClick(crewMember.id)) },
-                        personName = crewMember.name,
-                        additionalInfo = crewMember.role,
-                        additionalInfoHeight = infoHeight,
-                        imagePainter = painter
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-         */
-
-        item {
-            if (uiData.pictures.isNotEmpty()) {
+            if (uiData.show.images.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
@@ -218,13 +181,13 @@ fun ShowScreen(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiData.pictures.size) { i ->
-                    val painter = loadPainter(uiData.pictures[i])
+                items(uiData.show.images.size) { i ->
+                    val painter = loadPainter(uiData.show.images[i])
 
                     BingeWatcherSmallImageCard(
                         painter = painter,
                         onClick = {
-                            viewModel.onEvent(ShowScreenEvent.OnGalleryClick(i, uiData.pictures))
+                            viewModel.onEvent(ShowScreenEvent.OnGalleryClick(i, uiData.show.images))
                         })
                 }
             }

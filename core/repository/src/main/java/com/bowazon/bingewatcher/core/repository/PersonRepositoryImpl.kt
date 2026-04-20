@@ -1,6 +1,7 @@
 package com.bowazon.bingewatcher.core.repository
 
 import android.util.Log
+import com.bowazon.bingewatcher.core.database.BingeWatcherDatabase
 import com.bowazon.bingewatcher.core.entities.ActorCredits
 import com.bowazon.bingewatcher.core.entities.CrewCredits
 import com.bowazon.bingewatcher.core.entities.Person
@@ -12,7 +13,8 @@ import com.bowazon.bingewatcher.core.network.tvmaze.mappers.toPerson
 import javax.inject.Inject
 
 class PersonRepositoryImpl@Inject constructor(
-    val api: TvMazeRemoteDataSource
+    val api: TvMazeRemoteDataSource,
+    val database: BingeWatcherDatabase,
 ) : PersonRepository {
     override suspend fun getPersonInfo(id: Int): Person {
         return api.personInfo(id).toPerson()

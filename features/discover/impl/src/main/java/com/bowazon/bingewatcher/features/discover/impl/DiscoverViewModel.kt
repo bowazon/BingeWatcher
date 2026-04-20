@@ -14,12 +14,5 @@ import javax.inject.Inject
 class DiscoverViewModel @Inject constructor(
     val repository: SearchRepository
 ) : ViewModel() {
-    private val _searchState = MutableStateFlow<List<ShowDetailed>>(emptyList())
-    val searchState = _searchState.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            _searchState.emit(repository.searchShow("girls"))
-        }
-    }
 }
