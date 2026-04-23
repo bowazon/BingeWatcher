@@ -67,7 +67,6 @@ fun SeasonScreen(
             BingeWatcherShowTopBadge(
                 name = uiData.season.showName + ", season " + uiData.season.seasonNumber,
                 premiered = uiData.season.premiereDate,
-                rating = ""
             )
         },
         badge = { uiData ->
@@ -114,6 +113,7 @@ fun SeasonScreen(
                 date = episode.airdate,
                 rating = episode.rating,
                 description = episode.summary,
+                // TODO I have feel this is wrong and doesn't use reactivity
                 toggleState = ToggleState(
                     isChecked = episode.watched,
                     isLoading = episode.isUpdatingWatched

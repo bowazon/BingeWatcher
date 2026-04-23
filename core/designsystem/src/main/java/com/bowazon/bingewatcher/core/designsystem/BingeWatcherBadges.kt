@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
 import com.bowazon.bingewatcher.core.designsystem.utils.Rating
 import com.bowazon.bingewatcher.core.designsystem.utils.RatingWithStar
-import com.bowazon.bingewatcher.core.designsystem.utils.isNotEmpty
+import com.bowazon.bingewatcher.core.designsystem.utils.isNotNull
 import kotlin.text.isNotEmpty
 
 @Composable
@@ -34,7 +34,7 @@ private fun BaseTopBadge(
     largeText: String = "",
     smallText: String = "",
     rightText: String = "",
-    rating: Rating = Rating("")
+    rating: Rating = Rating(null)
 ) {
     Box(
         modifier = modifier
@@ -57,7 +57,7 @@ private fun BaseTopBadge(
         }
         Row(verticalAlignment = Alignment.Top,
             modifier = Modifier.align(Alignment.TopEnd)) {
-            if (rating.isNotEmpty()) {
+            if (rating.isNotNull()) {
                 RatingWithStar(rating)
             }
             if(rightText.isNotEmpty()) {
@@ -92,7 +92,7 @@ fun BingeWatcherShowTopBadge(
     modifier: Modifier = Modifier,
     name: String,
     premiered: String,
-    rating: String
+    rating: Double? = null
 ) {
     BaseTopBadge(
         modifier = modifier,
@@ -167,7 +167,7 @@ fun BingeWatcherShowTopBadgePreview() {
             BingeWatcherShowTopBadge(
                 name = "Breaking Bad",
                 premiered = "2008 ",
-                rating = "9.2",
+                rating = 9.2,
             )
         }
     }

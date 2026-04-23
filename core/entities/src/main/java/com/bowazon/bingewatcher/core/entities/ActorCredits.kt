@@ -6,6 +6,6 @@ data class ActorCredits (
     val showPremiered: String,
     val showGenre: String,
     val showPicture: String,
-    val showRating: String,
+    val showRating: Double?,
     val character: String,
 )

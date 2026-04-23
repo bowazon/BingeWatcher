@@ -40,7 +40,7 @@ private fun ScreenLoading(modifier: Modifier = Modifier) {
 @Composable
 private fun ScreenError(
     modifier: Modifier = Modifier,
-    onBackClicked: () -> Unit
+    onBackClicked: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -51,7 +51,7 @@ private fun ScreenError(
 
         }
         BingeWatcherBackIcon(
-            onClick = onBackClicked,
+            onClick = onBackClicked ?: {},
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
@@ -125,6 +125,28 @@ fun <T> BingeWatcherDetailsScreen(
                         .padding(16.dp)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun <T> BingeWatcherGenericScreen(
+    modifier: Modifier = Modifier,
+    uiState: ScreenState<T>,
+    content: @Composable (T) -> Unit,
+) {
+    when (uiState) {
+        is ScreenState.Loading -> {
+            ScreenLoading()
+        }
+
+        is ScreenState.Error -> {
+            ScreenError()
+        }
+
+        is ScreenState.Success -> {
+            val data = uiState.data
+            content(data)
         }
     }
 }

@@ -8,5 +8,5 @@ data class ShowSummary(
     val premiered: String,
     val image: String, // TODO maybe bitmap?
     val genres: List<String>,
-    val rating: String
+    val rating: Double?
 ) : CrewSource

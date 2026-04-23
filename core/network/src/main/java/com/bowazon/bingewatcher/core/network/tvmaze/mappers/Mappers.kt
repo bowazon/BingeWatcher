@@ -33,7 +33,7 @@ fun TvMazeShow.toShowSummary(): ShowSummary {
         premiered = premiered?.substringBefore("-") ?: "",
         image = image?.medium  ?: "" ,
         genres = genres ?: listOf(""),
-        rating = rating?.average?.let { it.toString() } ?: ""
+        rating = rating?.average
     )
 }
 
@@ -113,7 +113,7 @@ fun TvMazeEpisode.toEpisode(): Episode {
         episode = number?.toInt() ?: 0,
         airdate = formatDate(airdate ?: ""),
         runtime = runtime?.toInt() ?: 0,
-        rating = rating?.average?.let { it.toString() } ?: "",
+        rating = rating?.average,
         image = image?.medium ?: "",
         summary = summary ?: "",
         showName = links?.show?.name ?: ""
@@ -127,7 +127,7 @@ fun TvMazeCastCredit.toActorCredits(): ActorCredits {
         showPicture = embedded?.show?.image?.medium ?: "",
         showGenre = embedded?.show?.genres?.joinToString(separator = "/") ?: "",
         showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
-        showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
+        showRating = embedded?.show?.rating?.average,
         character = links.character.name,
     )
 }
@@ -140,7 +140,7 @@ fun TvMazeCrewCredit.toCrewCredits(): CrewCredits {
         showPicture = embedded?.show?.image?.medium ?: "",
         showGenre = embedded?.show?.genres?.joinToString(separator = "/") ?: "",
         showPremiered = embedded?.show?.premiered?.substringBefore("-") ?: "",
-        showRating = embedded?.show?.rating?.average?.let { it.toString() } ?: "",
+        showRating = embedded?.show?.rating?.average,
     )
 }
 

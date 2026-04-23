@@ -31,7 +31,6 @@ fun BingeWatcherBottomNavigation(
             item(
                 selected = true,
                 onClick =  {
-                    Log.i("ART_DBG_4", "pressed")
                     navigator.navigate(discoverKey)
                            } ,
                 icon = {

@@ -105,10 +105,6 @@ fun PersonScreen(
             )
 
             BingeWatcherMediumShowCard(
-                //modifier = Modifier.clickable{
-                //    Log.i("ART_DBG_4", "here")
-                //    viewModel.onEvent(PersonEvent.OnShowClick(actorCredits.showId))
-                //},
                 showName = actorCredits.showName,
                 additional = actorCredits.character,
                 picturePainter = painter,

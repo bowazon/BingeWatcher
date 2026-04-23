@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d97fb8b400b231525df577b57f72a22b",
+    "identityHash": "86c2cd02a2a20d0c86d704f79e0dfb41",
     "entities": [
       {
         "tableName": "shows",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `premiered` TEXT NOT NULL, `image` TEXT NOT NULL, `genres` TEXT NOT NULL, `rating` TEXT NOT NULL, `ended` TEXT NOT NULL, `officialSite` TEXT NOT NULL, `imdb` TEXT NOT NULL, `largeImage` TEXT NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `premiered` TEXT NOT NULL, `image` TEXT NOT NULL, `genres` TEXT NOT NULL, `rating` REAL, `ended` TEXT NOT NULL, `officialSite` TEXT NOT NULL, `imdb` TEXT NOT NULL, `largeImage` TEXT NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -41,8 +41,7 @@
           {
             "fieldPath": "rating",
             "columnName": "rating",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "REAL"
           },
           {
             "fieldPath": "ended",
@@ -85,7 +84,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd97fb8b400b231525df577b57f72a22b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '86c2cd02a2a20d0c86d704f79e0dfb41')"
     ]
   }
 }

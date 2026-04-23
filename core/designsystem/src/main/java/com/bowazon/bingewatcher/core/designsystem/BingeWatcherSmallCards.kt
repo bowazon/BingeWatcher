@@ -42,6 +42,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
+import com.bowazon.bingewatcher.core.designsystem.utils.Rating
+import com.bowazon.bingewatcher.core.designsystem.utils.RatingWithStar
 
 val SMALL_PERSON_CARD_SIZE = 100.dp
 val SMALL_SEASON_CARD_WIDTH = 120.dp
@@ -236,6 +238,32 @@ fun BingeWatcherSmallImageCard(
             modifier = modifier
                 .height(150.dp)
         )
+    }
+}
+
+@Composable
+fun BingeWatcherSmallShowCard(
+    modifier: Modifier = Modifier,
+    imagePainter: Painter,
+    date: String,
+    name: String,
+    rating: Double?,
+    onClick: () -> Unit
+) {
+    BaseScalableCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Column {
+            Image(
+                modifier = Modifier.size(150.dp),
+                painter = imagePainter,
+                contentDescription = null
+            )
+            Text(text = date)
+            Text(text = name)
+            RatingWithStar(Rating(rating))
+        }
     }
 }
 

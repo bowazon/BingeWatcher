@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
     implementation(project(":features:discover:api"))
+    implementation(project(":features:show:api"))
     implementation(project(":core:navigation"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:entities"))

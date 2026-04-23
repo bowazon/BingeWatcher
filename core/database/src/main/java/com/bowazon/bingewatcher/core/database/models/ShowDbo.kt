@@ -12,7 +12,7 @@ data class ShowDbo(
     val premiered: String,
     val image: String,
     val genres: List<String>,
-    val rating: String,
+    val rating: Double?,
     val ended: String, // empty if still active
     val officialSite: String,
     val imdb: String,

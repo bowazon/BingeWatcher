@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.bowazon.bingewatcher.core.designsystem.R
 
 @JvmInline
-internal value class Rating(val rating: String)
+internal value class Rating(val rating: Double?)
 
-internal fun Rating.isNotEmpty() = rating.isNotEmpty()
+internal fun Rating.isNotNull() = (rating != null)
 
 // TODO can be private or internal, and we can pass all these things as parameters in BingeWatcherMediumEpisodeCard
 class ToggleState(
@@ -29,7 +29,7 @@ class ToggleState(
 internal fun RatingWithStar(rating: Rating) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            text = rating.rating,
+            text = rating.rating.toString(),
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.width(4.dp))

@@ -52,53 +52,53 @@ fun SearchScreen(
     val searchType by viewModel.searchType.collectAsState()
     val items by viewModel.searchState.collectAsState()
 
-    //Scaffold(modifier.fillMaxSize()) { padding ->
-    Column {
-        SearchTextField(viewModel::search)
+    Scaffold(modifier.fillMaxSize()) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            SearchTextField(viewModel::search)
 
-        SearchTabs(
-            selected = searchType,
-            onSelected = viewModel::setSearchType
-        )
+            SearchTabs(
+                selected = searchType,
+                onSelected = viewModel::setSearchType
+            )
 
-        LazyColumn {
-            items(items) { item ->
-                when (item) {
-                    is SearchItem.ShowItem -> {
-                        val painter = loadPainter(
-                            item.data.summary.image,
-                            painterResource(R.drawable.show_placeholder)
-                        )
+            LazyColumn {
+                items(items) { item ->
+                    when (item) {
+                        is SearchItem.ShowItem -> {
+                            val painter = loadPainter(
+                                item.data.summary.image,
+                                painterResource(R.drawable.show_placeholder)
+                            )
 
-                        BingeWatcherMediumShowCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            showName = item.data.summary.name,
-                            picturePainter = painter,
-                            date = item.data.summary.premiered,
-                            genre = item.data.summary.genres.joinToString(separator = "/"),
-                            rating = item.data.summary.rating,
-                            onClick = { onShowClicked(item.data.id) }
-                        )
-                    }
+                            BingeWatcherMediumShowCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                showName = item.data.summary.name,
+                                picturePainter = painter,
+                                date = item.data.summary.premiered,
+                                genre = item.data.summary.genres.joinToString(separator = "/"),
+                                rating = item.data.summary.rating,
+                                onClick = { onShowClicked(item.data.id) }
+                            )
+                        }
 
-                    is SearchItem.PersonItem -> {
-                        val painter = loadPainter(
-                            item.data.image,
-                            painterResource(R.drawable.show_placeholder)
-                        )
-                        BingeWatcherMediumPersonCard(
-                            //modifier = Modifier.fillMaxWidth(),
-                            name = item.data.name,
-                            picturePainter = painter,
-                            role = "",
-                            onClick = { onPersonClicked(item.data.id) }
-                        )
+                        is SearchItem.PersonItem -> {
+                            val painter = loadPainter(
+                                item.data.image,
+                                painterResource(R.drawable.show_placeholder)
+                            )
+                            BingeWatcherMediumPersonCard(
+                                //modifier = Modifier.fillMaxWidth(),
+                                name = item.data.name,
+                                picturePainter = painter,
+                                role = "",
+                                onClick = { onPersonClicked(item.data.id) }
+                            )
+                        }
                     }
                 }
             }
         }
     }
-    //}
 }
 
 @Composable

@@ -55,7 +55,7 @@ import com.bowazon.bingewatcher.core.designsystem.theme.BingeWatcherTheme
 import com.bowazon.bingewatcher.core.designsystem.utils.ToggleState
 import com.bowazon.bingewatcher.core.designsystem.utils.Rating
 import com.bowazon.bingewatcher.core.designsystem.utils.RatingWithStar
-import com.bowazon.bingewatcher.core.designsystem.utils.isNotEmpty
+import com.bowazon.bingewatcher.core.designsystem.utils.isNotNull
 import kotlin.text.isNotEmpty
 
 val MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT = 150.dp
@@ -73,7 +73,7 @@ private fun BaseMediumHorizontalCard(
     text1: String = "",
     text2: String = "",
     text3: String = "",
-    rating: Rating = Rating(""),
+    rating: Rating = Rating(null),
 
     toggleState: ToggleState? = null,
     onToggle: (() -> Unit)? = null,
@@ -127,7 +127,7 @@ private fun BaseMediumHorizontalCard(
             modifier = Modifier
                 .align(Alignment.TopEnd),
         ) {
-            if (rating.isNotEmpty()) {
+            if (rating.isNotNull()) {
                 RatingWithStar(rating)
             }
 
@@ -149,7 +149,7 @@ fun BingeWatcherMediumShowCard(
     picturePainter: Painter,
     date: String,
     genre: String,
-    rating: String,
+    rating: Double?,
     additional: String = "",
     onClick: (() -> Unit)
 ) {
@@ -177,7 +177,7 @@ fun BingeWatcherMediumEpisodeCard(
     episodeName: String,
     picturePainter: Painter,
     date: String,
-    rating: String,
+    rating: Double?,
     description: String? = null,
     toggleState: ToggleState? = null,
     onToggle: (() -> Unit)? = null
@@ -218,6 +218,35 @@ fun BingeWatcherMediumEpisodeCard(
             )
         }
     }
+}
+
+@Composable
+fun BingeWatcherMediumScheduledEpisodeCard(
+    modifier: Modifier = Modifier,
+    showName: String,
+    episode: String,
+    season: String,
+    genre: String,
+    picturePainter: Painter,
+    date: String,
+    showRating: Double?,
+    onClick: () -> Unit
+) {
+    BaseMediumHorizontalCard(
+        modifier = modifier.clickable {
+            onClick()
+        },
+        name = showName,
+        picturePainter = picturePainter,
+        text1 = "E"+episode+"S"+season,
+        text2 = date,
+        text3 = genre,
+        rating = Rating(showRating),
+        imageModifier = Modifier.size(
+            height = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT,
+            width = MEDIUM_HORIZONTAL_CARD_IMAGE_HEIGHT
+        )
+    )
 }
 
 @Composable
@@ -334,7 +363,7 @@ fun BingeWatcherMediumShowCardPreview() {
                 picturePainter = painterResource(R.drawable.breaking_bad_official),
                 date = "2008",
                 genre = "Drama/Crime/Thriller",
-                rating = "9.2",
+                rating = 9.2,
                 onClick = {}
             )
         }
@@ -358,7 +387,7 @@ fun BingeWatcherMediumEpisodeCardPreview() {
                 episodeName = "Pilot",
                 picturePainter = painterResource(R.drawable.breaking_bad_episode_pilot),
                 date = "2008",
-                rating = "8.2",
+                rating = 8.2,
                 description = "A high-school chemistry teacher (Bryan Cranston) " +
                         "is diagnosed with a deadly cancer, so he puts his expertise " +
                         "to use and teams with an ex-student (Aaron Paul) to manufacture " +
@@ -369,6 +398,33 @@ fun BingeWatcherMediumEpisodeCardPreview() {
                     isLoading = false,
                 ),
                 onToggle = {}
+            )
+        }
+    }
+}
+
+@Preview(
+    widthDp = 412,
+    heightDp = 200,
+)
+@Composable
+fun BingeWatcherMediumScheduledEpisodeCardPreview() {
+    BingeWatcherTheme(
+        darkTheme = true,
+        dynamicColor = false,
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides Color.White
+        ) {
+            BingeWatcherMediumScheduledEpisodeCard(
+                showName = "Breaking Bad",
+                episode = "1",
+                season = "1",
+                genre = "Drama/Crime/Thriller",
+                picturePainter = painterResource(R.drawable.breaking_bad_episode_pilot),
+                date = "2008-12-20",
+                showRating = 8.2,
+                onClick = {}
             )
         }
     }
