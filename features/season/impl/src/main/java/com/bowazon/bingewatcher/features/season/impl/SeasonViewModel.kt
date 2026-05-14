@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class SeasonViewModel @AssistedInject constructor(
     @Assisted("showId") val showId: Int,
     @Assisted("seasonId") val seasonId: Int,
-    val repository: SeasonRepository
+    private val repository: SeasonRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ScreenState<SeasonUiModel>>(ScreenState.Loading)
@@ -106,7 +106,7 @@ class SeasonViewModel @AssistedInject constructor(
             }
 
             is SeasonEvent.OnLikeClicked -> {
-
+                // TODO
             }
         }
     }

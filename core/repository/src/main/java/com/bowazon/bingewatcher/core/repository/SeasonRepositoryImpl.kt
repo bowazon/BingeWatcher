@@ -28,7 +28,7 @@ class SeasonRepositoryImpl @Inject constructor(
 
         return season
         // TODO I know it's stupid - two consecutive suspend calls.
-        // Season info doesn't have show info like sho name.
+        // Season info doesn't have show info like show name.
         // I will fix this when I'll fix API model problem with embedded field
     }
 

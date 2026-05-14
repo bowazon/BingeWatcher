@@ -48,7 +48,7 @@ private fun ScreenError(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Error")
-
+            // TODO add error behavior
         }
         BingeWatcherBackIcon(
             onClick = onBackClicked ?: {},

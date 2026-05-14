@@ -54,6 +54,7 @@ fun ShowScreen(
                     context.startActivity(intent)
                 }
                 is ShowScreenEffect.OpenPersonScreen -> {
+                    // TODO for all navigation effects: do we need it as effects? Or should we call them directly from here?
                     navigateToPerson(effect.id)
                 }
                 is ShowScreenEffect.OpenSeasonScreen -> {

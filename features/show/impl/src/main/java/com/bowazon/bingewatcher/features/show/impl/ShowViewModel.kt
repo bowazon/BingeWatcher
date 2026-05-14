@@ -118,7 +118,7 @@ class ShowViewModel @AssistedInject constructor(
     }
 }
 
-// TODO dumb model
+// TODO should be it's own dumb model
 data class ShowUiModel(
     val show: ShowTempModel
 )
