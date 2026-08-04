@@ -1,0 +1,36 @@
+name: Android checks
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - run: chmod +x gradlew
+
+      - name: Run lint
+        run: ./gradlew lint
+
+      - name: Run screenshot tests
+        run: ./gradlew validateScreenshotTest
+
+      - name: Upload screenshot reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-test-results
+          path: |
+            **/build/reports/**
+            **/build/outputs/

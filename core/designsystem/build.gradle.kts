@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.android.screenshot)
 }
 
 android {
@@ -31,6 +33,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 dependencies {
@@ -66,4 +69,7 @@ dependencies {
     implementation(project(":features:search:api"))
 
     implementation(libs.androidx.compose.material.icons.extended)
+
+    screenshotTestImplementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.androidx.ui.tooling)
 }
